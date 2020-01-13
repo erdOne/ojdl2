@@ -1,7 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import verdicts from "common/verdicts";
 
@@ -14,9 +13,7 @@ import {
   TasksProgress,
   TotalProfit,
   LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
+  UsersByDevice
 } from "./components";
 
 const styles = theme => ({
@@ -25,7 +22,7 @@ const styles = theme => ({
   }
 });
 
-function mapStateToProps({ user }){
+function mapStateToProps({ user }) {
   return { user };
 }
 
@@ -37,24 +34,24 @@ class Dashboard extends Component {
     user: PropTypes.object
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     var active = this.props.user.active;
     this.state = { dataLoaded: !active, active };
-    if(active)
+    if (active)
       axios.post("/api/get_dashboard_data", { uid: this.props.user.uid })
         .then(res=>{
           console.log(res);
           this.setState({ ...res.data, dataLoaded: true });
-          if(res.data.error) throw res.data;
+          if (res.data.error) throw res.data;
         }).catch(res=>{
           this.setState({ error: true, errMsg: res.msg });
         });
   }
 
-  render(){
-    if(!this.state.active) return "GO Sign In";
-    if(!this.state.dataLoaded)
+  render() {
+    if (!this.state.active) return "GO Sign In";
+    if (!this.state.dataLoaded)
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
     const { classes } = this.props;
     const { user, probs } = this.state;
@@ -67,7 +64,8 @@ class Dashboard extends Component {
       const days = 1000 * 60 * 60 * 24;
       let curDate = Math.floor(new Date() / days),
         ACSet = new Set(), scoreMap = new Map(),
-        totalDays = curDate - Math.floor(new Date(user.submissions[0].timestamp) / days) + 1;
+        totalDays = user.submissions.length > 0 ?
+          curDate - Math.floor(new Date(user.submissions[0].timestamp) / days) + 1 : 1;
       data = {
         labels: Array.fromFn(totalDays, i => new Date(new Date() - i * days)
           .toLocaleDateString(undefined, { month: "short", day: "numeric" })
@@ -75,17 +73,17 @@ class Dashboard extends Component {
         ACs: Array.init(totalDays, 0),
         Subs: Array.init(totalDays, 0),
       };
-      for(let s of user.submissions.reverse()){
+      for (let s of user.submissions.reverse()) {
         s.timestamp = new Date(s.timestamp);
         var sDate = curDate - Math.floor(s.timestamp / days);
-        if(sDate === streak)streak++;
-        if(s.verdict === verdicts.AC){
+        if (sDate === streak)streak++;
+        if (s.verdict === verdicts.AC) {
           data.ACs[sDate]++;
           ACSet.add(s.pid);
           scoreMap.set(s.pid, Math.max(scoreMap.get(s.pid) || 0, s.score * s.problem.difficulty));
         }
-        if(s.timestamp < new Date() - 7 * days){
-          if(s.verdict === verdicts.AC)pastACs++;
+        if (s.timestamp < new Date() - 7 * days) {
+          if (s.verdict === verdicts.AC)pastACs++;
           pastSubs++;
         }
         data.Subs[sDate]++;
