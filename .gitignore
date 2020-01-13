@@ -1,0 +1,6 @@
+**/.DS_Store
+secrets.js
+addpage.sh
+package-lock.json
+node_modules
+data
