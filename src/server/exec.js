@@ -38,6 +38,7 @@ async function init(sid) {
   var compiler = new Compiler(sub.language);
   console.log("jizz");
   await compiler.compile(jid, sid);
+  console.log(`Finished compiling of submission No. ${sid}.`);
   var prob = await ProbDB.findByPk(sub.pid, { logging: false });
   return { jid, sub, prob };
 }
@@ -48,7 +49,6 @@ export async function exec(sid) {
   var uploader = new Uploader(sid);
   try {
     var { jid, sub, prob } = await init(sid);
-    console.log(`Finished compiling of submission No. ${sid}.`);
 
     var Comparator = getComparator(prob.testMethod),
       comparator   = new Comparator(prob.param),

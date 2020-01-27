@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import axios from "axios";
 //import { withSnackbar } from "notistack";
 
@@ -59,6 +59,10 @@ const styles = theme => ({
     "&:first-child": {
       paddingTop: 0
     }
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: "none",
   }
 });
 
@@ -162,7 +166,11 @@ class Submission extends Component {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell>{`${sub.pid} - ${sub.problem.title}`}</TableCell>
+                  <TableCell>
+                    <Link to={`/problem/${sub.pid}`} className={classes.link}>
+                      {`${sub.pid} - ${sub.problem.title}`}
+                    </Link>
+                  </TableCell>
                   <TableCell>{sub.user.handle}</TableCell>
                   <TableCell>{languages[sub.language].text}</TableCell>
                   <TableCell>{new Date(sub.createdAt).toLocaleString()}</TableCell>

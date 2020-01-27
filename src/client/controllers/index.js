@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -26,6 +26,8 @@ class Controller extends Component {
     /* FromState */
     inContest: PropTypes.bool.isRequired,
     user: PropTypes.object,
+    /* FromRouter */
+    history: PropTypes.object,
     /* FromDispatch */
     leave: PropTypes.func.isRequired,
     enter: PropTypes.func.isRequired,
@@ -39,8 +41,9 @@ class Controller extends Component {
   onEnter({ match }) {
     axios.post("/api/get-cont", { uid: this.props.user.uid, cid: match.params.cid })
       .then(res => {
-        if (res.error) return;
-        this.props.enter(res.data.cont);
+        if (res.error)
+          this.props.history.go(-1);
+        else this.props.enter(res.data.cont);
       });
     return null;
   }
@@ -56,4 +59,4 @@ class Controller extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Controller);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Controller));

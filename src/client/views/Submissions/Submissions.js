@@ -37,6 +37,7 @@ class Submissions extends Component {
     /* FromRouter */
     match: PropTypes.object
   }
+
   constructor(props) {
     super(props);
     this.state = { dataLoaded: false };
@@ -46,6 +47,7 @@ class Submissions extends Component {
         this.setState({ rows: res.data.subs, dataLoaded: true });
       });
   }
+
   render() {
     if (this.state.dataLoaded)
       return (

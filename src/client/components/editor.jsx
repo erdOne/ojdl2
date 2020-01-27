@@ -2,6 +2,8 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import cm from "codemirror";
 import "codemirror/mode/clike/clike";
+import "codemirror/mode/haskell/haskell";
+import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closebrackets.js";
 import "codemirror/addon/edit/matchbrackets.js";
 import "codemirror/lib/codemirror.css";
@@ -20,12 +22,13 @@ export default class Editor extends Component {
     readOnly: false
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.editorRef = React.createRef();
   }
+
   componentDidMount() {
-    if(!this.codeMirror){
+    if (!this.codeMirror) {
       this.codeMirror = cm.fromTextArea(this.editorRef.current, {
         lineNumbers: true,
         matchBrackets: true,
@@ -40,16 +43,18 @@ export default class Editor extends Component {
       });
     }
   }
-  componentDidUpdate(prevProps){
-    if(this.props.mode !== prevProps.mode)
+
+  componentDidUpdate(prevProps) {
+    if (this.props.mode !== prevProps.mode)
       this.codeMirror.setOption("mode", this.props.mode);
-    if(this.props.readOnly !== prevProps.readOnly)
+    if (this.props.readOnly !== prevProps.readOnly)
       this.codeMirror.setOption("readOnly", this.props.readOnly);
-    if(this.props.code !== prevProps.code)
-      if(this.props.code !== this.codeMirror.getDoc().getValue())
+    if (this.props.code !== prevProps.code)
+      if (this.props.code !== this.codeMirror.getDoc().getValue())
         this.codeMirror.getDoc().setValue(this.props.code);
 
   }
+
   render() {
     return (
       <div style={{ fontSize: "120%" }} className = {this.props.className}>

@@ -44,10 +44,10 @@ export default class Comparator {
         if (!this.compareTerm(a[i][j], b[i][j]))
           return [Codes.WA,
             `The ${ord(j + 1)} term of the ${ord(i + 1)} line of your output is incorrect.\n`
-            + "Your output is: \n"
-            + `${a[i][j]}\n`
-            + "But the correct output is \n"
-            + `${b[i][j]}\n.`
+            //+ "Your output is: \n"
+            //+ `${a[i][j]}\n`
+            //+ "But the correct output is \n"
+            //+ `${b[i][j]}\n`
           ];
     }
     return [Codes.AC, "OK"];

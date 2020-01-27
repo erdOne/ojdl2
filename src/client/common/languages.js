@@ -4,14 +4,35 @@ export default {
     id: "c++17",
     mode: "text/x-c++src",
     text: "C++17 (gcc)",
-    buildArgs: ["-e", "--processes=5", "--", "/usr/bin/g++", "-std=c++17", "main.cpp", "-o", "main.o"],
-    execArgs: ["--run", "--", "main.o"],
+    buildArgs: ["-e", "--processes=5", "--", "/usr/bin/g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
+    execArgs: ["--run", "--", "main.out"],
     source: "main.cpp",
-    executable: "main.o"
+    executable: "main.out"
   },
   "c": {
     id: "c",
     mode: "text/x-csrc",
-    text: "C99 (gcc)"
+    text: "C (gcc)",
+    buildArgs: ["-e", "--processes=5", "--", "/usr/bin/gcc", "main.c", "-o", "main.out"],
+    execArgs: ["--run", "--", "main.out"],
+    source: "main.c",
+    executable: "main.out"
+  },
+  "haskell": {
+    id: "haskell",
+    mode: "text/x-haskell",
+    text: "haskell (ghc)",
+    buildArgs: ["-e", "--processes=10", "--", "/usr/bin/ghc", "-dynamic", "-tmpdir", ".", "main.hs", "-o", "main.out"],
+    execArgs: ["--run", "--", "main.out"],
+    source: "main.hs",
+    executable: "main.out"
+  },
+  "js": {
+    id: "js",
+    mode: "text/javascript",
+    text: "javascript (node)",
+    execArgs: ["-e", "--processes=10", "--run", "--", "/usr/bin/node", "main.js"],
+    source: "main.js",
+    executable: "main.js"
   }
 };

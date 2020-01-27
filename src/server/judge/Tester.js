@@ -29,6 +29,7 @@ export default class Tester {
   constructor(lang) {
     this.lang = languages[lang];
   }
+
   async test({ jid, tid }, { timeLimit, memLimit }) {
     var { boxExec, boxClean } = await global.sandBoxQueue.request();
     timeLimit = parseInt(timeLimit); memLimit = parseInt(memLimit);
