@@ -1,0 +1,9 @@
+time:0.012
+time-wall:0.022
+max-rss:8904
+csw-voluntary:23
+csw-forced:3
+cg-mem:2000
+exitsig:9
+status:SG
+message:Caught fatal signal 9

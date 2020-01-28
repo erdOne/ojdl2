@@ -39,7 +39,7 @@ class Contests extends Component {
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Contests"
-          config={{ key: "cid", link: key=>`/contest/${key}` }} />
+          config={{ key: "cid", link: key=>`/contest/${key}/home` }} />
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);

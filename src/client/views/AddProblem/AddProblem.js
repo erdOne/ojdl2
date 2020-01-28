@@ -151,6 +151,7 @@ class Problem extends Component {
     formData.set("prob", JSON.stringify(this.getProb()));
     for (var file of this.fileUploadRef.current.files)
       formData.append(file.name, file);
+    return formData;
   }
 
   handleSubmit(e) {

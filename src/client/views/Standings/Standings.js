@@ -73,6 +73,9 @@ const chartOptions = {
       }
     }]
   },
+  datasets: {
+    line: { lineTension: 0 },
+  },
   plugins: {
     colorschemes: {
       scheme: "tableau.Classic20"

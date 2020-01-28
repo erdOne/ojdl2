@@ -59,7 +59,7 @@ const TotalProfit = props => {
               color="inherit"
               variant="h3"
             >
-              {totalScore.toString().replace(/(?<!^)(?=(?:\d{3})+$)/g, ",")}
+              {totalScore.toString().replace(/(.)(?=(\d{3})+$)/g, "$1,")}
             </Typography>
           </Grid>
           <Grid item>

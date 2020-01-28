@@ -69,6 +69,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
     "highlight.js": "^9.16.2",
+    "hsts": "^2.2.0",
     "jss": "^10.0.0",
     "jss-plugin-expand": "^10.0.0",
     "jss-preset-default": "^10.0.0",

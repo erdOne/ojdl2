@@ -58,7 +58,7 @@ class Submit extends Component {
           cid
         }).then(res => {
           if (res.error) throw new Error(res.errMsg);
-          else this.props.history.push(`../submission/${res.data.sid}`);
+          else this.props.history.push(`./submission/${res.data.sid}`);
         }).catch(err=>{
           this.setState({ error: true, errorMsg: err.message });
         });

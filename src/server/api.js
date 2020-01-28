@@ -137,12 +137,13 @@ export async function getProbs({ uid, cid }) {
 }
 
 export async function getProb({ uid, pid, cid }) {
-  var admin = isAdmin({ uid });
+  var admin = await isAdmin({ uid });
   if (!cid) {
     let prob = await ProbDB.findByPk(pid);
-    if (prob.visibility === "hidden" && !admin)
+    if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
-    if (!prob) throw "no such prob";
+console.log(prob.visibility, admin);    
+if (!prob) throw "no such prob";
     return { prob };
   } else {
     let { cont } = await getCont({ uid, cid }),
@@ -230,6 +231,7 @@ export async function addProb({ uid, prob }, files) {
     await ProbDB.update(prob, { where: { pid: prob.pid } });
   else
     prob = await ProbDB.create(prob);
+  fs.mkdirSync(`data/prob/${prob.pid}`, { recursive: true });
   if (files)
     for (let fileName in files)
       files[fileName].mv(`data/prob/${prob.pid}/${fileName}`);
@@ -248,7 +250,7 @@ export async function getSubs({ uid, cid }) {
     where: { cid: { [Op.in]: cids } },
     include: [
       { model: UserDB, attributes: ["handle"] },
-      { model: ProbDB, attributes: ["title"] }
+      { model: ProbDB, attributes: ["title"], required: true, ...visible(admin) }
     ]
   }) };
 }

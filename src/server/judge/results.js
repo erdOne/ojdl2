@@ -36,7 +36,7 @@ class ScoreResult extends GeneralResult {
   tryAC(score = 0) {
     if (this.verdict === verdicts.UN) {
       this.verdict = verdicts.AC;
-      this.score += score;
+      this.score += parseInt(score);
       return true;
     }
     return false;
@@ -72,7 +72,7 @@ export class Result extends ScoreResult {
   }
   endJudge(si, score) {
     if (this.subtaskResult[si].tryAC(score))
-      this.score += score;
+      this.score += parseInt(score);
   }
 }
 

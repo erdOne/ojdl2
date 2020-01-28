@@ -162,7 +162,7 @@ class SubtaskDisplay extends PureComponent {
     let no = this.props.no;
     this.props.onChange(s=>{
       s[no] = modifier(s[no]);
-      console.log(s);
+      //console.log(s);
       return s;
     });
   }
