@@ -82,12 +82,12 @@ const useStyles = makeStyles(theme => ({
 
 function EnhancedTable({ rows, columns, config, history, title }) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("sid");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === "desc";

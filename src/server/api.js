@@ -86,7 +86,7 @@ export async function getSub({ sid, uid, cid, withData }) {
 }
 
 function visible(admin) {
-  return admin ? {} : { visibility: "visible" };
+  return admin ? { visibility: { [Op.not]: "" } } : { visibility: "visible" };
 }
 
 
@@ -242,7 +242,7 @@ export async function addProb({ uid, prob }, files) {
 export async function getSubs({ uid, cid }) {
   var admin = await isAdmin({ uid });
   var cids = Array.from((await getConts({ uid })).conts)
-    .filter(c => admin || c.end < new Date())
+    .filter(c => admin || c.end < new Date() || c.cid === parseInt(cid))
     .map(c => c.cid)
     .concat(0)
     .filter(c => !cid || c === parseInt(cid));
@@ -250,7 +250,7 @@ export async function getSubs({ uid, cid }) {
     where: { cid: { [Op.in]: cids } },
     include: [
       { model: UserDB, attributes: ["handle"] },
-      { model: ProbDB, attributes: ["title"], required: true, ...visible(admin) }
+      { model: ProbDB, attributes: ["title"], required: true }
     ]
   }) };
 }
