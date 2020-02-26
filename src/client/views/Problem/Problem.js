@@ -35,10 +35,11 @@ const styles = theme => ({
       content: "counter(line)",
       display: "inline-block",
       borderRight: "1px solid #ddd",
+      textAlign: "right",
       width: 20,
-      padding: "0 .5em",
+      padding: "0 0.3em 0 0",
       marginRight: ".5em",
-      color: "#888",
+      color: "#888"
     }
   },
   labels: {
@@ -151,7 +152,7 @@ class Problem extends Component {
                     <pre className={classes.codeblock} style={{ marginBottom: 0 }}>
                       <span className={classes.labels}>
                         <span>Input</span>
-                        <span onClick={()=>copy(sample[1])}>Copy</span>
+                        <span onClick={()=>copy(sample[0])}>Copy</span>
                       </span>
                       <code>
                         {

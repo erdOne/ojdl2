@@ -317,3 +317,11 @@ export async function alterPost({ poid, uid, visibility }) {
   await PostDB.update({ visibility }, { where: { poid } });
   return null;
 }
+
+export async function getLastLanguage({ uid }) {
+  var lastSub = await SubDB.findOne({
+    order: [[sql.col("sid"), "DESC"]],
+    where: { uid: hashUidInDB(uid) }
+  });
+  return lastSub ? languages[lastSub.language] : null;
+}

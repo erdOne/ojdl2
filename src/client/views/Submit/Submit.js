@@ -72,6 +72,13 @@ class Submit extends Component {
       languages: Object.keys(languages).map(l => languages[l].text)
     };
     this.state = { problemsLoaded: false };
+    axios.post("/api/get_last_language", { uid })
+      .then(res => {
+        this.setState({ language: res.data.text });
+      })
+      .catch(err => {
+        this.setState({ error: true, errorMsg: err.message });
+      });
     axios.post("/api/get_probs", { cid, uid })
       .then(res=>{
         if (res.data.err) throw new Error(res.data.msg);
