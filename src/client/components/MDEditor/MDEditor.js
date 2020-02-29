@@ -3,8 +3,8 @@ import CM from "codemirror";
 import React, { Component } from "react";
 import { PropTypes } from "prop-types";
 import * as Icons from "./icons";
-import marked from "marked";
 import { withStyles } from "@material-ui/core/styles";
+import MDRenderer from "../MDRenderer";
 
 require("codemirror/mode/xml/xml");
 require("codemirror/mode/markdown/markdown");
@@ -12,12 +12,6 @@ require("codemirror/addon/edit/continuelist");
 
 import { getCursorState, applyFormat } from "./format";
 import styles from "./styles";
-
-
-function getMarkdownText(text) {
-  var rawMarkup = marked(text || "");
-  return { __html: rawMarkup };
-}
 
 function getOptions(options){
   return {
@@ -27,39 +21,6 @@ function getOptions(options){
     tabSize: "2",
     ...options
   };
-}
-
-class MDViewer extends Component {
-  static propTypes = {
-    html: PropTypes.string,
-    className: PropTypes.string
-  }
-  constructor(props){
-    super(props);
-    var pendingRender = 1;
-    this.componentDidUpdate = prevProps => {
-      if(prevProps.html !== this.props.html)
-        pendingRender++;
-    };
-    this.componentWillUnmount = () => {
-      clearInterval(this.renderID);
-    };
-    this.renderID = setInterval(()=>{
-      if(!pendingRender)return;
-      pendingRender = 0;
-      window.MathJax.startup.promise = window.MathJax.startup.promise.then(
-        ()=>window.MathJax.typesetPromise()
-      );
-    }, 200);
-  }
-
-  render(){
-    return (
-      <div className={this.props.className}
-        dangerouslySetInnerHTML={getMarkdownText(this.props.html)}
-      >
-      </div>);
-  }
 }
 
 class MDEditor extends Component {
@@ -177,7 +138,7 @@ class MDEditor extends Component {
             />
           </div>
         </div>
-        <MDViewer html={this.currentCodemirrorValue} className={this.props.classes.editorPreview} />
+        <MDRenderer source={this.currentCodemirrorValue} className={this.props.classes.editorPreview} />
       </div>
     );
   }

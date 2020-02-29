@@ -7,7 +7,7 @@ import { withSnackbar } from "notistack";
 
 import { Typography, CircularProgress, Button, Fab } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import ReactMarkdown from "react-markdown";
+import { MDRenderer } from "components";
 import { SubtaskDisplay } from "./components";
 
 const styles = theme => ({
@@ -102,6 +102,7 @@ class Problem extends Component {
   }
 
   componentDidUpdate() {
+/*
     try {
       window.MathJax.startup.promise = window.MathJax.startup.promise.then(
         ()=>window.MathJax.typesetPromise()
@@ -109,6 +110,7 @@ class Problem extends Component {
     } catch (e) {
       console.log("cannot typeset");
     }
+*/
   }
 
   render() {
@@ -143,7 +145,7 @@ class Problem extends Component {
             }
           </div>
           <Typography variant="body1" component="div" className={classes.text}>
-            <ReactMarkdown source={this.state.prob.content} />
+            <MDRenderer source={this.state.prob.content} />
             <h2>Samples: </h2>
             <div>
               {
@@ -184,7 +186,7 @@ class Problem extends Component {
                 <SubtaskDisplay subtask={{ ...s, no: i }} key={i}/>
               )
             }
-            <ReactMarkdown source={this.state.prob.note} />
+            <MDRenderer source={this.state.prob.note} />
             {this.state.prob.difficulty === undefined ? null :
               <div>
                 <Fab disabled classes={{ root: classes.fab, disabled: classes.disabled }}>

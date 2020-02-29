@@ -16,10 +16,10 @@ function mapStateToProps({ user, contest }) {
   return { user, contest };
 }
 
-function datasetFromData(start, subs) {
+function datasetFromData(start, end, subs) {
   var users = {}, ACprobs = new Set();
   subs.forEach(s => { s.timestamp = new Date(s.timestamp); });
-  for (let i of subs.sort((a, b) => a.timestamp - b.timestamp)) {
+  for (let i of subs.sort((a, b) => a.timestamp - b.timestamp).filter(s => s.timestamp <= end)) {
     var user = users[i.uid] ||= {
         user: i.user.handle,
         scoresT: [{ t: 0, y: 0 }],
@@ -42,6 +42,7 @@ function datasetFromData(start, subs) {
     }
   }
   var now = new Date() - start;
+  if (now > end - start) now = end - start;
   for (var uid in users)
     users[uid].scoresT.push({ t: now, y: users[uid].totalScore });
 
@@ -99,8 +100,9 @@ class Standings extends Component {
     axios.post("/api/get_subs", { uid: this.props.user.uid, cid: this.props.contest.cid })
       .then(res=>{
         console.log(res.data);
+        console.log(this.props.contest);
         this.setState({
-          data: datasetFromData(new Date(this.props.contest.start), res.data.subs),
+          data: datasetFromData(new Date(this.props.contest.start), new Date(this.props.contest.end), res.data.subs),
           dataLoaded: true
         });
       });
@@ -130,6 +132,7 @@ class Standings extends Component {
     this.columns.push({
       label: "總分", align: "right", numeric: true, disablePadding: false, id: "totalScore"
     });
+    console.log("columns =", this.columns);
     this.loadData();
   }
 
@@ -145,17 +148,21 @@ class Standings extends Component {
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
     else return (
       <>
-        <DataTable columns={this.columns} rows={this.state.data} title="Standings"
-          config={{ key: "user" }} />
-          <LineChart
-            data={{
-              datasets: this.state.data.map(u => ({
-                label: u.user,
-                data: u.scoresT
-              }))
-            }}
-            options={chartOptions}
-          />
+        <DataTable
+          columns={this.columns}
+          rows={this.state.data}
+          title="Standings"
+          config={{ key: "user" }}
+        />
+        <LineChart
+          data={{
+            datasets: this.state.data.map(u => ({
+              label: u.user,
+              data: u.scoresT
+            }))
+          }}
+          options={chartOptions}
+        />
       </>
     );
   }
