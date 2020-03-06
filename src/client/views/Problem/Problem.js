@@ -129,7 +129,7 @@ class Problem extends Component {
           <Typography variant="h2" style={{ marginBottom: 10 }}>
             {this.state.prob.title}
             <small style={{ fontSize: "", color: "gray" }}>
-              {" #" + pid}
+              {" #" + pid + (this.state.prob.subtitle==="" ? "" :  " - " + this.state.prob.subtitle)}
             </small>
           </Typography>
           <div className={classes.actions}>

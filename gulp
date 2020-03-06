@@ -11,11 +11,9 @@ const columns = [
   { id: "pid", align: "right", numeric: true,
     disablePadding: false, label: "#", style: { width: 75 } },
   { id: "title", align: "left", numeric: false, disablePadding: false, label: "題目",
-    display: prob => (<Link href={`./problem/${prob.pid}`} color="textPrimary"> {prob.title}  </Link>) },
+    display: row => (<Link href={`./problem/${row.pid}`} color="text"> {row.title}  </Link>) },
   { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "",
-    display: prob => (<small style={{ color: "gray" }}> {prob.subtitle} </small>) },
-  { id: "updatedAt", align: "left", numeric: false, disablePadding: false, label: "上次修改",
-    display: prob => new Date(prob.updatedAt).toLocaleString() }
+    display: row => (<small style={{ color: "gray" }}> {row.subtitle} </small>) } 
 ];
 
 function mapStateToProps({ user }) {

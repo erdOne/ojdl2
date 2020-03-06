@@ -128,7 +128,7 @@ export async function getCont({ uid, cid }) {
 export async function getProbs({ uid, cid }) {
   if (!cid) {
     var probs = await ProbDB.findAll({
-      attributes: ["pid", "title", "subtitle"],
+      attributes: ["pid", "title", "subtitle", "updatedAt"],
       where: visible(await isAdmin({ uid }))
     });
     return { probs };
