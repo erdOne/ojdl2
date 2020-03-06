@@ -129,8 +129,11 @@ class Problem extends Component {
           <Typography variant="h2" style={{ marginBottom: 10 }}>
             {this.state.prob.title}
             <small style={{ fontSize: "", color: "gray" }}>
-              {" #" + pid + (this.state.prob.subtitle==="" ? "" :  " - " + this.state.prob.subtitle)}
+              {" #" + pid}
             </small>
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+             {this.state.prob.subtitle}
           </Typography>
           <div className={classes.actions}>
             <Link to={`../submit/${pid}`} style={{ textDecoration: "none" }}>
