@@ -128,10 +128,9 @@ class Standings extends Component {
         .concat(this.props.contest.problems.map((prob, i) => ({
           label: `p${toChars(i)}`, align: "right", numeric: true, disablePadding: false, id: `${i}`,
           display: user => user.scoresP[prob.ppid]?.score || 0
-        })));
-    this.columns.push({
-      label: "總分", align: "right", numeric: true, disablePadding: false, id: "totalScore"
-    });
+        })))
+        .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true, disablePadding: false }]);
+
     console.log("columns =", this.columns);
     this.loadData();
   }
@@ -152,7 +151,7 @@ class Standings extends Component {
           columns={this.columns}
           rows={this.state.data}
           title="Standings"
-          config={{ key: "user" }}
+          config={{ key: "user", defaultOrder: "desc", defaultOrderBy: "totalScore" }}
         />
         <LineChart
           data={{

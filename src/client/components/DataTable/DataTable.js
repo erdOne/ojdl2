@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouterLink as Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Table,
   TableBody,
@@ -82,15 +82,17 @@ const useStyles = makeStyles(theme => ({
 
 function EnhancedTable({ rows, columns, config, history, title }) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("sid");
+  const [order, setOrder] = React.useState(config.defaultOrder || "");
+  const [orderBy, setOrderBy] = React.useState(config.defaultOrderBy || "");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [requestedSort, setRequestedSort] = React.useState(false);
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === "desc";
+    setRequestedSort(true);
     setOrder(isDesc ? "asc" : "desc");
     setOrderBy(property);
   }
@@ -140,17 +142,23 @@ function EnhancedTable({ rows, columns, config, history, title }) {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
               headCells={columns}
+              isRequestedSort={requestedSort}
             />
             <TableBody>
               {stableSort(rows, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row[config.key]);
+                  const onRowClick = evt => {
+                    if(!config.link) return;
+                    evt.preventDefault();
+                    history.push(config.link(row));
+                  };
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => config.link && history.push(config.link(row[config.key]))}
+                      //onClick={onRowClick}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -159,8 +167,10 @@ function EnhancedTable({ rows, columns, config, history, title }) {
                     >
                       {
                         columns.map((column, i) => (
-                          <TableCell {...(i ? {} : { component: "th", scope: "row" })}
-                            align={column.align} key={i}>
+                          <TableCell
+                            {...(i ? {} : { component: "th", scope: "row" })}
+                            align={column.align} key={i}
+                          >
                             {column.display ? column.display(row) : row[column.id]}
                           </TableCell>
                         ))

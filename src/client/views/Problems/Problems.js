@@ -42,7 +42,7 @@ class Problems extends Component {
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Problems"
-          config={{ key: "pid" }} />
+          config={{ key: "pid", defaultOrder: "asc", defaultOrderBy: "pid", link: prob => `./problem/${prob.pid}` }} />
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
