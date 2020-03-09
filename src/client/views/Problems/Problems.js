@@ -11,7 +11,7 @@ const columns = [
   { id: "pid", align: "right", numeric: true,
     disablePadding: false, label: "#", style: { width: 75 } },
   { id: "title", align: "left", numeric: false, disablePadding: false, label: "題目",
-    display: prob => (<Link href={`./problem/${prob.pid}`} color="textPrimary"> {prob.title}  </Link>) },
+    display: prob => prob.title },
   { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "",
     display: prob => (<small style={{ color: "gray" }}> {prob.subtitle} </small>) },
   { id: "updatedAt", align: "left", numeric: false, disablePadding: false, label: "上次修改",
@@ -22,6 +22,16 @@ function mapStateToProps({ user }) {
   return { user };
 }
 
+function typesetMath() {
+  try {
+    window.MathJax.startup.promise = window.MathJax.startup.promise.then(
+      ()=>window.MathJax.typesetPromise()
+    );
+  } catch (e) {
+      console.log("cannot typeset");
+  }
+}
+
 class Problems extends Component {
   static propTypes = {
     /* FromState */
@@ -29,6 +39,7 @@ class Problems extends Component {
     /* FromRouter */
     match: PropTypes.object
   }
+
   constructor(props) {
     super(props);
     this.state = { dataLoaded: false };
@@ -37,7 +48,9 @@ class Problems extends Component {
         console.log(res.data);
         this.setState({ rows: res.data.probs, dataLoaded: true });
       });
+    this.componentDidUpdate = this.componentDidMount = typesetMath;
   }
+
   render() {
     if (this.state.dataLoaded)
       return (
