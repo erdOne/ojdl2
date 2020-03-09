@@ -152,13 +152,14 @@ function EnhancedTable({ rows, columns, config, history, title }) {
                   const onRowClick = evt => {
                     if(!config.link) return;
                     evt.preventDefault();
-                    history.push(config.link(row));
+                    //history.push(config.link(row));
+                    window.open(config.link(row));
                   };
 
                   return (
                     <TableRow
                       hover
-                      //onClick={onRowClick}
+                      onClick={onRowClick}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

@@ -133,7 +133,7 @@ class Problem extends Component {
             </small>
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
-             {this.state.prob.subtitle}
+            {this.state.prob.subtitle || ""}
           </Typography>
           <div className={classes.actions}>
             <Link to={`../submit/${pid}`} style={{ textDecoration: "none" }}>
