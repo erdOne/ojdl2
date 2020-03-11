@@ -90,6 +90,18 @@ function EnhancedTable({ rows, columns, config, history, title }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [requestedSort, setRequestedSort] = React.useState(false);
 
+  React.useEffect(() => {
+    // typesetMath
+    try {
+      window.MathJax.startup.promise = window.MathJax.startup.promise.then(
+        ()=>window.MathJax.typesetPromise()
+      );
+    } catch (e) {
+      console.log("cannot typeset");
+    }
+  });
+
+
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === "desc";
     setRequestedSort(true);

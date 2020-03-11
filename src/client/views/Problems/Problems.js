@@ -22,16 +22,6 @@ function mapStateToProps({ user }) {
   return { user };
 }
 
-function typesetMath() {
-  try {
-    window.MathJax.startup.promise = window.MathJax.startup.promise.then(
-      ()=>window.MathJax.typesetPromise()
-    );
-  } catch (e) {
-      console.log("cannot typeset");
-  }
-}
-
 class Problems extends Component {
   static propTypes = {
     /* FromState */
@@ -48,7 +38,6 @@ class Problems extends Component {
         console.log(res.data);
         this.setState({ rows: res.data.probs, dataLoaded: true });
       });
-    this.componentDidUpdate = this.componentDidMount = typesetMath;
   }
 
   render() {
