@@ -126,14 +126,14 @@ class Problem extends Component {
       const { pid, ppid } = this.state.prob, inContest = !!this.props.match.params.cid;
       return (
         <div className={classes.root}>
-          <Typography variant="h2" style={{ marginBottom: 10 }}>
+          <Typography variant="h1" style={{ marginBottom: 10 }}>
             {this.state.prob.title}
             <small style={{ fontSize: "", color: "gray" }}>
               {" #" + pid}
             </small>
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
-            {this.state.prob.subtitle || ""}
+            {this.state.prob.subtitle}
           </Typography>
           <div className={classes.actions}>
             <Link to={`../submit/${pid}`} style={{ textDecoration: "none" }}>
@@ -148,8 +148,10 @@ class Problem extends Component {
             }
           </div>
           <Typography variant="body1" component="div" className={classes.text}>
-            <MDRenderer source={this.state.prob.content} />
-            <h2>Samples: </h2>
+            <big>
+              <MDRenderer source={this.state.prob.content} />
+              <h2>Samples: </h2>
+            </big>
             <div>
               {
                 this.state.prob.samples.map((sample, si) => (
@@ -189,7 +191,7 @@ class Problem extends Component {
                 <SubtaskDisplay subtask={{ ...s, no: i }} key={i}/>
               )
             }
-            <MDRenderer source={this.state.prob.note} />
+	    <big><MDRenderer source={this.state.prob.note} /></big>
             {this.state.prob.difficulty === undefined ? null :
               <div>
                 <Fab disabled classes={{ root: classes.fab, disabled: classes.disabled }}>

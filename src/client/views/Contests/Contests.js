@@ -12,9 +12,9 @@ const columns = [
     disablePadding: false, label: "#", style: { width: 75 } },
   { id: "title", align: "left", numeric: false, disablePadding: false, label: "競賽名稱" },
   { id: "start", align: "left", numeric: false, disablePadding: true, label: "開始時間",
-    display: sub=>new Date(sub.start).toLocaleString() },
+    display: cont=>new Date(cont.start).toLocaleString() },
   { id: "end", align: "left", numeric: false, disablePadding: true, label: "結束時間",
-    display: sub=>new Date(sub.end).toLocaleString() },
+    display: cont=>new Date(cont.end).toLocaleString() },
 ];
 
 function mapStateToProps({ user }) {
@@ -39,7 +39,7 @@ class Contests extends Component {
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Contests"
-          config={{ key: "cid", link: key=>`/contest/${key}/home` }} />
+          config={{ key: "cid", link: cont=>`/contest/${cont.cid}/home` }} />
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);

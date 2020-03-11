@@ -11,9 +11,9 @@ import verdicts from "common/verdicts";
 const columns = [
   { id: "sid", align: "right", numeric: true,
     disablePadding: true, label: "#", style: { width: 75 },
-    display: sub=>(<Link href={`./submission/${sub.sid}`} color="textPrimary"> {sub.sid} </Link>) },
+    display: sub=>sub.sid },
   { id: "pid", align: "left", numeric: false, disablePadding: true, label: "題目",
-    display: sub=>(<Link href={`./problem/${sub.pid}`} color="textPrimary"> {`${sub.pid} - ${sub.problem.title}`} </Link>)},
+    display: sub=>`${sub.pid} - ${sub.problem.title}`},
   { id: "handle", align: "left", numeric: false, disablePadding: true, label: "上傳者",
     display: sub=>sub.user.handle },
   { id: "time", align: "right", numeric: true, disablePadding: true, label: "時間(ms)" },
