@@ -317,6 +317,10 @@ class TestSuiteDisplay extends PureComponent {
       <Paper className={classes.paper}>
         <Typography variant="h3" style={{ marginBottom: 10 }}>
         Test suite
+          <Button onClick={this.props.downloadTestSuites} className={classes.buttons}
+            variant="contained" color="primary">
+            Download
+          </Button>
           <Button onClick={()=>this.addSubtask()} className={classes.buttons}
             variant="contained" color="primary">
             Add subtask

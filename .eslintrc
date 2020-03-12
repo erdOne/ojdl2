@@ -101,6 +101,9 @@
         "strict": [2, "function"],
         "yoda": [2, "never"],
         "max-len": [2, {"code": 100}],
+        "max-lines": 2,
+        "max-params": 2,
+        "max-lines-per-function": 2,
         "react/jsx-key": 0,
         "react/display-name": 0
     }
