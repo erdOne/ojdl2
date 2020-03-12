@@ -91,6 +91,7 @@ function EnhancedTable({ rows, columns, config, history, title }) {
   const [requestedSort, setRequestedSort] = React.useState(false);
 
   React.useEffect(() => {
+    if(!config.typesetMath) return;
     // typesetMath
     try {
       window.MathJax.startup.promise = window.MathJax.startup.promise.then(
@@ -100,7 +101,6 @@ function EnhancedTable({ rows, columns, config, history, title }) {
       console.log("cannot typeset");
     }
   });
-
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === "desc";

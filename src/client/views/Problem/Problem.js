@@ -122,89 +122,88 @@ class Problem extends Component {
     };
     if (this.state.error)
       return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
-    else if (this.state.dataLoaded) {
-      const { pid, ppid } = this.state.prob, inContest = !!this.props.match.params.cid;
-      return (
-        <div className={classes.root}>
-          <Typography variant="h1" style={{ marginBottom: 10 }}>
-            {this.state.prob.title}
-            <small style={{ fontSize: "", color: "gray" }}>
-              {" #" + pid}
-            </small>
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {this.state.prob.subtitle}
-          </Typography>
-          <div className={classes.actions}>
-            <Link to={`../submit/${pid}`} style={{ textDecoration: "none" }}>
-              <Button variant="contained" color="primary">Submit</Button>
-            </Link>
-            {this.props.user.isAdmin &&
-              <Link to={`/edit/problem/${inContest ? ppid : pid}`}
-                style={{ textDecoration: "none", margin: 10 }}
-              >
-                <Button variant="contained" color="primary">Edit</Button>
-              </Link>
-            }
-          </div>
-          <Typography variant="body1" component="div" className={classes.text}>
-            <big>
-              <MDRenderer source={this.state.prob.content} />
-              <h2>Samples: </h2>
-            </big>
-            <div>
-              {
-                this.state.prob.samples.map((sample, si) => (
-                  <div style={{ marginBottom: 10 }} key={si}>
-                    <pre className={classes.codeblock} style={{ marginBottom: 0 }}>
-                      <span className={classes.labels}>
-                        <span>Input</span>
-                        <span onClick={()=>copy(sample[0])}>Copy</span>
-                      </span>
-                      <code>
-                        {
-                          sample[0].split("\n").map((x, i) => (
-                            [<span key={`Sample${si}-Input${i}`}>{x}</span>, <br key={i} />]
-                          ))
-                        }
-                      </code>
-                    </pre>
-                    <pre className={classes.codeblock} style={{ borderTop: 0, marginTop: 0 }}>
-                      <span className={classes.labels}>
-                        <span>Output</span>
-                        <span onClick={()=>copy(sample[1])}>Copy</span>
-                      </span>
-                      <code>
-                        {
-                          sample[1].split("\n").map((x, i) => (
-                            [<span key={`Sample${si}-Output${i}`}>{x}</span>, <br key={i} />]
-                          ))
-                        }
-                      </code>
-                    </pre>
-                  </div>
-                ))
-              }
-            </div>
-            {
-              this.state.prob.testSuite.map((s, i) =>
-                <SubtaskDisplay subtask={{ ...s, no: i }} key={i}/>
-              )
-            }
-	    <big><MDRenderer source={this.state.prob.note} /></big>
-            {this.state.prob.difficulty === undefined ? null :
-              <div>
-                <Fab disabled classes={{ root: classes.fab, disabled: classes.disabled }}>
-                  {this.state.prob.difficulty}
-                </Fab>
-              </div>
-            }
-          </Typography>
-        </div>
-      );
-    } else
+    if (!this.state.dataLoaded)
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
 
+    const { pid, ppid } = this.state.prob, inContest = !!this.props.match.params.cid;
+    return (
+      <div className={classes.root}>
+        <Typography variant="h1" style={{ marginBottom: 10 }}>
+          {this.state.prob.title}
+          <small style={{ fontSize: "", color: "gray" }}>
+            {" #" + pid}
+          </small>
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          {this.state.prob.subtitle}
+        </Typography>
+        <div className={classes.actions}>
+          <Link to={`../submit/${pid}`} style={{ textDecoration: "none" }}>
+            <Button variant="contained" color="primary">Submit</Button>
+          </Link>
+          {this.props.user.isAdmin &&
+            <Link to={`/edit/problem/${inContest ? ppid : pid}`}
+              style={{ textDecoration: "none", margin: 10 }}
+            >
+              <Button variant="contained" color="primary">Edit</Button>
+            </Link>
+          }
+        </div>
+        <Typography variant="body1" component="div" className={classes.text}>
+          <big>
+            <MDRenderer source={this.state.prob.content} />
+            <h2>Samples: </h2>
+          </big>
+          <div>
+            {
+              this.state.prob.samples.map((sample, si) => (
+                <div style={{ marginBottom: 10 }} key={si}>
+                  <pre className={classes.codeblock} style={{ marginBottom: 0 }}>
+                    <span className={classes.labels}>
+                      <span>Input</span>
+                      <span onClick={()=>copy(sample[0])}>Copy</span>
+                    </span>
+                    <code>
+                      {
+                        sample[0].split("\n").map((x, i) => (
+                          [<span key={`Sample${si}-Input${i}`}>{x}</span>, <br key={i} />]
+                        ))
+                      }
+                    </code>
+                  </pre>
+                  <pre className={classes.codeblock} style={{ borderTop: 0, marginTop: 0 }}>
+                    <span className={classes.labels}>
+                      <span>Output</span>
+                      <span onClick={()=>copy(sample[1])}>Copy</span>
+                    </span>
+                    <code>
+                      {
+                        sample[1].split("\n").map((x, i) => (
+                          [<span key={`Sample${si}-Output${i}`}>{x}</span>, <br key={i} />]
+                        ))
+                      }
+                    </code>
+                  </pre>
+                </div>
+              ))
+            }
+          </div>
+          {
+            this.state.prob.testSuite.map((s, i) =>
+              <SubtaskDisplay subtask={{ ...s, no: i }} key={i}/>
+            )
+          }
+          <big><MDRenderer source={this.state.prob.note} /></big>
+          {this.state.prob.difficulty === undefined ? null :
+            <div>
+              <Fab disabled classes={{ root: classes.fab, disabled: classes.disabled }}>
+                {this.state.prob.difficulty}
+              </Fab>
+            </div>
+          }
+        </Typography>
+      </div>
+    );
   }
 }
 

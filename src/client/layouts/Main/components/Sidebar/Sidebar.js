@@ -80,8 +80,8 @@ class Sidebar extends React.Component {
     console.log("oops rendered");
     if (!display) return null;
     const { contest } = this.props,
-      pathPrefix = contest.inContest&&!clean ? `/contest/${contest.cid}` : "";
-    if (!exact && other.href !== undefined)other.href = pathPrefix + other.href;
+      pathPrefix = contest.inContest && !clean ? `/contest/${contest.cid}` : "";
+    if ((!exact && other.href !== undefined) || contest.cid===undefined) other.href = pathPrefix + other.href;
     return <SidebarItem {...other} />;
   }
 

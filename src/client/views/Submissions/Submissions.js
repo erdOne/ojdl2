@@ -53,7 +53,14 @@ class Submissions extends Component {
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Submissions"
-          config={{ key: "sid", defaultOrder: "desc", defaultOrderBy: "sid", link: sub => `./submission/${sub.sid}` }} />
+          config={{
+            key: "sid",
+            defaultOrder: "desc",
+            defaultOrderBy: "sid",
+            link: sub => `./submission/${sub.sid}`,
+            typesetMath: true
+          }}
+        />
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);

@@ -37,18 +37,29 @@ class Problems extends Component {
       .then(res=>{
         console.log(res.data);
         this.setState({ rows: res.data.probs, dataLoaded: true });
+      })
+      .catch(res=>{
+        this.setState({ error: true, errMsg: res.msg });
       });
   }
 
   render() {
-    if (this.state.dataLoaded)
-      return (
-        <DataTable columns={columns} rows={this.state.rows} title="Problems"
-          config={{ key: "pid", defaultOrder: "asc", defaultOrderBy: "pid", link: prob => `./problem/${prob.pid}` }} />
-      );
-    else
+    if (this.state.error)
+      return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
+    if (!this.state.dataLoaded)
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
 
+    return (
+      <DataTable columns={columns} rows={this.state.rows} title="Problems"
+        config={{
+          key: "pid",
+          defaultOrder: "asc",
+          defaultOrderBy: "pid",
+          link: prob => `./problem/${prob.pid}`,
+          typesetMath: true
+        }}
+      />
+    );
   }
 }
 
