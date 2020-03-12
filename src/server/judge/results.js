@@ -75,6 +75,8 @@ export class Result extends ScoreResult {
   addResult(si, ti, result) {
     this.subtaskResult[si].addResult(ti, result);
     this.update(result);
+    if (isNaN(result.memory) || isNaN(result.time))
+      console.log(si, ti, result);
   }
 
   endJudge(si, score) {
@@ -87,6 +89,7 @@ export class Result extends ScoreResult {
 
 export class ErrorResult extends Result {
   constructor(e) {
+    console.log("construct jizz", e);
     super({
       verdict: e[0] === "Compile" ? verdicts.CE : verdicts.SE,
       msg: e[0] === undefined ? fullError(e) : `${e[0]} error exited with code ${e[1]}\n${e[2]}`

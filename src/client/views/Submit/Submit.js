@@ -15,7 +15,8 @@ function mapStateToProps({ user }) {
 }
 
 function findLanguageFromText(text) {
-  return languages[Object.keys(languages).find(l=>languages[l].text === text)] || {};
+  const lang = Object.keys(languages).find(l => languages[l].text === text);
+  return languages[lang];
 }
 
 class Submit extends Component {
@@ -58,7 +59,9 @@ class Submit extends Component {
           cid
         }).then(res => {
           if (res.error) throw new Error(res.errMsg);
-          else this.props.history.push(`../submission/${res.data.sid}`);
+          else {
+            this.props.history.push(`${this.props.match.params.pid ? '..' : '.'}/submission/${res.data.sid}`);
+          }
         }).catch(err=>{
           this.setState({ error: true, errorMsg: err.message });
         });
@@ -69,6 +72,13 @@ class Submit extends Component {
       languages: Object.keys(languages).map(l => languages[l].text)
     };
     this.state = { problemsLoaded: false };
+    axios.post("/api/get_last_language", { uid })
+      .then(res => {
+        this.setState({ language: res.data.text });
+      })
+      .catch(err => {
+        this.setState({ error: true, errorMsg: err.message });
+      });
     axios.post("/api/get_probs", { cid, uid })
       .then(res=>{
         if (res.data.err) throw new Error(res.data.msg);
@@ -84,13 +94,14 @@ class Submit extends Component {
   }
 
   render() {
+    const lang = findLanguageFromText(this.state.language);
     if (this.state.error)
       return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
     else if (this.state.problemsLoaded)
       return (<SubmitDisplay {...this.innerProps}
         problemSelected = {this.state.problem}
         languageSelected = {this.state.language} editorMode={
-          findLanguageFromText(this.state.language).mode || "text/plain"
+          lang ? lang.mode : "text/plain"
         } />);
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);

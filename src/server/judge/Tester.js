@@ -21,6 +21,8 @@ function statusToErrCode(exitsig, msg) {
   if (msg === "Time limit exceeded\n") return verdicts.TLE;
   if (msg === "Caught fatal signal 9\n") return verdicts.MLE;
   if (msg === "Caught fatal signal 11\n") return verdicts.SF;
+  if (exitsig === 2) throw new Error(msg);
+  //console.log(exitsig, msg);
   if (exitsig) return verdicts.RE;
   return verdicts.UN;
 }

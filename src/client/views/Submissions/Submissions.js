@@ -3,16 +3,17 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { CircularProgress } from "@material-ui/core";
+import { Link, CircularProgress } from "@material-ui/core";
 
 import DataTable from "components/DataTable";
 import verdicts from "common/verdicts";
 
 const columns = [
   { id: "sid", align: "right", numeric: true,
-    disablePadding: true, label: "#", style: { width: 75 } },
+    disablePadding: true, label: "#", style: { width: 75 },
+    display: sub=>sub.sid },
   { id: "pid", align: "left", numeric: false, disablePadding: true, label: "題目",
-    display: sub=>`${sub.pid} - ${sub.problem.title}` },
+    display: sub=>`${sub.pid} - ${sub.problem.title}`},
   { id: "handle", align: "left", numeric: false, disablePadding: true, label: "上傳者",
     display: sub=>sub.user.handle },
   { id: "time", align: "right", numeric: true, disablePadding: true, label: "時間(ms)" },
@@ -52,7 +53,14 @@ class Submissions extends Component {
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Submissions"
-          config={{ key: "sid", link: key=>`submission/${key}` }} />
+          config={{
+            key: "sid",
+            defaultOrder: "desc",
+            defaultOrderBy: "sid",
+            link: sub => `./submission/${sub.sid}`,
+            typesetMath: true
+          }}
+        />
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);

@@ -271,20 +271,20 @@ ContDB.hasMany(PostDB, { foreignKey: "cid" });
 PostDB.belongsTo(ContDB, { foreignKey: "cid" });
 PostDB.belongsTo(UserDB, { foreignKey: "uid" });
 
-ContDB.findOrCreate({ where: { cid: 0, start: new Date(0), end: new Date(0) } });
+//ContDB.findOrCreate({ where: { cid: 0, start: new Date(0), end: new Date(0) } });
 
 var prob;
 
 export async function init() {
-  //UserDB.sync({ force: true });
-  //SubDB.sync({ force: true });
+//  UserDB.sync({ force: true });
+  SubDB.sync({ force: true });
   PostDB.sync({ force: true });
-  ProbDB.sync({ force: true })
-    .then(()=>ProbDB.create(prob));
-  ContDB.sync({ force: true })
-    .then(()=>
-      ContDB.findOrCreate({ where: { cid: 0, start: new Date(0), end: new Date(0) } })
-    );
+//  ProbDB.sync({ force: true })
+  //  .then(()=>ProbDB.create(prob));
+ // ContDB.sync({ force: true })
+   // .then(()=>
+     // ContDB.create({ where: { cid: 0, start: new Date(0), end: new Date(0) } })
+    //);
 }
 
 //init();
@@ -311,4 +311,5 @@ prob = {
   testSuite: JSON.parse("[{\"tid\":1,\"description\":\"$n \\\\leq 5 $\",\"score\":10,\"testcases\":[{\"tid\":1,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":2,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":3,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":4,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":5,\"timeLimit\":1000,\"memLimit\":4096}]},{\"tid\":2,\"description\":\"$n \\\\leq 50 $\",\"score\":20,\"testcases\":[{\"tid\":6,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":7,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":8,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":9,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":10,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":11,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":12,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":13,\"timeLimit\":1000,\"memLimit\":4096}]},{\"tid\":3,\"description\":\"$n \\\\leq 200$\",\"score\":20,\"testcases\":[{\"tid\":14,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":15,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":16,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":17,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":18,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":19,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":20,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":21,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":22,\"timeLimit\":1000,\"memLimit\":4096}]},{\"tid\":4,\"description\":\"$n \\\\leq 500$\",\"score\":50,\"testcases\":[{\"tid\":23,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":24,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":25,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":26,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":27,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":28,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":29,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":30,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":31,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":32,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":33,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":34,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":35,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":36,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":37,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":38,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":39,\"timeLimit\":1000,\"memLimit\":4096},{\"tid\":40,\"timeLimit\":1000,\"memLimit\":4096}]}]"),
   testMethod: "string"
 };
+//ProbDB.create(prob);
 //*/

@@ -7,7 +7,7 @@ import { withSnackbar } from "notistack";
 
 import { Typography, CircularProgress, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import ReactMarkdown from "react-markdown";
+import { MDRenderer } from "components";
 
 const styles = theme => ({
   codeblock: {
@@ -118,7 +118,7 @@ class Contest extends Component {
           }
         </div>
         <Typography variant="body1" component="div" className={classes.text}>
-          <ReactMarkdown source={this.state.cont.content} />
+          <MDRenderer source={this.state.cont.content} />
         </Typography>
       </div>
     );

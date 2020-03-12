@@ -76,12 +76,12 @@ class Sidebar extends React.Component {
     this.handleLeave = this.handleLeave.bind(this);
   }
 
-  Item({ display = true, exact = false, ...other }) {
+  Item({ display = true, exact = false, clean = false, ...other }) {
     console.log("oops rendered");
     if (!display) return null;
     const { contest } = this.props,
-      pathPrefix = contest.inContest ? `/contest/${contest.cid}` : "";
-    if (!exact && other.href !== undefined)other.href = pathPrefix + other.href;
+      pathPrefix = contest.inContest && !clean ? `/contest/${contest.cid}` : "";
+    if ((!exact && other.href !== undefined) || contest.cid===undefined) other.href = pathPrefix + other.href;
     return <SidebarItem {...other} />;
   }
 
@@ -117,7 +117,7 @@ class Sidebar extends React.Component {
         </div>
         <Divider />
         <List>
-          <Item href="" icon={<Home />} title="Home" display={inContest} />
+          <Item href="/home" icon={<Home />} title="Home" display={inContest} />
           <Item href="/dashboard" icon={<Dashboard />} title="Dashboard" display={!inContest} />
           <Item href="/bulletin" icon={<Chat />} title="Bulletin" display={inContest} />
           <Item href="/problems" icon={<Assignment />} title="Problems" />
@@ -127,13 +127,13 @@ class Sidebar extends React.Component {
           <Item exact href="/" icon={<ArrowBack />} title="Leave Contest" display={inContest} />
           <Item href="/contests" icon={<GolfCourse />} title="Contests" display={!inContest} />
           { isAdmin ? <Divider /> : null }
-          <Item exact href="/add/problem" icon={<Edit />} title="Add problem" display={isAdmin} />
-          <Item exact href="/add/contest" icon={<Add />} title="Add contest" display={isAdmin} />
+          <Item exact href="/add/problem" icon={<Edit />} title="Add problem" display={Boolean(isAdmin)} />
+          <Item exact href="/add/contest" icon={<Add />} title="Add contest" display={Boolean(isAdmin)} />
           <Divider />
-          <Item exact href="/account" icon={<Person />} title="Profile" display={isActive} />
+          <Item exact href="/account" icon={<Person />} title="Profile" display={isActive} clean />
           <Item onClick={this.handleLeave} icon={<Cancel />} title="Sign out" display={isActive} />
-          <Item href="/sign-in" icon={<ExitToApp />} title="Sign in" display={!isActive} />
-          <Item href="/sign-up" icon={<FiberNew />} title="Sign up" display={!isActive} />
+          <Item href="/sign-in" icon={<ExitToApp />} title="Sign in" display={!isActive} clean />
+          <Item href="/sign-up" icon={<FiberNew />} title="Sign up" display={!isActive} clean />
         </List>
       </Drawer>
     );

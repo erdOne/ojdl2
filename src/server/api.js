@@ -86,7 +86,7 @@ export async function getSub({ sid, uid, cid, withData }) {
 }
 
 function visible(admin) {
-  return admin ? {} : { visibility: "visible" };
+  return admin ? { visibility: { [Op.not]: "" } } : { visibility: "visible" };
 }
 
 
@@ -128,7 +128,7 @@ export async function getCont({ uid, cid }) {
 export async function getProbs({ uid, cid }) {
   if (!cid) {
     var probs = await ProbDB.findAll({
-      attributes: ["pid", "title", "subtitle"],
+      attributes: ["pid", "title", "subtitle", "updatedAt"],
       where: visible(await isAdmin({ uid }))
     });
     return { probs };
@@ -137,12 +137,13 @@ export async function getProbs({ uid, cid }) {
 }
 
 export async function getProb({ uid, pid, cid }) {
-  var admin = isAdmin({ uid });
+  var admin = await isAdmin({ uid });
   if (!cid) {
     let prob = await ProbDB.findByPk(pid);
-    if (prob.visibility === "hidden" && !admin)
+    if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
-    if (!prob) throw "no such prob";
+console.log(prob.visibility, admin);    
+if (!prob) throw "no such prob";
     return { prob };
   } else {
     let { cont } = await getCont({ uid, cid }),
@@ -241,7 +242,7 @@ export async function addProb({ uid, prob }, files) {
 export async function getSubs({ uid, cid }) {
   var admin = await isAdmin({ uid });
   var cids = Array.from((await getConts({ uid })).conts)
-    .filter(c => admin || c.end < new Date())
+    .filter(c => admin || c.end < new Date() || c.cid === parseInt(cid))
     .map(c => c.cid)
     .concat(0)
     .filter(c => !cid || c === parseInt(cid));
@@ -249,7 +250,7 @@ export async function getSubs({ uid, cid }) {
     where: { cid: { [Op.in]: cids } },
     include: [
       { model: UserDB, attributes: ["handle"] },
-      { model: ProbDB, attributes: ["title"] }
+      { model: ProbDB, attributes: ["title"], required: true }
     ]
   }) };
 }
@@ -315,4 +316,12 @@ export async function alterPost({ poid, uid, visibility }) {
   if (!await isAdmin({ uid })) throw "you have no permission";
   await PostDB.update({ visibility }, { where: { poid } });
   return null;
+}
+
+export async function getLastLanguage({ uid }) {
+  var lastSub = await SubDB.findOne({
+    order: [[sql.col("sid"), "DESC"]],
+    where: { uid: hashUidInDB(uid) }
+  });
+  return lastSub ? languages[lastSub.language] : null;
 }

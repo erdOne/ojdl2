@@ -55,12 +55,12 @@ export async function exec(sid) {
       tester       = new Tester(sub.language),
       judger       = new Judger(tester, comparator, uploader);
 
-    judger.judge(jid, prob.testSuite);
+    await judger.judge(jid, prob.testSuite);
   } catch (e) {
     console.error(e);
-    uploader.upload(new ErrorResult(e));
+    await uploader.upload(new ErrorResult(e));
   }
-  fs.unlink(`${workdir}/${jid}`, () => {});
+  fs.rmdir(`${workdir}/${jid}`, { recursive: true },  console.error);
   console.log(`Finished judging on submission No. ${sid}.`);
 }
 
