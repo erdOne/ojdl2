@@ -24,64 +24,8 @@ import { Delete as DeleteIcon } from "@material-ui/icons";
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
 
 import { MDEditor } from "components";
+import styles from "./styles";
 
-const styles = theme => ({
-  text: {
-    "& > p": {
-      marginBottom: 30,
-      marginTop: 10
-    }
-  },
-  actions: {
-    position: "absolute",
-    top: 0,
-    right: 0
-  },
-  buttons: {
-    margin: theme.spacing(0, 1)
-  },
-  root: {
-    position: "relative"
-  },
-  textField: {
-    margin: theme.spacing(1, 1),
-    width: "max(200px, 25vw)",
-    fallbacks: {
-      width: 200
-    }
-  },
-  textFieldHalf: {
-    margin: theme.spacing(1, 1),
-    width: `calc(50% - 2 * ${theme.spacing(1)}px)`
-  },
-  textFieldThird: {
-    margin: theme.spacing(1, 1),
-    width: `calc(33% - 2 * ${theme.spacing(1)}px)`
-  },
-  hidden: {
-    display: "none"
-  },
-  paper: {
-    padding: theme.spacing(1, 1),
-    margin: theme.spacing(3, 2),
-    background: "none"
-  },
-  sliderContainer: {
-    width: "40%",
-    margin: theme.spacing(0, 1)
-  },
-  listItemText: {
-    display: "flex",
-    alignItems: "baseline"
-  },
-  title: {
-    margin: theme.spacing(1, 1, -2, 1)
-  },
-  listItem: {
-    paddingBottom: 0,
-    paddingTop: 0
-  }
-});
 
 function mapStateToProps({ user }) {
   return { user };

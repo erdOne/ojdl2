@@ -34,7 +34,11 @@ class FloatComparator extends Comparator {
   }
 }
 
+<<<<<<< HEAD
+class MultipleComparator extends Comparator {
+=======
 class MultipleComparator extends StringComparator {
+>>>>>>> dc191a205b2c8326a20589cc06f5e26a2cf972e1
   async compareOutput(jid, tid) {
     var userOut = await readOutput(`${workdir}/${jid}/${tid}.xout`),
       correctOut = await readOutput(`${workdir}/${jid}/${tid}.out`),

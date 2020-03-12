@@ -30,57 +30,25 @@ class Submit extends Component {
     /* FromRouter */
     history: PropTypes.object
   }
+
   constructor(props) {
     super(props);
     const { cid = 0 } = this.props.match.params,
       { uid } = this.props.user;
+
     this.innerProps = {
-      handleSubmit: () => {
-        if (!this.props.user.active) {
-          this.props.enqueueSnackbar("請先登入再上傳唷");
-          return;
-        }
-        var lang = findLanguageFromText(this.state.language);
-        if (!lang) {
-          this.props.enqueueSnackbar("請選擇語言");
-          return;
-        }
-        var pid = this.state.problem.match(/.+?(?= - )/);
-        if (!pid) {
-          this.props.enqueueSnackbar("請選擇題目");
-          return;
-        }
-        pid = pid[0];
-        axios.post("/api/submit", {
-          pid,
-          language: lang.id,
-          code: this.state.code,
-          uid,
-          cid
-        }).then(res => {
-          if (res.error) throw new Error(res.errMsg);
-          else {
-            this.props.history.push(`${this.props.match.params.pid ? '..' : '.'}/submission/${res.data.sid}`);
-          }
-        }).catch(err=>{
-          this.setState({ error: true, errorMsg: err.message });
-        });
-      },
-      handleChange: key => value =>
-        this.setState({ [key]: value })
-      ,
+      handleSubmit: this.handleSubmit.bind(this),
+      handleChange: key => value => this.setState({ [key]: value }),
       languages: Object.keys(languages).map(l => languages[l].text)
     };
     this.state = { problemsLoaded: false };
+
     axios.post("/api/get_last_language", { uid })
-      .then(res => {
-        this.setState({ language: res.data.text });
-      })
-      .catch(err => {
-        this.setState({ error: true, errorMsg: err.message });
-      });
+      .then(res => this.setState({ language: res.data.text }))
+      .catch(err => this.setState({ error: true, errorMsg: err.message }));
+
     axios.post("/api/get_probs", { cid, uid })
-      .then(res=>{
+      .then(res => {
         if (res.data.err) throw new Error(res.data.msg);
         console.log(res.data);
         var problemDisplay = prob => prob ? `${prob.pid} - ${prob.title}` : "";
@@ -88,9 +56,32 @@ class Submit extends Component {
         this.setState({ problemsLoaded: true, problem: problemDisplay(
           res.data.probs.find(({ pid }) => pid.toString() === this.props.match.params.pid)
         ) });
-      }).catch(err=>{
-        this.setState({ error: true, errorMsg: err.message });
-      });
+      })
+      .catch(err => this.setState({ error: true, errorMsg: err.message }));
+  }
+
+  handleSubmit() {
+    const { cid = 0 } = this.props.match.params,
+      { uid } = this.props.user,
+      { code } = this.state;
+    if (!this.props.user.active)
+      return void this.props.enqueueSnackbar("請先登入再上傳唷");
+    var lang = findLanguageFromText(this.state.language);
+    if (!lang)
+      return void this.props.enqueueSnackbar("請選擇語言");
+    var pid = this.state.problem.match(/.+?(?= - )/);
+    if (!pid)
+      return void this.props.enqueueSnackbar("請選擇題目");
+    pid = pid[0];
+    axios.post("/api/submit", { pid, uid, cid, language: lang.id, code })
+      .then(res => {
+        if (res.error) throw new Error(res.errMsg);
+        else this.props.history.push(
+          `${this.props.match.params.pid ? ".." : "."}/submission/${res.data.sid}`
+        );
+      })
+      .catch(err => this.setState({ error: true, errorMsg: err.message }));
+    return void 0;
   }
 
   render() {

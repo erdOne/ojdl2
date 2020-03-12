@@ -10,27 +10,27 @@ import {
   DialogContent
 } from "@material-ui/core";
 
-class EditAllDialog extends Component{
+class EditAllDialog extends Component {
 
   static propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func.isRequired
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = { open: this.props.open, timeLimit: "", memLimit: "" };
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
   }
 
-  componentDidUpdate(prevprops){
-    if(prevprops.open !== this.props.open){
+  componentDidUpdate(prevprops) {
+    if (prevprops.open !== this.props.open) {
       this.setState({ open: this.props.open });
-      if(this.props.open)this.setState({ timeLimit: "", memLimit: "" });
+      if (this.props.open) this.setState({ timeLimit: "", memLimit: "" });
     }
   }
 
-  render(){
+  render() {
     var { onClose, open } = this.props;
     var val = e => e.target.value;
     return (

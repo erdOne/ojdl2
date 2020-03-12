@@ -44,19 +44,19 @@ const styles = theme => ({
   }
 });
 
-class SubtaskDisplay extends Component{
+class SubtaskDisplay extends Component {
   static propTypes = {
     subtask: PropTypes.object,
     /* FromStyle */
     classes: PropTypes.object
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = { expanded: false };
   }
 
-  render(){
+  render() {
     const { classes, subtask } = this.props;
     const { expanded } = this.state;
     return (

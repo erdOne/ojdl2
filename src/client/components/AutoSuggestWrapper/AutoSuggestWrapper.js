@@ -4,7 +4,11 @@ import Autosuggest from "react-autosuggest";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { renderInputComponent, renderSuggestion, renderSuggestionsContainer } from "./auto-suggest-display.jsx";
+import {
+  InputComponent as renderInputComponent,
+  Suggestion as renderSuggestion,
+  SuggestionsContainer as renderSuggestionsContainer
+} from "./components";
 
 const styles = theme => ({
   root: {
@@ -44,7 +48,24 @@ function getSuggestionValue( item ) {
   return item;
 }
 
+function onSuggestionsFetchRequested({ value }) {
+  this.setState({ suggestions: this.getSuggestions(getSuggestionValue(value)) });
+}
+
+function onSuggestionsClearRequested() {
+  this.setState({ suggestions: this.getSuggestions("") });
+}
+
+
 class AutoSuggestWrapper extends Component {
+  static propTypes = {
+    options: PropTypes.arrayOf(PropTypes.string),
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    /* FromStyle */
+    classes: PropTypes.object.isRequired
+  };
+
   constructor(props) {
     super(props);
 
@@ -64,9 +85,8 @@ class AutoSuggestWrapper extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value) {
+    if (prevProps.value !== this.props.value)
       this.setState({ value: this.props.value });
-    }
   }
 
   render() {
@@ -74,8 +94,8 @@ class AutoSuggestWrapper extends Component {
     const { suggestions } = this.state;
     const inputProps = {
       suggestions,
-      onSuggestionsFetchRequested: ({ value }) => this.setState({ suggestions: this.getSuggestions(getSuggestionValue(value)) }),
-      onSuggestionsClearRequested: () => this.setState({ suggestions: this.getSuggestions("") }),
+      onSuggestionsFetchRequested,
+      onSuggestionsClearRequested,
       shouldRenderSuggestions: ()=>true,
       getSuggestionValue,
       renderSuggestion,
@@ -84,25 +104,13 @@ class AutoSuggestWrapper extends Component {
       inputProps: {
         ...this.props,
         value: this.state.value,
-        onChange: (e, { newValue }) => { console.log(newValue); onChange(newValue); this.setState({ value: newValue }); },
+        onChange: (e, { newValue }) => { onChange(newValue); this.setState({ value: newValue }); },
         classes
       },
       theme: classes,
-
     };
-    return (
-      <Autosuggest {...inputProps} />
-    );
+    return <Autosuggest {...inputProps} />;
   }
 }
-
-AutoSuggestWrapper.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.string
-  ),
-  value: PropTypes.string,
-  /* FromStyle */
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(AutoSuggestWrapper);

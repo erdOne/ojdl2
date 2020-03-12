@@ -1,3 +1,4 @@
+/* eslint-disable */
 // ChartJS extension rounded bar chart
 // https://codepen.io/jedtrow/full/ygRYgo
 function draw() {
@@ -17,13 +18,13 @@ function draw() {
   // If radius is less than 0 or is large enough to cause drawing errors a max
   //      radius is imposed. If cornerRadius is not defined set it to 0.
   let { cornerRadius } = this._chart.config.options;
-  if (cornerRadius < 0) {
+  if (cornerRadius < 0)
     cornerRadius = 0;
-  }
 
-  if (typeof cornerRadius === 'undefined') {
+
+  if (typeof cornerRadius === "undefined")
     cornerRadius = 0;
-  }
+
 
   if (!vm.horizontal) {
     // bar
@@ -33,7 +34,7 @@ function draw() {
     bottom = vm.base;
     signX = 1;
     signY = bottom > top ? 1 : -1;
-    borderSkipped = vm.borderSkipped || 'bottom';
+    borderSkipped = vm.borderSkipped || "bottom";
   } else {
     // horizontal bar
     left = vm.base;
@@ -42,7 +43,7 @@ function draw() {
     bottom = vm.y + vm.height / 2;
     signX = right > left ? 1 : -1;
     signY = 1;
-    borderSkipped = vm.borderSkipped || 'left';
+    borderSkipped = vm.borderSkipped || "left";
   }
 
   // Canvas doesn't allow us to stroke inside the width so we can
@@ -54,12 +55,12 @@ function draw() {
     const halfStroke = borderWidth / 2;
     // Adjust borderWidth when bar top position is near vm.base(zero).
     const borderLeft =
-      left + (borderSkipped !== 'left' ? halfStroke * signX : 0);
+      left + (borderSkipped !== "left" ? halfStroke * signX : 0);
     const borderRight =
-      right + (borderSkipped !== 'right' ? -halfStroke * signX : 0);
-    const borderTop = top + (borderSkipped !== 'top' ? halfStroke * signY : 0);
+      right + (borderSkipped !== "right" ? -halfStroke * signX : 0);
+    const borderTop = top + (borderSkipped !== "top" ? halfStroke * signY : 0);
     const borderBottom =
-      bottom + (borderSkipped !== 'bottom' ? -halfStroke * signY : 0);
+      bottom + (borderSkipped !== "bottom" ? -halfStroke * signY : 0);
     // not become a vertical line?
     if (borderLeft !== borderRight) {
       top = borderTop;
@@ -83,11 +84,11 @@ function draw() {
   const corners = [[left, bottom], [left, top], [right, top], [right, bottom]];
 
   // Find first (starting) corner with fallback to 'bottom'
-  const borders = ['bottom', 'left', 'top', 'right'];
+  const borders = ["bottom", "left", "top", "right"];
   let startCorner = borders.indexOf(borderSkipped, 0);
-  if (startCorner === -1) {
+  if (startCorner === -1)
     startCorner = 0;
-  }
+
 
   function cornerAt(index) {
     return corners[(startCorner + index) % 4];
@@ -100,9 +101,9 @@ function draw() {
   for (let i = 1; i < 4; i += 1) {
     corner = cornerAt(i);
     let nextCornerId = i + 1;
-    if (nextCornerId === 4) {
+    if (nextCornerId === 4)
       nextCornerId = 0;
-    }
+
 
     const width = corners[2][0] - corners[1][0];
     const height = corners[0][1] - corners[1][1];
@@ -111,12 +112,12 @@ function draw() {
 
     radius = cornerRadius;
     // Fix radius being too large
-    if (radius > Math.abs(height) / 2) {
+    if (radius > Math.abs(height) / 2)
       radius = Math.floor(Math.abs(height) / 2);
-    }
-    if (radius > Math.abs(width) / 2) {
+
+    if (radius > Math.abs(width) / 2)
       radius = Math.floor(Math.abs(width) / 2);
-    }
+
 
     if (height < 0) {
       // Negative values in a standard bar chart
@@ -182,9 +183,9 @@ function draw() {
   }
 
   ctx.fill();
-  if (borderWidth) {
+  if (borderWidth)
     ctx.stroke();
-  }
+
 }
 
 export default {

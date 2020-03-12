@@ -5,7 +5,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
-import { deepAssign } from "helpers";
+import { deepAssign } from "utils";
 import {
   Button,
   TextField,
@@ -59,18 +59,18 @@ const styles = theme => ({
   }
 });
 
-function mapStateToProps({ user }){
+function mapStateToProps({ user }) {
   return { userActive: user.active };
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return {
     handleSignIn: uid => dispatch(signIn(uid))
   };
 }
 
 class SignUpForm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.deepSetState = x => this.setState(deepAssign(this.state, x));
     this.fields = {
@@ -107,40 +107,41 @@ class SignUpForm extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  onSignUp(e){
+  onSignUp(e) {
     e.preventDefault();
     var hashPsw = hashPswAtClient(this.state.fields.password.value);
     axios.post("/api/sign-up", {
       handle: this.state.fields.handle.value,
       password: hashPsw
     }).then(res=>{
-      if(res.data.error){
-        if(res.data.msg === "handle taken") { this.setState({ handleServerError: true }); }
+      if (res.data.error) {
+        if (res.data.msg === "handle taken") this.setState({ handleServerError: true });
         console.error(res.data.msg);
-      }else{
+      } else {
         this.props.handleSignIn(hashUid(this.state.handle, hashPsw));
         this.props.enqueueSnackbar("註冊成功");
       }
     });
   }
 
-  onChange(event){
+  onChange(event) {
     var { type, validate } = this.fields[event.target.name];
     var fields = { [event.target.name]: {
       value: event.target[fieldTypes[type].valueName],
       error: !validate(event.target)
     } };
-    if(event.target.name === "password" && this.state.fields.confpsw.value !== "") {
+    if (event.target.name === "password" && this.state.fields.confpsw.value !== "")
       fields.confpsw = { error: this.state.fields.confpsw.value !== event.target.value };
-    }
+
     var handleServerError = this.state.handleServerError && event.target.name !== "handle";
     this.setState(deepAssign(this.state, { handleServerError, fields }));
   }
-  render(){
+
+  render() {
     const { classes } = this.props;
-    if(this.props.userActive){
+    if (this.props.userActive)
       return (<Redirect to="/" />);
-    }
+
     return (
       <form className={classes.form} onSubmit={this.onSignUp}>
         <Typography className={classes.title} variant="h2" >

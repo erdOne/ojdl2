@@ -257,6 +257,7 @@ class TestSuiteDisplay extends PureComponent {
     /* FromStyle */
     classes: PropTypes.object.isRequired
   }
+
   constructor(props) {
     super(props);
     this.state = {

@@ -38,49 +38,49 @@ const styles = theme => ({
 });
 
 const quotes = [
-    {
-        content: "下去啦下去啦",
-        author: "oToToT",
-        description: "新世界的神"
-    },
-    {
-        content: "Talk is Cheap. Show me the code.",
-        author: "Linus Torvalds",
-        description: "Co-founder of linux, git and much more."
-    }, {
-        content: "Truth can only be found in one place: the code.",
-        author: "Robert C. Martin",
-        description: "Author of \"Clean Code\""
-    }
+  {
+    content: "下去啦下去啦",
+    author: "oToToT",
+    description: "新世界的神"
+  },
+  {
+    content: "Talk is Cheap. Show me the code.",
+    author: "Linus Torvalds",
+    description: "Co-founder of linux, git and much more."
+  }, {
+    content: "Truth can only be found in one place: the code.",
+    author: "Robert C. Martin",
+    description: "Author of \"Clean Code\""
+  }
 ];
 
 class Quotes extends Component {
-    render(){
-        var quote = quotes[Math.floor(Math.random() * quotes.length)];
-        var { classes } = this.props;
-        return (
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography className={classes.quoteText} variant="h1">
-                  {quote.content}
-              </Typography>
-              <div className={classes.person}>
-                <Typography className={classes.name} variant="body1">
-                  {quote.author}
-                </Typography>
-                <Typography className={classes.bio} variant="body2">
-                  {quote.description}
-                </Typography>
-              </div>
-            </div>
+  render() {
+    var quote = quotes[Math.floor(Math.random() * quotes.length)];
+    var { classes } = this.props;
+    return (
+      <div className={classes.quote}>
+        <div className={classes.quoteInner}>
+          <Typography className={classes.quoteText} variant="h1">
+            {quote.content}
+          </Typography>
+          <div className={classes.person}>
+            <Typography className={classes.name} variant="body1">
+              {quote.author}
+            </Typography>
+            <Typography className={classes.bio} variant="body2">
+              {quote.description}
+            </Typography>
           </div>
-      );
-    }
+        </div>
+      </div>
+    );
+  }
 }
 
 Quotes.propTypes = {
-    /* FromStyle */
-    classes: PropTypes.object.isRequired
+  /* FromStyle */
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Quotes);

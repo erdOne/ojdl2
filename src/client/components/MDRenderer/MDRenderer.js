@@ -19,7 +19,7 @@ export default class MDRenderer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.source !== this.props.source)
+    if (prevProps.source !== this.props.source)
       window.MathJax.startup.promise = window.MathJax.startup.promise.then(
         ()=>window.MathJax.typesetPromise()
       );
@@ -31,7 +31,7 @@ export default class MDRenderer extends Component {
     );
   }
 
-  render(){
+  render() {
     return (
       <div className={this.props.className}
         dangerouslySetInnerHTML={getMarkdownText(this.props.source)}

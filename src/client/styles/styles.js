@@ -1,6 +1,6 @@
 
 const drawerWidth = 240;
-
+/* eslint-disable max-lines-per-function */
 const style = theme => ({
   root: {
     display: "flex",
