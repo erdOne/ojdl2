@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
+import React from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'inline-block',
-    borderRadius: '50%',
+    display: "inline-block",
+    borderRadius: "50%",
     flexGrow: 0,
     flexShrink: 0
   },
@@ -65,19 +65,19 @@ const StatusBullet = props => {
 StatusBullet.propTypes = {
   className: PropTypes.string,
   color: PropTypes.oneOf([
-    'neutral',
-    'primary',
-    'info',
-    'success',
-    'warning',
-    'danger'
+    "neutral",
+    "primary",
+    "info",
+    "success",
+    "warning",
+    "danger"
   ]),
-  size: PropTypes.oneOf(['sm', 'md', 'lg'])
+  size: PropTypes.oneOf(["sm", "md", "lg"])
 };
 
 StatusBullet.defaultProps = {
-  size: 'md',
-  color: 'default'
+  size: "md",
+  color: "default"
 };
 
 export default StatusBullet;

@@ -13,7 +13,7 @@ require("codemirror/addon/edit/continuelist");
 import { getCursorState, applyFormat } from "./format";
 import styles from "./styles";
 
-function getOptions(options){
+function getOptions(options) {
   return {
     mode: "markdown",
     lineNumbers: false,
@@ -33,7 +33,7 @@ class MDEditor extends Component {
     classes: PropTypes.object
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.pendingRender = 1;
     this.state = { value: this.props.value || "", isFocused: false, cs: {} };
@@ -67,7 +67,7 @@ class MDEditor extends Component {
   codemirrorValueChanged(doc, change) {
     var newValue = doc.getValue();
     this.currentCodemirrorValue = newValue;
-    if(this.props.onChange) this.props.onChange(newValue);
+    if (this.props.onChange) this.props.onChange(newValue);
   }
 
   toggleFormat(formatKey, e) {
@@ -138,7 +138,10 @@ class MDEditor extends Component {
             />
           </div>
         </div>
-        <MDRenderer source={this.currentCodemirrorValue} className={this.props.classes.editorPreview} />
+        <MDRenderer
+          source={this.currentCodemirrorValue}
+          className={this.props.classes.editorPreview}
+        />
       </div>
     );
   }

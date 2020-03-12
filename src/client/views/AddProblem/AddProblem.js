@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import { withSnackbar } from "notistack";
+import { react as bind } from "auto-bind";
 
 import {
   Paper,
@@ -110,10 +111,7 @@ class Problem extends Component {
     this.init().catch(err=>{
       this.setState({ error: true, errMsg: err });
     });
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleDifficultySliderChange = this.handleDifficultySliderChange.bind(this);
-    this.getProps = this.getProps.bind(this);
+    bind(this);
   }
 
   async getAdmin() {
@@ -158,8 +156,8 @@ class Problem extends Component {
     e.preventDefault();
     this.props.enqueueSnackbar("請靜候資料送出");
     axios.post("/api/add-prob", this.getFormData())
-      .then(res => this.props.history.push(`/problem/${res.data.pid}`));
-      .catch(err => this.setState({ error: true, errMsg: err }))
+      .then(res => this.props.history.push(`/problem/${res.data.pid}`))
+      .catch(err => this.setState({ error: true, errMsg: err }));
   }
 
   handleChange(e) {
@@ -181,7 +179,7 @@ class Problem extends Component {
   }
 
   downloadTestSuites() {
-    this.props.enqueueSnackbar("The Feature is still work-in-progress.");
+    this.props.enqueueSnackbar("The Feature is still a work-in-progress.");
     axios.post("/api/get_prob");
   }
 

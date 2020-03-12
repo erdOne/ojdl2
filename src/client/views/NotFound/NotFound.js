@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Grid, Typography } from '@material-ui/core';
+import React from "react";
+import { makeStyles } from "@material-ui/styles";
+import { Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -8,12 +8,12 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     paddingTop: 150,
-    textAlign: 'center'
+    textAlign: "center"
   },
   image: {
     marginTop: 50,
-    display: 'inline-block',
-    maxWidth: '100%',
+    display: "inline-block",
+    maxWidth: "100%",
     width: 560
   }
 }));

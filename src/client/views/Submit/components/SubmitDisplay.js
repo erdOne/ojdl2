@@ -5,8 +5,8 @@ import { Typography, Paper, Button } from "@material-ui/core";
 import { Send as SendIcon } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 
-import AutoSuggestWrapper from "components/auto-suggest-wrapper.jsx";
-import Editor from "components/editor.jsx";
+import AutoSuggestWrapper from "components/AutoSuggestWrapper";
+import Editor from "components/Editor";
 
 const styles = theme => ({
   paper: {
@@ -33,6 +33,7 @@ class SubmitDisplay extends Component {
     /* FromStyle */
     classes: PropTypes.object
   }
+
   render() {
     const {
       problems, problemSelected,

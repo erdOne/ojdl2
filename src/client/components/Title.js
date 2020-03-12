@@ -13,6 +13,7 @@ class Title extends Component {
     pageTitle: null,
     siteTitle: "Your Site Name Here",
   };
+
   constructor(props) {
     super(props);
     this.titleEl = document.getElementsByTagName("title")[0];
@@ -20,7 +21,7 @@ class Title extends Component {
 
   render() {
     let fullTitle = this.props.pageTitle;
-    if(this.props.pageTitle)
+    if (this.props.pageTitle)
       fullTitle += " - " + this.props.siteTitle;
 
     return ReactDOM.createPortal(fullTitle || "", this.titleEl);

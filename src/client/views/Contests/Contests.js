@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { CircularProgress } from "@material-ui/core";
 
-import DataTable from "components/DataTable";
+import { DataTable } from "components";
 
 const columns = [
   { id: "cid", align: "right", numeric: true,
@@ -26,6 +26,7 @@ class Contests extends Component {
     /* FromState */
     user: PropTypes.object
   }
+
   constructor(props) {
     super(props);
     this.state = { dataLoaded: false };
@@ -35,11 +36,15 @@ class Contests extends Component {
         this.setState({ rows: res.data.conts, dataLoaded: true });
       });
   }
+
   render() {
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Contests"
-          config={{ key: "cid", defaultOrder: "asc", defaultOrderBy: "cid", link: cont=>`/contest/${cont.cid}/home` }} />
+          config={{ key: "cid", defaultOrder: "asc", defaultOrderBy: "cid",
+            link: cont=>`/contest/${cont.cid}/home`
+          }}
+        />
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);

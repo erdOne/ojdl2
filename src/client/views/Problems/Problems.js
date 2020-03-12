@@ -3,9 +3,9 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { Link, CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 
-import DataTable from "components/DataTable";
+import { DataTable } from "components";
 
 const columns = [
   { id: "pid", align: "right", numeric: true,
