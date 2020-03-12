@@ -8,6 +8,7 @@ class GeneralResult {
   constructor({ verdict = verdicts.UN, time = 0, memory = 0, msg = "" } = {}) {
     Object.assign(this, { verdict, time, memory, msg });
   }
+
   update(res) {
     this.time += res.time;
     this.memory = Math.max(res.memory, this.memory);
@@ -33,10 +34,13 @@ class ScoreResult extends GeneralResult {
     super(props);
     this.score = score;
   }
+
   tryAC(score = 0) {
+    if (this.verdict === verdicts.PAC)
+      this.score += parseInt(score) >> 1;
     if (this.verdict === verdicts.UN) {
       this.verdict = verdicts.AC;
-      this.score += score;
+      this.score += parseInt(score);
       return true;
     }
     return false;
@@ -49,6 +53,7 @@ class SubtaskResult extends ScoreResult {
     this.no = no;
     this.testResult = subtask.testcases.map(testcase => new TestResult(testcase.tid));
   }
+
   addResult(ti, result) {
     this.testResult[ti] = result;
     this.update(result);
@@ -66,13 +71,17 @@ export class Result extends ScoreResult {
       this.subtaskResult = [];
     }
   }
+
   addResult(si, ti, result) {
     this.subtaskResult[si].addResult(ti, result);
     this.update(result);
   }
+
   endJudge(si, score) {
     if (this.subtaskResult[si].tryAC(score))
-      this.score += score;
+      this.score += parseInt(score);
+    if (this.subtaskResult[si].verdict === verdicts.PAC)
+      this.score += parseInt(score) >> 1;
   }
 }
 

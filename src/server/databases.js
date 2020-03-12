@@ -168,7 +168,7 @@ export const ProbDB = sequelize.define("problems", {
     defaultValue: "[]"
   },
   testMethod: {
-    type: Sequelize.ENUM("string", "special", "float"),
+    type: Sequelize.ENUM("string", "special", "float", "multiple"),
     allowNull: false,
     defaultValue: "string"
   },

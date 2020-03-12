@@ -230,6 +230,7 @@ export async function addProb({ uid, prob }, files) {
     await ProbDB.update(prob, { where: { pid: prob.pid } });
   else
     prob = await ProbDB.create(prob);
+  fs.mkdirSync(`data/prob/${prob.pid}`, { recursive: true });
   if (files)
     for (let fileName in files)
       files[fileName].mv(`data/prob/${prob.pid}/${fileName}`);

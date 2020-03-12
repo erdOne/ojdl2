@@ -41,6 +41,12 @@ export default {
     status: "Segmentation Fault",
     color: ["#673ab7", "#b39ddb", "#d1c4e9"]
   },
+  PAC: 8,
+  8: {
+    abbr: "PAC",
+    status: "Partially Accepted",
+    color: ["#f44336", "#ef9a9a", "#ffcdd2"]
+  },
   UN: 9,
   9: {
     abbr: "",

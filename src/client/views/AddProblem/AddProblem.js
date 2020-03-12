@@ -151,6 +151,7 @@ class Problem extends Component {
     formData.set("prob", JSON.stringify(this.getProb()));
     for (var file of this.fileUploadRef.current.files)
       formData.append(file.name, file);
+    return formData;
   }
 
   handleSubmit(e) {
@@ -213,7 +214,7 @@ class Problem extends Component {
                 </TextField>
                 <TextField select {...getProps("testMethod")}>
                   {
-                    ["string", "float", "special"]
+                    ["string", "float", "special", "multiple"]
                       .map(v => <MenuItem key={v} value={v}>{v}</MenuItem>)
                   }
                 </TextField>
