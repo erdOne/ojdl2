@@ -6,4 +6,4 @@ node_modules
 data
 public/dist/index.js
 workdir/**
-npm-debug.log
+*.log
