@@ -7,18 +7,7 @@ import * as api from "./api.js";
 
 import fs from "fs";
 import http from "http";
-import https from "https";
-import hsts from "hsts"
-
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/ojdl.ck.tp.edu.tw/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/ojdl.ck.tp.edu.tw/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/ojdl.ck.tp.edu.tw/chain.pem', 'utf8');
-
-const credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
-};
+import hsts from "hsts";
 
 var app = express();
 
@@ -27,9 +16,7 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
-app.use(hsts({
-  maxAge: 15552000
-}));
+app.use(hsts({ maxAge: 0 }));
 
 const snakeToCamel = (str) => str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
@@ -66,5 +53,7 @@ app.use(function(req, res) {
   });
 });
 
-http.createServer(app).listen(80);
-https.createServer(credentials, app).listen(443);
+app.listen(8080, "127.0.0.1");
+
+//http.createServer(app).listen(7122);
+//https.createServer(credentials, app).listen(443);
