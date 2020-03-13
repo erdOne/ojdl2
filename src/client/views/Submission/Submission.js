@@ -70,6 +70,18 @@ function mapStateToProps({ user }) {
   return { user };
 }
 
+function typesetMath() {
+    // typesetMath
+    try {
+      window.MathJax.startup.promise = window.MathJax.startup.promise.then(
+        ()=>window.MathJax.typesetPromise()
+      );
+    } catch (e) {
+      console.log("cannot typeset");
+      console.log(e);
+    }
+}
+
 class Submission extends Component {
   static propTypes = {
     /* FromStyle */
@@ -91,6 +103,7 @@ class Submission extends Component {
     this.onEdit = this.onEdit.bind(this);
     this.loadSub = this.loadSub.bind(this);
     this.openDialog = this.openDialog.bind(this);
+    this.componentDidMount = this.componentDidUpdate = () => typesetMath();
   }
 
   loadSub(withData, pollingId) {

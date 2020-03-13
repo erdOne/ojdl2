@@ -13,7 +13,7 @@ const columns = [
     disablePadding: true, label: "#", style: { width: 75 },
     display: sub=>sub.sid },
   { id: "pid", align: "left", numeric: false, disablePadding: true, label: "題目",
-    display: sub=><Link to={`/problems/${sub.pid}`}>{`${sub.pid} - ${sub.problem.title}`}</Link> },
+    display: sub=>`${sub.pid} - ${sub.problem.title}`},
   { id: "handle", align: "left", numeric: false, disablePadding: true, label: "上傳者",
     display: sub=>sub.user.handle },
   { id: "time", align: "right", numeric: true, disablePadding: true, label: "時間(ms)" },
