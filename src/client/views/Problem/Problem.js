@@ -80,13 +80,13 @@ class Problem extends Component {
           <div>
             {
               this.state.prob.samples.map((sample, si) =>
-                <SampleDisplay sample={sample} id={si} />
+                <SampleDisplay sample={sample} id={si} key={si} />
               )
             }
           </div>
           {
             this.state.prob.testSuite.map((s, i) =>
-              <SubtaskDisplay subtask={{ ...s, no: i }} key={i}/>
+              <SubtaskDisplay subtask={{ ...s, no: i }} key={i} />
             )
           }
           <big><MDRenderer source={this.state.prob.note} /></big>
