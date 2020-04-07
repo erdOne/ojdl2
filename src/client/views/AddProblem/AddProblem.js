@@ -184,7 +184,7 @@ class Problem extends Component {
   }
 
   render() {
-    console.log(this.props);
+    /*console.log(this.props);*/
     if (this.state.error)
       return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
     if (!this.state.dataLoaded)
