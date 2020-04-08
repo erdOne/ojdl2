@@ -40,7 +40,7 @@ export default class Tester {
     boxClean();
     return {
       verdict: statusToErrCode(result.status, result.stderr),
-      msg: result.status ? result.stderr : null
+      msg: result.status ? result.stderr.substr(0, 256) : null
     };
   }
 }

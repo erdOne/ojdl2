@@ -14,7 +14,14 @@ const workdir = "./workdir";
 const isolatePath = "isolate/isolate";
 
 global.sandBoxQueue = new Queue(10, function(boxno, callback) {
-  tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
+
+  try {
+    tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
+  } catch (e) {
+    tryfork(spawnSync(isolatePath, ["--cleanup", "--cg", "-b", boxno]), "Sandbox");
+    tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
+  }
+
   return {
     boxExec(...args) {
       return spawnP(isolatePath, ["-b", boxno, ...args]);
