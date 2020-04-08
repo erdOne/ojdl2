@@ -13,7 +13,10 @@ import { ErrorResult } from "./judge/results.js";
 const workdir = "./workdir";
 const isolatePath = "isolate/isolate";
 
-global.sandBoxQueue = new Queue(10, function(boxno, callback) {
+import { sandbox } from "../../../config.js";
+
+global.sandBoxQueue = new Queue(sandbox.limit, function(boxno, callback) {
+  boxno += sandbox.offset;
   try {
     tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
   } catch (e) {
