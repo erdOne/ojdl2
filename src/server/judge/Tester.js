@@ -35,7 +35,7 @@ export default class Tester {
     this.lang = languages[lang];
   }
 
-  getArgs() {
+  getArgs(tid) {
     return this.lang.execArgs;
   }
 
@@ -43,7 +43,7 @@ export default class Tester {
     var { boxExec, boxClean } = await global.sandBoxQueue.request();
     timeLimit = parseInt(timeLimit); memLimit = parseInt(memLimit);
     var args = testArgs({ jid, tid }, { timeLimit, memLimit }),
-      result = await boxExec(...args, ...this.getArgs());
+      result = await boxExec(...args, ...this.getArgs(tid));
     boxClean();
     return {
       verdict: statusToErrCode(result.status, result.stderr),
@@ -53,10 +53,10 @@ export default class Tester {
 }
 
 export class InteractiveTester extends Tester {
-  getArgs() {
-    var pipeargs = x => `/bin/pipexec -- [ int judge ] [ sol ${x} ]`.split(" ");
+  getArgs(tid) {
+    var pipeargs = x => `/bin/pipexec -- [ int /box/judge /box/${tid}.in ] [ sol ${x} ]`.split(" ");
     return [...pipeargs(this.lang.execArgs.join(" ")).split(" "),
-      "{int:2>sol:0}", "{sol:1>int:0}", "{sol:2>int:0}"];
+      "{int:2>sol:0}", "{sol:1>int:0}"];
   }
 }
 
