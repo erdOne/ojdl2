@@ -3,7 +3,7 @@ import parse from "autosuggest-highlight/parse";
 
 import { MenuItem } from "@material-ui/core";
 
-export function Suggestion(suggestion, { query, isHighlighted }) {
+export default function Suggestion(suggestion, { query, isHighlighted }) {
   const matches = match(suggestion, query);
   const parts = parse(suggestion, matches);
   return (
