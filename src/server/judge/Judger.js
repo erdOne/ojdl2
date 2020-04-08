@@ -6,6 +6,7 @@ class TestcaseJudger {
     this.Tester = Tester;
     this.Comparator = Comparator;
   }
+
   async judge({ jid, tid }, { timeLimit, memLimit }) {
     try {
       var result;
@@ -44,7 +45,7 @@ export default class Judger {
       this.result.tryAC();
       this.result.pending = false;
     } catch (e) {
-      console.log("jizz error");
+      //console.log("jizz error");
       console.error(e);
       this.result = new ErrorResult(e);
     }

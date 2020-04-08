@@ -64,6 +64,6 @@ const testers = {
   interactive: InteractiveTester
 };
 
-export function getComparator(str) {
+export function getTester(str) {
   return testers[str] || Tester;
 }
