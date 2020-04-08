@@ -1,5 +1,5 @@
 **/.DS_Store
-secrets.js
+config.js
 addpage.sh
 package-lock.json
 node_modules

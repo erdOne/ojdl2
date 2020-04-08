@@ -7,7 +7,10 @@ import * as api from "./api.js";
 
 import fs from "fs";
 import http from "http";
+import https from "https";
 import hsts from "hsts";
+
+import config from "../../config.js"
 
 var app = express();
 
@@ -16,7 +19,7 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
-app.use(hsts({ maxAge: 0 }));
+app.use(hsts({ maxAge: 31536000 }));
 
 const snakeToCamel = (str) => str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
@@ -41,8 +44,8 @@ app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
 app.use("/images", express.static(path.join(__dirname, "../../public/images")));
 app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
 
-app.get("/.well-known/acme-challenge/1x4KCTcxsX3xBvC2KlaB6BTf7fGvF4bDYAEeOqISlTs", (req, res)=>{
-    res.send("1x4KCTcxsX3xBvC2KlaB6BTf7fGvF4bDYAEeOqISlTs.whdjVLUBTtQEYftp45Xfgxi9xS8Dp6egLhwAgfQ93zg");
+app.get(config.credentials.challenge.url, (req, res)=>{
+    res.send(config.credentials.challenge.response);
 });
 
 app.use(function(req, res) {
@@ -53,7 +56,7 @@ app.use(function(req, res) {
   });
 });
 
-app.listen(8080, "127.0.0.1");
+//app.listen(8080, "127.0.0.1");
 
-//http.createServer(app).listen(7122);
-//https.createServer(credentials, app).listen(443);
+http.createServer(app).listen(config.ports.http);
+https.createServer(config.credentials.certs, app).listen(config.ports.https);
