@@ -4,6 +4,8 @@ import Autosuggest from "react-autosuggest";
 
 import { withStyles } from "@material-ui/core/styles";
 
+import { react as bind } from "auto-bind";
+
 import {
   InputComponent as renderInputComponent,
   Suggestion as renderSuggestion,
@@ -48,14 +50,9 @@ function getSuggestionValue( item ) {
   return item;
 }
 
-function onSuggestionsFetchRequested({ value }) {
-  this.setState({ suggestions: this.getSuggestions(getSuggestionValue(value)) });
+function shouldRenderSuggestions() {
+  return true;
 }
-
-function onSuggestionsClearRequested() {
-  this.setState({ suggestions: this.getSuggestions("") });
-}
-
 
 class AutoSuggestWrapper extends Component {
   static propTypes = {
@@ -74,8 +71,15 @@ class AutoSuggestWrapper extends Component {
       suggestions: this.getSuggestions("")
     };
 
-    this.getSuggestions = this.getSuggestions.bind(this);
-    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    bind(this);
+  }
+
+  onSuggestionsFetchRequested({ value }) {
+    this.setState({ suggestions: this.getSuggestions(getSuggestionValue(value)) });
+  }
+
+  onSuggestionsClearRequested() {
+    this.setState({ suggestions: this.getSuggestions("") });
   }
 
   getSuggestions(value) {
@@ -92,11 +96,12 @@ class AutoSuggestWrapper extends Component {
   render() {
     const { classes, onChange } = this.props;
     const { suggestions } = this.state;
+    const { onSuggestionsFetchRequested, onSuggestionsClearRequested } = this;
     const inputProps = {
       suggestions,
       onSuggestionsFetchRequested,
       onSuggestionsClearRequested,
-      shouldRenderSuggestions: ()=>true,
+      shouldRenderSuggestions,
       getSuggestionValue,
       renderSuggestion,
       renderInputComponent,
