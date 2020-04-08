@@ -1,4 +1,4 @@
-export const SampleDisplayStyles = theme => ({
+export var SampleDisplayStyles = theme => ({
   codeblock: {
     color: "saddlebrown",
     /* text-shadow: "0 1px white", */
@@ -23,10 +23,11 @@ export const SampleDisplayStyles = theme => ({
       content: "counter(line)",
       display: "inline-block",
       borderRight: "1px solid #ddd",
+      textAlign: "right",
       width: 20,
-      padding: "0 .5em",
+      padding: "0 0.3em 0 0",
       marginRight: ".5em",
-      color: "#888",
+      color: "#888"
     }
   },
   labels: {
@@ -43,14 +44,6 @@ export const SampleDisplayStyles = theme => ({
     "& > span": {
       padding: [1, 5],
       borderRight: ["solid", 1, "rgba(51, 51, 51, 0.12)"]
-    }
-  },
-  actions: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    "& button": {
-      width: 90
     }
   }
 });
