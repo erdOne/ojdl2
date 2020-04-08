@@ -1,8 +1,8 @@
 
 const Sequelize = require("sequelize");
-const { db } = require("../../secrets.js");
+const { db } = require("../../config.js");
 
-const sequelize = new Sequelize("OJDL", db.user, db.password, {
+const sequelize = new Sequelize(db.schema, db.user, db.password, {
   host: "localhost",
   dialect: "mariadb",
   dialectOptions: {

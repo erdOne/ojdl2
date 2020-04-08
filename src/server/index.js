@@ -8,28 +8,18 @@ import * as api from "./api.js";
 import fs from "fs";
 import http from "http";
 import https from "https";
-import hsts from "hsts"
+import hsts from "hsts";
 
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/ojdl.ck.tp.edu.tw/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/ojdl.ck.tp.edu.tw/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/ojdl.ck.tp.edu.tw/chain.pem', 'utf8');
-
-const credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
-};
+import config from "../../config.js"
 
 var app = express();
 
-app.set("port", process.env.PORT || 80);
+//app.set("port", process.env.PORT || 80);
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
-app.use(hsts({
-  maxAge: 15552000
-}));
+app.use(hsts({ maxAge: 31536000 }));
 
 const snakeToCamel = (str) => str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
@@ -54,8 +44,8 @@ app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
 app.use("/images", express.static(path.join(__dirname, "../../public/images")));
 app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
 
-app.get("/.well-known/acme-challenge/1x4KCTcxsX3xBvC2KlaB6BTf7fGvF4bDYAEeOqISlTs", (req, res)=>{
-    res.send("1x4KCTcxsX3xBvC2KlaB6BTf7fGvF4bDYAEeOqISlTs.whdjVLUBTtQEYftp45Xfgxi9xS8Dp6egLhwAgfQ93zg");
+app.get(config.credentials.challenge.url, (req, res)=>{
+    res.send(config.credentials.challenge.response);
 });
 
 app.use(function(req, res) {
@@ -66,5 +56,7 @@ app.use(function(req, res) {
   });
 });
 
-http.createServer(app).listen(80);
-https.createServer(credentials, app).listen(443);
+//app.listen(8080, "127.0.0.1");
+
+http.createServer(app).listen(config.ports.http);
+https.createServer(config.credentials.certs, app).listen(config.ports.https);

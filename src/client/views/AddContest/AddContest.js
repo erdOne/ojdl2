@@ -87,7 +87,7 @@ class AddContest extends Component {
     }
     this.allProblems =
       (await axios.post("/api/get_probs", { uid: this.props.user.uid })).data.probs;
-    console.log(this.allProblems);
+    /*console.log(this.allProblems);*/
     var cid = this.props.match.params.cid;
     if (cid) await this.loadData(cid);
     else this.setState({ dataLoaded: true });
@@ -104,7 +104,7 @@ class AddContest extends Component {
     axios.post("/api/add-cont", { uid: this.props.user.uid, cont: this.getCont() })
       .then(res => {
         if (res.data.error) throw res.data.msg;
-        this.props.history.push(`/contest/${res.data.cid}`);
+        this.props.history.push(`/contest/${res.data.cid}/home`);
       })
       .catch(err => this.setState({ error: true, errMsg: err }));
   }
@@ -152,7 +152,7 @@ class AddContest extends Component {
     const { classes } = this.props;
     const { cid, content, start, end, problems } = this.state;
     const { getProps, allProblems } = this;
-    console.log(allProblems);
+    /*console.log(allProblems);*/
 
     return (
       <div className={classes.root}>
