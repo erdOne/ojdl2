@@ -1,5 +1,4 @@
-// changeable
-//
+/* eslint-disable max-lines */
 
 // var db = require("./mySQL.js");
 var fs = require("fs");
@@ -142,8 +141,8 @@ export async function getProb({ uid, pid, cid }) {
     let prob = await ProbDB.findByPk(pid);
     if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
-console.log(prob.visibility, admin);    
-if (!prob) throw "no such prob";
+    //console.log(prob.visibility, admin);
+    if (!prob) throw "no such prob";
     return { prob };
   } else {
     let { cont } = await getCont({ uid, cid }),

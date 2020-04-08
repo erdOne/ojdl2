@@ -4,6 +4,7 @@ export default class Uploader {
   constructor(sid) {
     this.sid = sid;
   }
+
   upload(result) {
     return SubDB.update({
       verdict: result.verdict,
