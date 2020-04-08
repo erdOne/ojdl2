@@ -5,7 +5,7 @@ const gutil = require("gutil");
 const webpack = require("webpack");
 const gwebpack = x => require("webpack-stream")(x, webpack);
 const ftp = require("vinyl-ftp");
-const { ftpServer } = require("./secrets.js");
+//const { ftpServer } = require("./secrets.js");
 var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 //const path = require("path");
 
