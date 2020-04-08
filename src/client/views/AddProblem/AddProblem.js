@@ -219,7 +219,7 @@ class Problem extends Component {
                 </TextField>
                 <TextField select {...getProps("testMethod")}>
                   {
-                    ["string", "float", "special", "multiple"]
+                    ["string", "float", "special", "multiple", "interactive"]
                       .map(v => <MenuItem key={v} value={v}>{v}</MenuItem>)
                   }
                 </TextField>

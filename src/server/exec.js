@@ -4,7 +4,7 @@ var fsP = fs.promises;
 import { SubDB, ProbDB } from "./databases.js";
 import { Queue, spawnP, tryfork } from "./utils.js";
 import { getComparator } from "./judge/comparators.js";
-import Tester from "./judge/Tester.js";
+import { getTester } from "./judge/Tester.js";
 import Judger from "./judge/Judger.js";
 import Compiler from "./judge/Compiler.js";
 import Uploader from "./judge/Uploader.js";
@@ -14,7 +14,13 @@ const workdir = "./workdir";
 const isolatePath = "isolate/isolate";
 
 global.sandBoxQueue = new Queue(10, function(boxno, callback) {
-  tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
+  try {
+    tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
+  } catch (e) {
+    tryfork(spawnSync(isolatePath, ["--cleanup", "--cg", "-b", boxno]), "Sandbox");
+    tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
+  }
+
   return {
     boxExec(...args) {
       return spawnP(isolatePath, ["-b", boxno, ...args]);
@@ -50,7 +56,7 @@ export async function exec(sid) {
   try {
     var { jid, sub, prob } = await init(sid);
 
-    var Comparator = getComparator(prob.testMethod),
+    var Comparator = getComparator(prob.testMethod), Tester = getTester(prob.testMethod),
       comparator   = new Comparator(prob.param),
       tester       = new Tester(sub.language),
       judger       = new Judger(tester, comparator, uploader);

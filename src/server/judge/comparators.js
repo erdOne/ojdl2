@@ -14,6 +14,13 @@ class SpecialComparator extends Comparator {
   }
 }
 
+class InteractiveComparator extends Comparator {
+  async compareOutput(jid, tid) {
+    var judgeResult = await readOutput(`${workdir}/${jid}/${tid}.xout`);
+    return [parseInt(judgeResult) ? Codes.AC : Codes.WA, judgeResult];
+  }
+}
+
 class StringComparator extends Comparator {
   compareTerm(a, b) {
     return String(a) === String(b);
@@ -55,7 +62,8 @@ const comparators = {
   string: StringComparator,
   float: FloatComparator,
   special: SpecialComparator,
-  multiple: MultipleComparator
+  multiple: MultipleComparator,
+  interactive: InteractiveComparator
 };
 
 export function getComparator(str) {

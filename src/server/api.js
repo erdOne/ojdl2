@@ -1,10 +1,9 @@
 /* eslint-disable max-lines */
 
-// var db = require("./mySQL.js");
-var fs = require("fs");
-// var { fork } = require("child_process");
+import fs from "fs";
 import { UserDB, SubDB, ProbDB, ContDB, PostDB } from "./databases.js";
 import { exec, execUnlimited } from "./exec.js";
+import { execSync } from "child_process";
 import { hashUid, hashPswInDB, hashUidInDB } from "../client/common/hash.js";
 import verdicts from "../client/common/verdicts.js";
 import languages from "../client/common/languages.js";
@@ -234,7 +233,8 @@ export async function addProb({ uid, prob }, files) {
   if (files)
     for (let fileName in files)
       files[fileName].mv(`data/prob/${prob.pid}/${fileName}`);
-
+  if (files["judge.cpp"])
+    execSync(`g++ --std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`);
   return { pid: prob.pid };
 }
 

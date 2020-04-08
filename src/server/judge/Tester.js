@@ -13,7 +13,10 @@ function testArgs({ jid, tid }, { timeLimit, memLimit }) {
     "--cg",
     "--stack=" + memLimit,
     "--cg-mem=" + memLimit * 2,
-    "--run"
+    "-e",
+    "--processes=10",
+    "--run",
+    "--",
   ];
 }
 
@@ -32,15 +35,35 @@ export default class Tester {
     this.lang = languages[lang];
   }
 
+  getArgs() {
+    return this.lang.execArgs;
+  }
+
   async test({ jid, tid }, { timeLimit, memLimit }) {
     var { boxExec, boxClean } = await global.sandBoxQueue.request();
     timeLimit = parseInt(timeLimit); memLimit = parseInt(memLimit);
     var args = testArgs({ jid, tid }, { timeLimit, memLimit }),
-      result = await boxExec(...args, ...this.lang.execArgs);
+      result = await boxExec(...args, ...this.getArgs());
     boxClean();
     return {
       verdict: statusToErrCode(result.status, result.stderr),
       msg: result.status ? result.stderr : null
     };
   }
+}
+
+export class InteractiveTester extends Tester {
+  getArgs() {
+    var pipeargs = x => `/bin/pipexec -- [ int judge ] [ sol ${x} ]`.split(" ");
+    return [...pipeargs(this.lang.execArgs.join(" ")).split(" "),
+      "{int:2>sol:0}", "{sol:1>int:0}", "{sol:2>int:0}"];
+  }
+}
+
+const testers = {
+  interactive: InteractiveTester
+};
+
+export function getComparator(str) {
+  return testers[str] || Tester;
 }
