@@ -1,6 +1,6 @@
 import { TextField } from "@material-ui/core";
 
-export function renderInputComponent(inputProps) {
+export default function InputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
 
   return (

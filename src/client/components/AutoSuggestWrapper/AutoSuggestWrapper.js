@@ -46,13 +46,9 @@ function escapeRegexCharacters(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function getSuggestionValue( item ) {
-  return item;
-}
+function getSuggestionValue( item ) { return item; }
 
-function shouldRenderSuggestions() {
-  return true;
-}
+function shouldRenderSuggestions() { return true; }
 
 class AutoSuggestWrapper extends Component {
   static propTypes = {

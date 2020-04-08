@@ -1,6 +1,6 @@
 import { Paper } from "@material-ui/core";
 
-export function renderSuggestionsContainer(options) {
+export default function SuggestionsContainer(options) {
   return (
     <Paper square {...options.containerProps}>
       {options.children}
