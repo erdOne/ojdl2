@@ -8,6 +8,7 @@ exports.ports = {
 exports.ftpServer = {};
 
 exports.db = {
+  schema: "schema",
   user: "user",
   password: "password"
 };
