@@ -9,7 +9,7 @@ const workdir = "./workdir";
 
 class SpecialComparator extends Comparator {
   async compareOutput(jid, tid) {
-    var judgeResult = execSync(`${workdir}/${jid}/judge ${tid}.in ${tid}.xout`);
+    var judgeResult = execSync(`${workdir}/${jid}/judge ${tid}.in ${tid}.out ${tid}.xout`);
     return [parseInt(judgeResult) ? Codes.AC : Codes.WA, judgeResult];
   }
 }
