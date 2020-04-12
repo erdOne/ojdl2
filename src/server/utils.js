@@ -63,6 +63,8 @@ export function spawnP(...args) {
       stdout: "",
       stderr: ""
     };
+    proc.stderr.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
     proc.stdout.on("data", data => { obj.stdout += data; });
     proc.stderr.on("data", data => { obj.stderr += data; });
     proc.stderr.on("error", error => { obj.error = error; });
