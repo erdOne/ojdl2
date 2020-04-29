@@ -77,7 +77,7 @@ class Sidebar extends React.Component {
   }
 
   Item({ display = true, exact = false, clean = false, ...other }) {
-    console.log("oops rendered");
+    //console.log("oops rendered");
     if (!display) return null;
     const { contest } = this.props,
       pathPrefix = contest.inContest && !clean ? `/contest/${contest.cid}` : "";

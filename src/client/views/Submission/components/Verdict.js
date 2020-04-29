@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import verdicts from "common/verdicts";
 
 function Verdict({ verdict, msg, openDialog }) {
-  const handleClick = ()=> msg && openDialog(msg);
+  const handleClick = ()=> msg && openDialog(String(msg));
   var style = { color: verdicts[verdict ?? verdicts.UN].color[0] };
   if (msg) style.borderBottom = "1px dotted";
   return <span style={style} onClick={handleClick}>

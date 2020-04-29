@@ -2,15 +2,16 @@ import Comparator from "./Comparator.js";
 import { execSync } from "child_process";
 import Codes from "../../client/common/verdicts.js";
 import Big from "big.js";
-
+import { readFileSync } from "fs";
 import { readOutput } from "./comparatorUtils.js";
+import { spawnP } from "../utils.js"
 
-const workdir = "./workdir";
+const workdir = process.cwd()+"/workdir";
 
 class SpecialComparator extends Comparator {
   async compareOutput(jid, tid) {
-    var judgeResult = execSync(`${workdir}/${jid}/judge ${tid}.in ${tid}.xout`);
-    return [parseInt(judgeResult) ? Codes.AC : Codes.WA, judgeResult];
+    var judgeResult = await spawnP(`${workdir}/${jid}/judge`, [`${tid}.in`, `${tid}.out`, `${tid}.xout`], { cwd: `${workdir}/${jid}/` });
+    return [parseInt(judgeResult.stdout) ? Codes.AC : Codes.WA, judgeResult.stderr];
   }
 }
 
