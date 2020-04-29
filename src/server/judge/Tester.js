@@ -9,7 +9,7 @@ function testArgs({ jid, tid }, { timeLimit, memLimit }) {
     `--meta=workdir/${jid}/${tid}.meta`,
     "--time=" + timeLimit / 1000,
     "--extra-time=" + timeLimit / 1000 * 0.1,
-    "--wall-time=" + timeLimit / 1000 * 60000,
+    "--wall-time=" + timeLimit / 1000 * 10,
     "--cg",
     "--stack=" + memLimit,
     "--cg-mem=" + memLimit * 2,
@@ -42,8 +42,10 @@ export default class Tester {
   async test({ jid, tid }, { timeLimit, memLimit }) {
     var { boxExec, boxClean } = await global.sandBoxQueue.request();
     timeLimit = parseInt(timeLimit); memLimit = parseInt(memLimit);
+    console.log("start test", tid, testArgs({ jid, tid }, {timeLimit, memLimit }), this.getArgs(tid));
     var args = testArgs({ jid, tid }, { timeLimit, memLimit }),
       result = await boxExec(...args, ...this.getArgs(tid));
+    console.log(args, this.getArgs(tid), result);
     boxClean();
     return {
       verdict: statusToErrCode(result.status, result.stderr),
@@ -54,9 +56,9 @@ export default class Tester {
 
 export class InteractiveTester extends Tester {
   getArgs(tid) {
-    var pipeargs = x => `/bin/pipexec -- [ int /box/judge /box/${tid}.in ] [ sol ${x} ]`.split(" ");
+    var pipeargs = x => `/bin/pipexec -- [ int /box/judge /box/${tid}.in ] [ sol ${x} ]`;
     return [...pipeargs(this.lang.execArgs.join(" ")).split(" "),
-      "{int:2>sol:0}", "{sol:1>int:0}"];
+      `"{int:2>sol:0}"`, `"{sol:1>int:0}"`];
   }
 }
 

@@ -138,10 +138,10 @@ export async function getProb({ uid, pid, cid }) {
   var admin = await isAdmin({ uid });
   if (!cid) {
     let prob = await ProbDB.findByPk(pid);
+    if (!prob) throw "no such prob";
     if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
     //console.log(prob.visibility, admin);
-    if (!prob) throw "no such prob";
     return { prob };
   } else {
     let { cont } = await getCont({ uid, cid }),
@@ -234,7 +234,7 @@ export async function addProb({ uid, prob }, files) {
     for (let fileName in files)
       files[fileName].mv(`data/prob/${prob.pid}/${fileName}`);
   if (files["judge.cpp"])
-    execSync(`g++ --std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`);
+    execSync(`g++ -std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`);
   return { pid: prob.pid };
 }
 
