@@ -124,7 +124,7 @@ class Standings extends Component {
     if (!this.props.contest.inContest) return;
     this.initted = true;
     this.columns =
-      [{ id: "user", align: "right", numeric: false, disablePadding: false, label: "" }]
+      [{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]
         .concat(this.props.contest.problems.map((prob, i) => ({
           label: `p${toChars(i)}`, align: "right", numeric: true, disablePadding: false, id: `${i}`,
           display: user => user.scoresP[prob.ppid]?.score || 0

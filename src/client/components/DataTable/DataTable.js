@@ -199,10 +199,9 @@ function EnhancedTable({ rows, columns, config, history, title }) {
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={Math.max(0, columns.length - 3)} />
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={3}
+                  colSpan={columns.length}
                   count={rows.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
