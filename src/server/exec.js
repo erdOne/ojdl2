@@ -42,10 +42,11 @@ function getJid(sid) { return `${sid}_${new Date() % 1000}_${Math.floor(Math.ran
 async function init(sid) {
   var jid = getJid(sid);
   await fsP.mkdir(`${workdir}/${jid}`);
+  tryfork(execSync(`install -m 777 src/server/judge/helpers/* ${workdir}/${jid}/`), "OpenBox"); /* */
   var sub = await SubDB.findByPk(sid);
   if (!sub) throw ["Submission", 0, "submission doesn't exist."];
-  tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData");
-  var compiler = new Compiler(sub.language);
+  tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData"); /* */
+	var compiler = new Compiler(sub.language);
   console.log("jizz");
   await compiler.compile(jid, sid);
   console.log(`Finished compiling of submission No. ${sid}.`);
