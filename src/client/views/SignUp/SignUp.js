@@ -49,7 +49,7 @@ const styles = theme => ({
 
 class SignUp extends Component {
 
-  render(){
+  render() {
     const { classes, history } = this.props;
     return (
       <div className={classes.root}>

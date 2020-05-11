@@ -22,4 +22,9 @@ exports.credentials = {
     cert: readFileSync("./fullchain.pem"),
     key: readFileSync("./privkey.pem")
   }
-}
+};
+
+exports.sandbox = {
+  offset: 0,
+  limit: 10
+};

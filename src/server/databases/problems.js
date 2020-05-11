@@ -47,7 +47,7 @@ export default {
     defaultValue: "[]"
   },
   testMethod: {
-    type: Sequelize.ENUM("string", "special", "float", "multiple"),
+    type: Sequelize.ENUM("string", "special", "float", "multiple", "interactive"),
     allowNull: false,
     defaultValue: "string"
   },

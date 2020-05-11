@@ -65,7 +65,7 @@ function mapStateToProps({ user }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleSignIn: uid => dispatch(signIn(uid))
+    handleSignIn: uid => dispatch(signIn(uid, false))
   };
 }
 

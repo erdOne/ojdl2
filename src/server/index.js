@@ -25,7 +25,6 @@ const snakeToCamel = (str) => str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
 app.post("/api/:type", function(req, res) {
   var type = snakeToCamel(req.params.type);
-  console.log(type);
   if (!(type in api))
     res.sendStatus(400);
   else

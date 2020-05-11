@@ -6,6 +6,7 @@ class TestcaseJudger {
     this.Tester = Tester;
     this.Comparator = Comparator;
   }
+
   async judge({ jid, tid }, { timeLimit, memLimit }) {
     try {
       var result;

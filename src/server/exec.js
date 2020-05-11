@@ -4,7 +4,7 @@ var fsP = fs.promises;
 import { SubDB, ProbDB } from "./databases.js";
 import { Queue, spawnP, tryfork } from "./utils.js";
 import { getComparator } from "./judge/comparators.js";
-import Tester from "./judge/Tester.js";
+import { getTester } from "./judge/Tester.js";
 import Judger from "./judge/Judger.js";
 import Compiler from "./judge/Compiler.js";
 import Uploader from "./judge/Uploader.js";
@@ -13,7 +13,10 @@ import { ErrorResult } from "./judge/results.js";
 const workdir = "./workdir";
 const isolatePath = "isolate/isolate";
 
-global.sandBoxQueue = new Queue(10, function(boxno, callback) {
+import { sandbox } from "../../config.js";
+
+global.sandBoxQueue = new Queue(sandbox.limit, function(boxno, callback) {
+  boxno += sandbox.offset;
 
   try {
     tryfork(spawnSync(isolatePath, ["--init", "--cg", "-b", boxno]), "Sandbox");
@@ -39,10 +42,11 @@ function getJid(sid) { return `${sid}_${new Date() % 1000}_${Math.floor(Math.ran
 async function init(sid) {
   var jid = getJid(sid);
   await fsP.mkdir(`${workdir}/${jid}`);
+  tryfork(execSync(`install -m 777 src/server/judge/helpers/* ${workdir}/${jid}/`), "OpenBox"); /* */
   var sub = await SubDB.findByPk(sid);
   if (!sub) throw ["Submission", 0, "submission doesn't exist."];
-  tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData");
-  var compiler = new Compiler(sub.language);
+  tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData"); /* */
+	var compiler = new Compiler(sub.language);
   console.log("jizz");
   await compiler.compile(jid, sid);
   console.log(`Finished compiling of submission No. ${sid}.`);
@@ -57,7 +61,7 @@ export async function exec(sid) {
   try {
     var { jid, sub, prob } = await init(sid);
 
-    var Comparator = getComparator(prob.testMethod),
+    var Comparator = getComparator(prob.testMethod), Tester = getTester(prob.testMethod),
       comparator   = new Comparator(prob.param),
       tester       = new Tester(sub.language),
       judger       = new Judger(tester, comparator, uploader);
@@ -67,7 +71,7 @@ export async function exec(sid) {
     console.error(e);
     await uploader.upload(new ErrorResult(e));
   }
-  fs.rmdir(`${workdir}/${jid}`, { recursive: true },  console.error);
+  fs.rmdir(`${workdir}/${jid}`, { recursive: true }, ()=>{});
   console.log(`Finished judging on submission No. ${sid}.`);
 }
 
