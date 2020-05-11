@@ -9,3 +9,5 @@ solution.on("close", c => {
 		code = c;
 	});
 interactor.on("close", () => process.exit(code));
+interactor.on("error", e => { console.error(e), process.exit(1); });
+solution.on("error", e => { console.error(e), process.exit(1); });

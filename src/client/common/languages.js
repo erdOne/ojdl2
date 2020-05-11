@@ -5,7 +5,7 @@ export default {
     mode: "text/x-c++src",
     text: "C++17 (gcc)",
     buildArgs: ["-e", "--processes=5", "--", "/usr/local/bin/g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
-    execArgs: ["main.out"],
+    execArgs: ["./main.out"],
     source: "main.cpp",
     executable: "main.out"
   },
@@ -14,7 +14,7 @@ export default {
     mode: "text/x-csrc",
     text: "C (gcc)",
     buildArgs: ["-e", "--processes=5", "--", "/usr/local/bin/gcc", "main.c", "-o", "main.out"],
-    execArgs: ["main.out"],
+    execArgs: ["./main.out"],
     source: "main.c",
     executable: "main.out"
   },
@@ -23,7 +23,7 @@ export default {
     mode: "text/x-haskell",
     text: "haskell (ghc)",
     buildArgs: ["-e", "--processes=10", "--", "/usr/bin/ghc", "-dynamic", "-tmpdir", ".", "main.hs", "-o", "main.out"],
-    execArgs: ["main.out"],
+    execArgs: ["./main.out"],
     source: "main.hs",
     executable: "main.out"
   },
