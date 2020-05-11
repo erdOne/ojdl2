@@ -11,9 +11,9 @@ class TestcaseJudger {
       var result;
       do result = await this.Tester.test({ jid, tid }, { timeLimit, memLimit });
       while (result.verdict === verdicts.SE);
-      return this.Comparator.compare({ jid, tid }, result);
+      return await this.Comparator.compare({ jid, tid }, result);
     } catch (err) {
-      console.error(err);
+      console.error("testcase judger got error:", err);
       return new ErrorTestResult(tid, err);
     }
   }
@@ -44,7 +44,7 @@ export default class Judger {
       this.result.tryAC();
       this.result.pending = false;
     } catch (e) {
-      console.log("jizz error");
+      console.log("Judger got error:");
       console.error(e);
       this.result = new ErrorResult(e);
     }
