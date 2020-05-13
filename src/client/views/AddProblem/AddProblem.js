@@ -142,15 +142,15 @@ class Problem extends Component {
 
     var prob = { ...this.state };
     delete prob.dataLoaded; delete prob.error;
-		for (var subtask of prob.testSuite)
-			for (var testcase of subtask.testcases) {
-		    const timeLimit = parseInt(testcase.timeLimit);
-				const memLimit = parseInt(testcase.memLimit);
-				if(isNaN(timeLimit) || isNaN(memLimit)) {
-					this.props.enqueueSnackbar("請為所有測資設置時間及記憶體限制");
-					return;
-				}
-			}
+    for (var subtask of prob.testSuite)
+      for (var testcase of subtask.testcases) {
+        const timeLimit = parseInt(testcase.timeLimit);
+        const memLimit = parseInt(testcase.memLimit);
+        if(isNaN(timeLimit) || isNaN(memLimit)) {
+          this.props.enqueueSnackbar("請為所有測資設置時間及記憶體限制");
+          return;
+        }
+      }
 
     var formData = new FormData();
     formData.set("uid", this.props.user.uid);
