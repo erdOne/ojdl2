@@ -7,3 +7,5 @@ export { default as MDEditor } from "./MDEditor";
 export { default as MDRenderer } from "./MDRenderer";
 export { default as Title } from "./Title";
 export { default as Editor } from "./Editor";
+
+export { default as DBTable } from "./DBTable";

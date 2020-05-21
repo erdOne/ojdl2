@@ -238,20 +238,32 @@ export async function addProb({ uid, prob }, files) {
   return { pid: prob.pid };
 }
 
-export async function getSubs({ uid, cid }) {
+export async function getSubs({ uid, cid, order, limit, offset, filters }) {
   var admin = await isAdmin({ uid });
   var cids = Array.from((await getConts({ uid })).conts)
     .filter(c => admin || c.end < new Date() || c.cid === parseInt(cid))
     .map(c => c.cid)
     .concat(0)
     .filter(c => !cid || c === parseInt(cid));
+  var where = { cid: { [Op.in]: cids } };
+  var { user_name: handle, problem_id: pid, filter_verdict: verdict, filter_language: language } = filters;
+  if (handle) {
+    var user = await UserDB.findOne({ where: { handle } });
+    if (user) where.uid = user.uid;
+  }
+  if (pid)
+    where.pid = parseInt(pid);
+  if (verdict)
+    where.verdict = verdicts[verdict];
+  if (language)
+    where.language = language;
   return { subs: await SubDB.findAll({
-    where: { cid: { [Op.in]: cids } },
+    order, limit, offset, where,
     include: [
       { model: UserDB, attributes: ["handle"] },
       { model: ProbDB, attributes: ["title"], required: true }
     ]
-  }) };
+  }), subCount: await SubDB.count({ where }), debug: cids };
 }
 
 export async function getDashboardData({ uid }) {

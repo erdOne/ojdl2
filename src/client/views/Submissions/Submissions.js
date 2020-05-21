@@ -6,14 +6,16 @@ import { connect } from "react-redux";
 import { Link, CircularProgress } from "@material-ui/core";
 
 import { DataTable } from "components";
+import { DBTable } from "components";
 import verdicts from "common/verdicts";
+import languages from "common/languages";
 
 const columns = [
   { id: "sid", align: "right", numeric: true,
     disablePadding: true, label: "#", style: { width: 75 },
     display: sub=>sub.sid },
   { id: "pid", align: "left", numeric: false, disablePadding: true, label: "題目",
-    display: sub=>`${sub.pid} - ${sub.problem.title}`},
+    display: sub=>`#${sub.pid}: ${sub.problem.title}`},
   { id: "handle", align: "left", numeric: false, disablePadding: true, label: "上傳者",
     display: sub=>sub.user.handle },
   { id: "time", align: "right", numeric: true, disablePadding: true, label: "時間(ms)" },
@@ -41,15 +43,31 @@ class Submissions extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { dataLoaded: false };
-    axios.post("/api/get_subs", { uid: this.props.user.uid, cid: this.props.match.params.cid })
-      .then(res=>{
-        console.log(res.data);
-        this.setState({ rows: res.data.subs, dataLoaded: true });
-      });
   }
 
   render() {
+    return (
+      <DBTable columns={columns} title="Submissions"
+        config={{
+          key: "sid",
+          order: [["sid", "desc"]],
+          link: sub => `./submission/${sub.sid}`,
+          typesetMath: true,
+          api: {
+            url: "/api/get_subs",
+            extract: data => [data.subs, data.subCount],
+            queryWhiteList: {
+              "user_name": null, "problem_id": null,
+              "filter_verdict": Object.keys(verdicts).filter(k => isNaN(parseInt(k))),
+              "filter_language": Object.keys(languages)
+            },
+            args: { uid: this.props.user.uid, cid: this.props.match.params.cid }
+          }
+        }}
+      />
+    );
+
+/*
     if (this.state.dataLoaded)
       return (
         <DataTable columns={columns} rows={this.state.rows} title="Submissions"
@@ -64,7 +82,7 @@ class Submissions extends Component {
       );
     else
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-
+    */
   }
 }
 
