@@ -30,7 +30,7 @@ const useToolbarStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.secondary.dark,
       },
   filter: {
-    flex: "3 1 300%"
+    flex: "5 1 auto"
   },
   spacer: {
     flex: "1 1 100%",
@@ -55,9 +55,9 @@ const EnhancedTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
 
   function getOptionsProps(key) {
     return {
-      label: key.split(/(?=[A-Z])/).map(i => i.toLowerCase()).join(" ").capitalize(),
+      label: key.split(/(?=[-_])/).map(i => i.toLowerCase()).join(" ").capitalize(),
       name: key,
-      value: form[key] ?? "",
+      value: form[key] ?? "", 
       onChange: handleChangeForm
     };
   };
@@ -70,19 +70,16 @@ const EnhancedTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
         </Typography>
       </div>
       <div className={classes.spacer} />
-      <form onSubmit={() => sendQuery(form)} style={{ display: "flex", flexDirection: "row" }}> 
-        <div className={classes.filter}>
-          {Object.entries(queryWhiteList).map(([term, options]) =>
-            options ? (
-              <>
-                <InputLabel shrink>{term}</InputLabel>
-                <TextField select {...getOptionsProps(term)}>
-                  {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-                </TextField>
-              </>
-            ) : <TextField {...getOptionsProps(term)} />
-          )}
-        </div>
+      <form onSubmit={() => sendQuery(form)} style={{ display: "flex", flexWrap: "nowrap", flex: "0 0 60%" }}> 
+        {Object.entries(queryWhiteList).map(([term, options]) =>
+          <div className={classes.filter} key={term}>
+          {options ? (
+              <TextField select {...getOptionsProps(term)} style={{ minWidth: 140 }}>
+                {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+              </TextField>
+          ) : <TextField {...getOptionsProps(term)} />}
+          </div>
+        )}
         <Button variant="contained" color="primary" type="submit"> Submit </Button>
       </form>
     </Toolbar>
@@ -91,6 +88,8 @@ const EnhancedTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
 
 EnhancedTableToolbar.propTypes = {
   title: PropTypes.string.isRequired,
+  queryWhiteList: PropTypes.object,
+  sendQuery: PropTypes.func.isRequired
 };
 
 export default EnhancedTableToolbar;
