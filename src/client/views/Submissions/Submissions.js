@@ -49,8 +49,8 @@ function Submissions(props) {
         queryWhiteList: {
           "user_name": null,
           "problem_id": null,
-          "filter_verdict": Object.keys(verdicts).filter(k => isNaN(parseInt(k))),
-          "filter_language": Object.keys(languages)
+          "filter_verdict": Object.keys(verdicts).filter(k => isNaN(parseInt(k))).sort(),
+          "filter_language": Object.keys(languages).sort()
         },
         args: { uid, cid }
       }}

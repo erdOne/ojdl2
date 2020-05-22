@@ -48,16 +48,23 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
   const [form, setForm] = useState({});
 
   function handleChangeForm(evt) {
+    const { name, value } = evt.target;
     setForm(prevForm => {
-      return { ...prevForm, [evt.target.name]: evt.target.value };
+      return { ...prevForm, [name]: value };
     });
+  }
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    sendQuery(form);
+    setForm({});
   }
 
   function getOptionsProps(key) {
     return {
       label: key.replace(/[-_]/, " ").toLowerCase().capitalize(),
       name: key,
-      value: form[key] ?? "", 
+      value: form[key] ?? "",
       onChange: handleChangeForm
     };
   };
@@ -70,7 +77,7 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
         </Typography>
       </div>
       <div className={classes.spacer} />
-      <form onSubmit={() => sendQuery(form)} style={{ display: "flex", flexWrap: "nowrap", flex: "0 0 60%" }}> 
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "nowrap", flex: "0 0 60%" }}> 
         {Object.entries(queryWhiteList).map(([term, options]) =>
           <div className={classes.filter} key={term}>
           {options ? (
@@ -85,7 +92,6 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
     </Toolbar>
   );
 };
-
 VirtualTableToolbar.propTypes = {
   title: PropTypes.string.isRequired,
   queryWhiteList: PropTypes.object,

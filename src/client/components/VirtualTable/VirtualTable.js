@@ -83,6 +83,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
     filters: Object.fromEntries(Array.from(qs.entries()).filter(([key, val]) => (key in api.queryWhiteList))),
     page, rowsPerPage, ...api.args
   });
+  console.log(data);
 
   function handleChangeDense(event) {
     setDense(event.target.checked);
@@ -95,12 +96,12 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value));
-    qs.set("page", 1);
+    qs.set("page", 1); 
     history.push({ search: qs.toString() });
   }
 
   function sendQuery(form) {
-    for(const { key, value } of form) qs.set(key, value);
+    const qs = new URLSearchParams({ page: page+1, ...form });
     history.push({ search: qs.toString() });
   }
 

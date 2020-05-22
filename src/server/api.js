@@ -123,7 +123,7 @@ export async function getCont({ uid, cid }) {
   return { cont };
 }
 
-export async function getProbs({ uid, cid, order, limit, offset, filters }) {
+export async function getProbs({ uid, cid, order, limit, offset, filters = {} }) {
   var { problem_id: pid, problem_name: title } = filters;
   if (!cid) {
     var where = visible(await isAdmin({ uid }));
@@ -139,14 +139,14 @@ export async function getProbs({ uid, cid, order, limit, offset, filters }) {
   var probs = (await getCont({ uid, cid })).cont.problems;
   var probCount = probs.length;
   if (pid)
-    probs = probs.filter(prob => prob.pid === parseInt(pid));
+    probs = probs.filter(prob => prob.pid === pid);
   if (title)
-    probs = probs.filter(prob => prob.title.match(new RegExp(`^${title}$`)));
+    probs = probs.filter(prob => prob.title.match(new RegExp(`.*${title}.*`)));
   probs = probs.sort((a, b) => {
-    for (const { key, orderBy } of filters) if(a[key] != b[key]) {
+    for (const [key, orderBy] of Object.entries(filters)) if(a[key] != b[key]) {
       const d = a[key] - b[key];
-      return orderBy === "desc" ? d : -d;
-    };
+      return orderBy === "asc" ? d : -d;
+    }
     return 0;
   });
   probs = probs.slice(offset, limit);
@@ -257,7 +257,7 @@ export async function addProb({ uid, prob }, files) {
   return { pid: prob.pid };
 }
 
-export async function getSubs({ uid, cid, order, limit, offset, filters }) {
+export async function getSubs({ uid, cid, order, limit, offset, filters = {} }) {
   var admin = await isAdmin({ uid });
   var cids = Array.from((await getConts({ uid })).conts)
     .filter(c => admin || c.end < new Date() || c.cid === parseInt(cid))
@@ -272,7 +272,7 @@ export async function getSubs({ uid, cid, order, limit, offset, filters }) {
     where.uid = user.uid;
   }
   if (pid)
-    where.pid = tryParseInt(pid);
+    where.pid = cid ? pid : tryParseInt(pid);
   if (verdict)
     where.verdict = verdicts[verdict];
   if (language)
@@ -283,7 +283,7 @@ export async function getSubs({ uid, cid, order, limit, offset, filters }) {
       { model: UserDB, attributes: ["handle"] },
       { model: ProbDB, attributes: ["title"], required: true }
     ]
-  }), subCount: await SubDB.count({ where }), debug: where };
+  }), subCount: await SubDB.count({ where }) }; // debug: where
 }
 
 export async function getDashboardData({ uid }) {
