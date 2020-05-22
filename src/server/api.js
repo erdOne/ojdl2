@@ -232,9 +232,10 @@ export async function addProb({ uid, prob }, files) {
   fs.mkdirSync(`data/prob/${prob.pid}`, { recursive: true });
   if (files)
     for (let fileName in files)
-      files[fileName].mv(`data/prob/${prob.pid}/${fileName}`);
-  if (files["judge.cpp"])
-    execSync(`g++ -std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`);
+      files[fileName].mv(`data/prob/${prob.pid}/${fileName}`).then(() =>
+        fileName == "judge.cpp" && 
+          execSync(`g++ -std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`)
+      );
   return { pid: prob.pid };
 }
 
