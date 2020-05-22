@@ -185,7 +185,7 @@ class Problem extends Component {
 
   downloadTestSuites() {
     this.props.enqueueSnackbar("The Feature is still a work-in-progress.");
-    axios.post("/api/get_prob");
+    //axios.post("/api/get_prob");
   }
 
   render() {

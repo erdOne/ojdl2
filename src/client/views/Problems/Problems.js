@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { CircularProgress } from "@material-ui/core";
 
-import { DataTable } from "components";
+import { VirtualTable } from "components";
 
 const columns = [
   { id: "pid", align: "right", numeric: true,
@@ -22,45 +22,35 @@ function mapStateToProps({ user }) {
   return { user };
 }
 
-class Problems extends Component {
-  static propTypes = {
-    /* FromState */
-    user: PropTypes.object,
-    /* FromRouter */
-    match: PropTypes.object
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = { dataLoaded: false };
-    axios.post("/api/get_probs", { uid: this.props.user.uid, cid: this.props.match.params.cid })
-      .then(res=>{
-        console.log(res.data);
-        this.setState({ rows: res.data.probs, dataLoaded: true });
-      })
-      .catch(res=>{
-        this.setState({ error: true, errMsg: res.msg });
-      });
-  }
-
-  render() {
-    if (this.state.error)
-      return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
-    if (!this.state.dataLoaded)
-      return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-
-    return (
-      <DataTable columns={columns} rows={this.state.rows} title="Problems"
-        config={{
-          key: "pid",
-          defaultOrder: "asc",
-          defaultOrderBy: "pid",
-          link: prob => `./problem/${prob.pid}`,
-          typesetMath: true
-        }}
-      />
-    );
-  }
+function Problems(props) {
+  const uid = props.user.uid;
+  const cid = props.match.params.cid;
+  return (
+    <VirtualTable columns={columns} title="Problems"
+      config={{
+        key: "pid",
+        order: [["pid", "asc"]],
+        link: prob => `./problem/${prob.pid}`,
+        typesetMath: true
+      }}
+      api={{
+        url: "/api/get_probs",
+        extract: data => [data.probs, data.probCount],
+        queryWhiteList: {
+          "problem_name": null,
+          "problem_id": null,
+        },
+        args: { uid, cid }
+      }}
+    />
+  );
 }
+Problems.propTypes = {
+  /* FromState */
+  user: PropTypes.object,
+  /* FromRouter */
+  match: PropTypes.object
+}
+
 
 export default connect(mapStateToProps)(Problems);
