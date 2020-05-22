@@ -15,7 +15,7 @@ import { Table,
   Switch } from "@material-ui/core";
 import axios from "axios";
 
-import { TablePaginationActions, EnhancedTableHead, EnhancedTableToolbar } from "./components";
+import { TablePaginationActions, VirtualTableToolbar } from "./components";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(0, 1)
   },
   tableRow: {
+    maxHeight: 48,
     "&>:first-child": {
       paddingLeft: theme.spacing(2)
     },
@@ -60,14 +61,28 @@ function useAPI({ url, order, page, rowsPerPage, extract, ...rest }) {
   const [data, setData] = useState(null);
   useEffect(() => {
     axios.post(url, { order, limit: rowsPerPage, offset: page * rowsPerPage, ...rest })
-      .then(res => setData(extract(res.data)))
-      .catch(res => setData({ err: true, errMsg: res.msg }));
+      .then(res => {
+        if(res.data.error) 
+          setData({ error: true, errMsg: res.data.msg });
+        else
+          setData(extract(res.data));
+      });
   }, [order, page, rowsPerPage]);
   return data;
 }
 
-function DBTable({ columns, config, history, location, title }) {
+function VirtualTable({ columns, config, api, history, location, title }) {
   const classes = useStyles();
+
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  let qs = new URLSearchParams(location.search);
+  const page = parseInt(qs.get("page") ?? 1) - 1;
+  const data = useAPI({
+    url: api.url, order: config.order, extract: api.extract,
+    filters: Object.fromEntries(Array.from(qs.entries()).filter(([key, val]) => (key in api.queryWhiteList))),
+    page, rowsPerPage, ...api.args
+  });
 
   function handleChangeDense(event) {
     setDense(event.target.checked);
@@ -77,25 +92,21 @@ function DBTable({ columns, config, history, location, title }) {
     qs.set("page", newPage + 1);
     history.push({ search: qs.toString() });
   }
-
-  function sendQuery(form) {
-    for(const { key, value } of Object.entries(form)) qs.set(key, value);
+  
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value));
+    qs.set("page", 1);
     history.push({ search: qs.toString() });
   }
 
-  const [dense, setDense] = useState(false);
-  const qs = new URLSearchParams(location.search);
-  const rowsPerPage = 5;
-  const page = parseInt(qs.get("page") ?? 1) - 1;
-  const data = useAPI({
-    url: config.api.url, order: config.order, extract: config.api.extract,
-    filters: Object.fromEntries(Array.from(qs.entries()).filter(([key, val]) => (key in config.api.queryWhiteList))),
-    page, rowsPerPage, ...config.api.args
-  });
+  function sendQuery(form) {
+    for(const { key, value } of form) qs.set(key, value);
+    history.push({ search: qs.toString() });
+  }
 
   if (data === null)
     return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-  if (data.err)
+  if (data.error)
     return (<div style={{ "textAlign": "center" }}><h4>{data.errMsg}</h4></div>);
 
   const [rows, rowsLength] = data;
@@ -104,7 +115,7 @@ function DBTable({ columns, config, history, location, title }) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar title={title} queryWhiteList={config.api.queryWhiteList} sendQuery={sendQuery} />
+        <VirtualTableToolbar title={title} queryWhiteList={api.queryWhiteList} sendQuery={sendQuery} />
         <div className={classes.tableWrapper}>
           <Table
             className={classes.table}
@@ -183,7 +194,7 @@ function DBTable({ columns, config, history, location, title }) {
                     native: true,
                   }}
                   onChangePage={handleChangePage}
-                  onChangeRowsPerPage={(event, x) => x}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
                   ActionsComponent={TablePaginationActions}
                 />
               </TableRow>
@@ -199,4 +210,4 @@ function DBTable({ columns, config, history, location, title }) {
   );
 }
 
-export default withRouter(DBTable);
+export default withRouter(VirtualTable);

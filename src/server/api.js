@@ -123,15 +123,34 @@ export async function getCont({ uid, cid }) {
   return { cont };
 }
 
-export async function getProbs({ uid, cid }) {
+export async function getProbs({ uid, cid, order, limit, offset, filters }) {
+  var { problem_id: pid, problem_name: title } = filters;
   if (!cid) {
-    var probs = await ProbDB.findAll({
-      attributes: ["pid", "title", "subtitle", "updatedAt"],
-      where: visible(await isAdmin({ uid }))
-    });
-    return { probs };
+    var where = visible(await isAdmin({ uid }));
+    if (pid)
+      where.pid = tryParseInt(pid);
+    if (title)
+      where.title = { [Op.like]: `%${title}%` };
+    return { probs: await ProbDB.findAll({
+      order, limit, offset, where,
+      attributes: ["pid", "title", "subtitle", "updatedAt"]
+    }), probCount: await ProbDB.count(where) };
   }
-  return { probs: (await getCont({ uid, cid })).cont.problems };
+  var probs = (await getCont({ uid, cid })).cont.problems;
+  var probCount = probs.length;
+  if (pid)
+    probs = probs.filter(prob => prob.pid === parseInt(pid));
+  if (title)
+    probs = probs.filter(prob => prob.title.match(new RegExp(`^${title}$`)));
+  probs = probs.sort((a, b) => {
+    for (const { key, orderBy } of filters) if(a[key] != b[key]) {
+      const d = a[key] - b[key];
+      return orderBy === "desc" ? d : -d;
+    };
+    return 0;
+  });
+  probs = probs.slice(offset, limit);
+  return { probs, probCount };
 }
 
 export async function getProb({ uid, pid, cid }) {
@@ -249,10 +268,11 @@ export async function getSubs({ uid, cid, order, limit, offset, filters }) {
   var { user_name: handle, problem_id: pid, filter_verdict: verdict, filter_language: language } = filters;
   if (handle) {
     var user = await UserDB.findOne({ where: { handle } });
-    if (user) where.uid = user.uid;
+    if (!user) return { subs: [], subCount: 0 };
+    where.uid = user.uid;
   }
   if (pid)
-    where.pid = parseInt(pid);
+    where.pid = tryParseInt(pid);
   if (verdict)
     where.verdict = verdicts[verdict];
   if (language)
@@ -263,7 +283,7 @@ export async function getSubs({ uid, cid, order, limit, offset, filters }) {
       { model: UserDB, attributes: ["handle"] },
       { model: ProbDB, attributes: ["title"], required: true }
     ]
-  }), subCount: await SubDB.count({ where }), debug: cids };
+  }), subCount: await SubDB.count({ where }), debug: where };
 }
 
 export async function getDashboardData({ uid }) {

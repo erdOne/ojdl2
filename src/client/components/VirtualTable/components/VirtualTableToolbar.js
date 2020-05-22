@@ -43,7 +43,7 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
+const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
   const classes = useToolbarStyles();
   const [form, setForm] = useState({});
 
@@ -55,7 +55,7 @@ const EnhancedTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
 
   function getOptionsProps(key) {
     return {
-      label: key.split(/(?=[-_])/).map(i => i.toLowerCase()).join(" ").capitalize(),
+      label: key.replace(/[-_]/, " ").toLowerCase().capitalize(),
       name: key,
       value: form[key] ?? "", 
       onChange: handleChangeForm
@@ -80,16 +80,16 @@ const EnhancedTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
           ) : <TextField {...getOptionsProps(term)} />}
           </div>
         )}
-        <Button variant="contained" color="primary" type="submit"> Submit </Button>
+        <Button variant="contained" color="primary" type="submit" className={classes.filter}> Submit </Button>
       </form>
     </Toolbar>
   );
 };
 
-EnhancedTableToolbar.propTypes = {
+VirtualTableToolbar.propTypes = {
   title: PropTypes.string.isRequired,
   queryWhiteList: PropTypes.object,
   sendQuery: PropTypes.func.isRequired
 };
 
-export default EnhancedTableToolbar;
+export default VirtualTableToolbar;

@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
-//import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { IconButton, TextField } from "@material-ui/core";
 import { LastPage, FirstPage, KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
 
 
-const useStyles1 = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexShrink: 0,
     color: theme.palette.text.secondary,
@@ -21,7 +20,7 @@ const useStyles1 = makeStyles(theme => ({
 }));
 
 function TablePaginationActions(props) {
-  const classes = useStyles1();
+  const classes = useStyles();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
   const lastPage = Math.ceil(count / rowsPerPage) - 1;

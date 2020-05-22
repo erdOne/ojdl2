@@ -5,8 +5,7 @@ import { connect } from "react-redux";
 
 import { Link, CircularProgress } from "@material-ui/core";
 
-import { DataTable } from "components";
-import { DBTable } from "components";
+import { VirtualTable } from "components";
 import verdicts from "common/verdicts";
 import languages from "common/languages";
 
@@ -33,41 +32,36 @@ function mapStateToProps({ user }) {
   return { user };
 }
 
-class Submissions extends Component {
-  static propTypes = {
+function Submissions(props) { 
+  const uid = props.user.uid;
+  const cid = props.match.params.cid;
+  return (
+    <VirtualTable columns={columns} title="Submissions"
+      config={{
+        key: "sid",
+        order: [["sid", "desc"]],
+        link: sub => `./submission/${sub.sid}`,
+        typesetMath: true
+      }}
+      api={{
+        url: "/api/get_subs",
+        extract: data => [data.subs, data.subCount],
+        queryWhiteList: {
+          "user_name": null,
+          "problem_id": null,
+          "filter_verdict": Object.keys(verdicts).filter(k => isNaN(parseInt(k))),
+          "filter_language": Object.keys(languages)
+        },
+        args: { uid, cid }
+      }}
+    />
+  );
+}
+Submissions.propTypes = {
     /* FromState */
-    user: PropTypes.object,
+  user: PropTypes.object,
     /* FromRouter */
-    match: PropTypes.object
-  }
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <DBTable columns={columns} title="Submissions"
-        config={{
-          key: "sid",
-          order: [["sid", "desc"]],
-          link: sub => `./submission/${sub.sid}`,
-          typesetMath: true,
-          api: {
-            url: "/api/get_subs",
-            extract: data => [data.subs, data.subCount],
-            queryWhiteList: {
-              "user_name": null,
-              "problem_id": null,
-              "filter_verdict": Object.keys(verdicts).filter(k => isNaN(parseInt(k))),
-              "filter_language": Object.keys(languages)
-            },
-            args: { uid: this.props.user.uid, cid: this.props.match.params.cid }
-          }
-        }}
-      />
-    );
-  }
+  match: PropTypes.object
 }
 
 export default connect(mapStateToProps)(Submissions);
