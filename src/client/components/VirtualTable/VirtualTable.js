@@ -78,11 +78,12 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   let qs = new URLSearchParams(location.search);
+  let filters = {};
+  for(const key of qs.keys()) if(key in api.queryWhiteList) filters[key] = qs.get(key);
   const page = parseInt(qs.get("page") ?? 1) - 1;
   const data = useAPI({
     url: api.url, order: config.order, extract: api.extract,
-    filters: Array.from(qs.keys()).filter(key => (key in api.queryWhiteList)).map(key => qs[key]),
-    page, rowsPerPage, ...api.args
+    filters, page, rowsPerPage, ...api.args
   });
 
   useEffect(() => {
