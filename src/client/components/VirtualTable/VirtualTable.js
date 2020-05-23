@@ -81,7 +81,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   const page = parseInt(qs.get("page") ?? 1) - 1;
   const data = useAPI({
     url: api.url, order: config.order, extract: api.extract,
-    filters: Array.from(qs.keys()).filter(key => (key in queryWhiteList)).map(key => qs[key]),
+    filters: Array.from(qs.keys()).filter(key => (key in api.queryWhiteList)).map(key => qs[key]),
     page, rowsPerPage, ...api.args
   });
 
