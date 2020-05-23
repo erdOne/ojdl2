@@ -43,7 +43,7 @@ const useToolbarStyles = makeStyles(theme => ({
     display: "flex",
     flexWrap: "wrap",
     flex: "0 0 auto",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       flex: "0 0 80%"
     }
   },
