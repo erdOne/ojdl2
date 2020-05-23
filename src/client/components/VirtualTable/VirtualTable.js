@@ -60,9 +60,10 @@ const useStyles = makeStyles(theme => ({
 function useAPI({ url, order, page, rowsPerPage, extract, ...rest }) {
   const [data, setData] = useState(null);
   useEffect(() => {
+    if (data) setData(([rows, rowsLength]) => [[], rowsLength]);
     axios.post(url, { order, limit: rowsPerPage, offset: page * rowsPerPage, ...rest })
       .then(res => {
-        if(res.data.error) 
+        if (res.data.error)
           setData({ error: true, errMsg: res.data.msg });
         else
           setData(extract(res.data));
@@ -83,7 +84,6 @@ function VirtualTable({ columns, config, api, history, location, title }) {
     filters: Object.fromEntries(Array.from(qs.entries()).filter(([key, val]) => (key in api.queryWhiteList))),
     page, rowsPerPage, ...api.args
   });
-  console.log(data);
 
   useEffect(() => {
     if (!config.typesetMath) return;
@@ -116,13 +116,12 @@ function VirtualTable({ columns, config, api, history, location, title }) {
     const qs = new URLSearchParams({ page: page+1, ...form });
     history.push({ search: qs.toString() });
   }
-
-  if (data === null)
-    return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
+  if (!data)
+    return (<div style={{ textAlign: "center" }}><CircularProgress /></div>);
   if (data.error)
-    return (<div style={{ "textAlign": "center" }}><h4>{data.errMsg}</h4></div>);
+    return (<div style={{ textAlign: "center" }}><h4>{data.errMsg}</h4></div>);
 
-  const [rows, rowsLength] = data;
+  const [rows = [], rowsLength] = data ?? [];
   const emptyRows = rowsPerPage - rows.length;
 
   return (
@@ -156,6 +155,15 @@ function VirtualTable({ columns, config, api, history, location, title }) {
             
             <TableBody>
               {
+                !data && (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} style={{ textAlign: "center" }}>
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow>
+                )
+              }
+              {
                 rows.map((row, index) => {
                   const onRowClick = evt => {
                     if (!config.link) return;
@@ -188,7 +196,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
               {
                 emptyRows > 0 && Array(emptyRows).fill().map((_, index) => (
                   <TableRow key={`emptyRow-${index}`} style={{ "height": 49 }}>
-                    <TableCell colSpan={columns.length} />
+                    <TableCell colSpan={columns.length}>&nbsp;</TableCell> 
                   </TableRow>
                 ))
               }
