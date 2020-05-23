@@ -78,15 +78,18 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
       </div>
       <div className={classes.spacer} />
       <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "nowrap", flex: "0 0 60%" }}> 
-        {Object.entries(queryWhiteList).map(([term, options]) =>
-          <div className={classes.filter} key={term}>
-          {options ? (
-              <TextField select {...getOptionsProps(term)} style={{ minWidth: 140 }}>
-                {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-              </TextField>
-          ) : <TextField {...getOptionsProps(term)} />}
-          </div>
-        )}
+        {Object.keys(queryWhiteList).map(term => {
+          const options = queryWhiteList[term];
+          return (
+            <div className={classes.filter} key={term}>
+              {options ? (
+                <TextField select {...getOptionsProps(term)} style={{ minWidth: 140 }}>
+                  {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+                </TextField>
+              ) : <TextField {...getOptionsProps(term)} />}
+            </div>
+          );
+        })}
         <Button variant="contained" color="primary" type="submit" className={classes.filter}> Submit </Button>
       </form>
     </Toolbar>
