@@ -155,15 +155,6 @@ function VirtualTable({ columns, config, api, history, location, title }) {
             
             <TableBody>
               {
-                !data && (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} style={{ textAlign: "center" }}>
-                      <CircularProgress />
-                    </TableCell>
-                  </TableRow>
-                )
-              }
-              {
                 rows.map((row, index) => {
                   const onRowClick = evt => {
                     if (!config.link) return;
