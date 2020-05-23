@@ -46,7 +46,7 @@ function datasetFromData(start, end, subs) {
   for (var uid in users)
     users[uid].scoresT.push({ t: now, y: users[uid].totalScore });
 
-  return Object.entries(users).map(([a, b]) => b).sort((a, b) => b.totalScore - a.totalScore);
+  return Object.values(users).sort((a, b) => b.totalScore - a.totalScore);
 }
 
 const chartOptions = {
