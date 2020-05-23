@@ -85,6 +85,18 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   });
   console.log(data);
 
+  useEffect(() => {
+    if (!config.typesetMath) return;
+    // typesetMath
+    try {
+      window.MathJax.startup.promise = window.MathJax.startup.promise.then(
+        ()=>window.MathJax.typesetPromise()
+      );
+    } catch (e) {
+      console.log("cannot typeset");
+    }
+  });
+
   function handleChangeDense(event) {
     setDense(event.target.checked);
   }
@@ -126,8 +138,8 @@ function VirtualTable({ columns, config, api, history, location, title }) {
 
             <TableHead>
               <TableRow className={classes.tableRow}>
-                {columns.map(({ id, align, style, disablePadding, label }) => {
-                  return (
+                {
+                  columns.map(({ id, align, style, disablePadding, label }) => (
                     <TableCell
                       key={id}
                       align={align}
@@ -137,8 +149,8 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                     >
                      {label}
                     </TableCell>
-                  );
-                })}
+                  ))
+                }
               </TableRow>
             </TableHead>
             
@@ -146,7 +158,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
               {
                 rows.map((row, index) => {
                   const onRowClick = evt => {
-                    if(!config.link) return;
+                    if (!config.link) return;
                     evt.preventDefault();
                     //history.push(config.link(row));
                     window.open(config.link(row));
@@ -174,12 +186,12 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                   );
                 })}
               {
-                Array(emptyRows).fill().map((_, index) => (
+                emptyRows > 0 && Array(emptyRows).fill().map((_, index) => (
                   <TableRow key={`emptyRow-${index}`} style={{ "height": 49 }}>
                     <TableCell colSpan={columns.length} />
                   </TableRow>
-                )
-              )}
+                ))
+              }
             </TableBody>
 
             <TableFooter>
