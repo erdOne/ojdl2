@@ -18,6 +18,9 @@ const useToolbarStyles = makeStyles(theme => ({
   root: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
+    display: "flex",
+    justifyContent: "space-between",
+    flexWrap: "wrap"
   },
   highlight:
     theme.palette.type === "light"
@@ -29,11 +32,20 @@ const useToolbarStyles = makeStyles(theme => ({
         color: theme.palette.text.primary,
         backgroundColor: theme.palette.secondary.dark,
       },
-  filter: {
-    flex: "5 1 auto"
+  textField: {
+    margin: theme.spacing(1, 1),
+    width: "max(150px, 10vw)",
+    fallbacks: {
+      width: 150
+    }
   },
-  spacer: {
-    flex: "1 1 100%",
+  filters: {
+    display: "flex",
+    flexWrap: "wrap",
+    flex: "0 0 auto",
+    [theme.breakpoints.down('md')]: {
+      flex: "0 0 80%"
+    }
   },
   actions: {
     color: theme.palette.text.secondary,
@@ -62,10 +74,13 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
 
   function getOptionsProps(key) {
     return {
+      key: key,
       label: key.replace(/[-_]/, " ").toLowerCase().capitalize(),
       name: key,
       value: form[key] ?? "",
-      onChange: handleChangeForm
+      onChange: handleChangeForm,
+      style: { flex: "2 1 auto" },
+      className: classes.textField
     };
   };
 
@@ -76,21 +91,17 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
           {title}
         </Typography>
       </div>
-      <div className={classes.spacer} />
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "nowrap", flex: "0 0 60%" }}> 
+      <form onSubmit={handleSubmit} className={classes.filters}> 
         {Object.keys(queryWhiteList).map(term => {
           const options = queryWhiteList[term];
-          return (
-            <div className={classes.filter} key={term}>
-              {options ? (
-                <TextField select {...getOptionsProps(term)} style={{ minWidth: 140 }}>
-                  {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-                </TextField>
-              ) : <TextField {...getOptionsProps(term)} />}
-            </div>
-          );
+          return options ? (
+              <TextField select {...getOptionsProps(term)}>
+                {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+              </TextField>
+            ) : <TextField {...getOptionsProps(term)} />
+          ;
         })}
-        <Button variant="contained" color="primary" type="submit" className={classes.filter}> Submit </Button>
+        <Button variant="contained" color="primary" type="submit" style={{ flex: "1 1 auto" }}> Submit </Button>
       </form>
     </Toolbar>
   );
