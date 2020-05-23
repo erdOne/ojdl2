@@ -167,7 +167,6 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                     <TableRow
                       hover
                       onClick={onRowClick}
-                      role="checkbox"
                       tabIndex={-1}
                       key={row[config.key]}
                     >
@@ -186,7 +185,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                 })}
               {
                 emptyRows > 0 && Array(emptyRows).fill().map((_, index) => (
-                  <TableRow key={`emptyRow-${index}`} style={{ "height": 49 }}>
+                  <TableRow key={index} style={{ height: 49 }}>
                     <TableCell colSpan={columns.length}>&nbsp;</TableCell> 
                   </TableRow>
                 ))
