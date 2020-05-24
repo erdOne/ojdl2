@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { PropTypes } from "prop-types";
 import marked from "marked";
-
+import clsx from "clsx";
 import { withStyles } from '@material-ui/core/styles';
 
 marked.setOptions({
@@ -16,7 +16,7 @@ function getMarkdownText(text) {
 
 const styles = {
   root: {
-    "& code": {
+    "& :not(pre) > code": {
       color: "saddlebrown",
       fontFamily: "'Inconsolata', Monaco, Consolas, 'Andale Mono', monospace",
       direction: "ltr",
@@ -59,7 +59,7 @@ class MDRenderer extends Component {
 
   render() {
     return (
-      <div className={`${this.props.className} ${this.props.classes.root}`}
+      <div className={clsx(this.props.className, this.props.classes.root)}
         dangerouslySetInnerHTML={getMarkdownText(this.props.source)}
       />
     );
