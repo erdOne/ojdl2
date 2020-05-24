@@ -42,6 +42,7 @@ const useToolbarStyles = makeStyles(theme => ({
   filters: {
     display: "flex",
     flexWrap: "wrap",
+    alignItems: "center",
     flex: "0 0 auto",
     [theme.breakpoints.down('sm')]: {
       flex: "0 0 80%"
@@ -79,7 +80,6 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
       name: key,
       value: form[key] ?? "",
       onChange: handleChangeForm,
-      style: { flex: "2 1 auto" },
       className: classes.textField
     };
   };
@@ -101,7 +101,9 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
             ) : <TextField {...getOptionsProps(term)} />
           ;
         })}
-        <Button variant="contained" color="primary" type="submit" style={{ flex: "1 1 auto" }}> Submit </Button>
+        <Button variant="contained" color="primary" type="submit" style={{ lineHeight: 2 }}>
+          Search
+        </Button>
       </form>
     </Toolbar>
   );
