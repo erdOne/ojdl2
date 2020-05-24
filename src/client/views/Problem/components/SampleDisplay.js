@@ -8,7 +8,7 @@ import { SampleDisplayStyles as styles } from "./styles";
 class SampleDisplay extends Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
-    sample: PropTypes.object.isRequired,
+    sample: PropTypes.arrayOf(PropTypes.string).isRequired,
     /* FromStyle */
     classes: PropTypes.object,
     /* FromSnackbar */
