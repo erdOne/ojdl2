@@ -30,7 +30,7 @@ const styles = {
       position: "relative",
       overflow: "hidden",
       textOverflow: "ellipsis",
-      padding: [".2em", ".2em"],
+      padding: [".1em", ".2em"],
       border: ["solid", 1, "rgba(51, 51, 51, 0.12)"],
       borderRadius: 3,
       background: "rgba(246, 246, 246, 1)"
