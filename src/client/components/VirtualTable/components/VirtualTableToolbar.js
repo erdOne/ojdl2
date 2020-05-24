@@ -101,7 +101,7 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
             ) : <TextField {...getOptionsProps(term)} />
           ;
         })}
-        <Button variant="contained" color="primary" type="submit" style={{ height: "30px" }}>
+        <Button variant="contained" color="primary" type="submit" style={{ lineHeight: 2 }}>
           Search
         </Button>
       </form>
