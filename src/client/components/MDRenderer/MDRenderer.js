@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { PropTypes } from "prop-types";
 import marked from "marked";
+
+import { withStyles } from '@material-ui/core/styles';
 
 marked.setOptions({
   gfm: true,
@@ -12,7 +14,31 @@ function getMarkdownText(text) {
   return { __html: rawMarkup };
 }
 
-export default class MDRenderer extends Component {
+const styles = {
+  root: {
+    "& code": {
+      color: "saddlebrown",
+      fontFamily: "'Inconsolata', Monaco, Consolas, 'Andale Mono', monospace",
+      direction: "ltr",
+      textAlign: "left",
+      whiteSpace: "pre",
+      wordSpacing: "normal",
+      wordBreak: "normal",
+      lineHeight: "1.3",
+      tabSize: "4",
+      hyphens: "none",
+      position: "relative",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      padding: [".2em", ".2em"],
+      border: ["solid", 1, "rgba(51, 51, 51, 0.12)"],
+      borderRadius: 3,
+      background: "rgba(246, 246, 246, 1)"
+    }
+  }
+};
+
+class MDRenderer extends Component {
   static propTypes = {
     source: PropTypes.string,
     className: PropTypes.string
@@ -33,9 +59,10 @@ export default class MDRenderer extends Component {
 
   render() {
     return (
-      <div className={this.props.className}
+      <div className={`${this.props.className} ${this.props.classes.root}`}
         dangerouslySetInnerHTML={getMarkdownText(this.props.source)}
-      >
-      </div>);
+      />
+    );
   }
 }
+export default withStyles(styles)(MDRenderer);

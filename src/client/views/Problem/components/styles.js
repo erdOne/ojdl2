@@ -16,6 +16,7 @@ export var SampleDisplayStyles = theme => ({
     textOverflow: "ellipsis",
     padding: [25, 12, 7, 12],
     border: ["solid", 1, "rgba(51, 51, 51, 0.12)"],
+    borderRadius: 3,
     background: "rgba(246, 246, 246, 0.2)",
     counterReset: "line",
     "& code span::before": {
