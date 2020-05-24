@@ -131,10 +131,11 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
       where.pid = tryParseInt(pid);
     if (title)
       where.title = { [Op.like]: `%${title}%` };
-    return { probs: await ProbDB.findAll({
+    const { rows, count } = await ProbDB.findAndCountAll({
       order, limit, offset, where,
       attributes: ["pid", "title", "subtitle", "updatedAt"]
-    }), probCount: await ProbDB.count(where) };
+    });
+    return { probs: rows, probCount: count };
   }
   var probs = (await getCont({ uid, cid })).cont.problems;
   var probCount = probs.length;
@@ -278,13 +279,14 @@ export async function getSubs({ uid, cid, order, limit, offset, filters = {} }) 
     where.verdict = verdicts[verdict];
   if (language)
     where.language = language;
-  return { subs: await SubDB.findAll({
+  let { rows, count } =  await SubDB.findAndCountAll({
     order, limit, offset, where,
     include: [
       { model: UserDB, attributes: ["handle"] },
       { model: ProbDB, attributes: ["title"], required: true }
     ]
-  }), subCount: await SubDB.count({ where }) }; // debug: where
+  });
+  return { subs: rows, subCount: count };
 }
 
 export async function getDashboardData({ uid }) {
