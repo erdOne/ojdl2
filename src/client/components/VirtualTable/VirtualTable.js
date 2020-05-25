@@ -33,6 +33,11 @@ const useStyles = makeStyles(theme => ({
   headCell: {
     padding: theme.spacing(0, 1)
   },
+  tableCell: {
+    textOverflow: "ellipsis",
+    overflowX: "hidden",
+    whiteSpace: "nowrap"
+  },
   tableRow: {
     maxHeight: 48,
     "&>:first-child": {
@@ -176,7 +181,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                         columns.map((column, i) => (
                           <TableCell
                             {...(i ? {} : { component: "th", scope: "row" })}
-                            align={column.align} key={i}
+                            align={column.align} key={i} className={classes.tableCell}
                           >
                             {column.display ? column.display(row) : row[column.id]}
                           </TableCell>
@@ -188,7 +193,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
               {
                 emptyRows > 0 && Array(emptyRows).fill().map((_, index) => (
                   <TableRow key={index}>
-                    <TableCell colSpan={columns.length}>&nbsp;</TableCell> 
+                    <TableCell colSpan={columns.length} className={classes.tableCell}>&nbsp;</TableCell> 
                   </TableRow>
                 ))
               }
