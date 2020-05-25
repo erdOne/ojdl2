@@ -36,7 +36,11 @@ const useStyles = makeStyles(theme => ({
   tableCell: {
     textOverflow: "ellipsis",
     overflowX: "hidden",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
+    [theme.breakpoints.down('sm')]: {
+      textOverflow: "clip",
+      whiteSpace: "normal"
+    }
   },
   tableRow: {
     maxHeight: 48,
