@@ -73,7 +73,6 @@ function useAPI({ url, order, page, rowsPerPage, extract, ...rest }) {
     if (data) setData(([rows, rowsLength]) => [[], rowsLength]);
     axios.post(url, { order, limit: rowsPerPage, offset: page * rowsPerPage, ...rest })
       .then(res => {
-        console.log(res.data);
         if (res.data.error)
           setData({ error: true, errMsg: res.data.msg });
         else
