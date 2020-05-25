@@ -28,7 +28,8 @@ function datasetFromData(start, end, subs) {
       },
       scoreP = user.scoresP[i.pid] ||= {
         score: 0,
-        first: false
+        first: false,
+        AC: false
       };
     if (scoreP.score >= i.score) continue;
     users[i.uid].scoresT.push(
@@ -36,9 +37,12 @@ function datasetFromData(start, end, subs) {
       { t: new Date(i.timestamp) - start, y: user.totalScore += i.score - scoreP.score }
     );
     scoreP.score = i.score;
-    if (i.verdict === verdicts.AC && !ACprobs.has(i.pid)) {
-      ACprobs.add(i.pid);
-      scoreP.first = true;
+    if (i.verdict === verdicts.AC) {
+      scoreP.AC = true;
+      if (!ACprobs.has(i.pid)) {
+        ACprobs.add(i.pid);
+        scoreP.first = true;
+      }
     }
   }
   var now = new Date() - start;
@@ -127,7 +131,12 @@ class Standings extends Component {
       [{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]
         .concat(this.props.contest.problems.map((prob, i) => ({
           label: `p${toChars(i)}`, align: "right", numeric: true, disablePadding: false, id: `${i}`,
-          display: user => user.scoresP[prob.ppid]?.score || 0
+          display: user => {
+            const scoreP = user.scoresP[prob.ppid];
+            const { score = 0, AC = false }  = scoreP || {};
+            return
+              scoreP ? (<span style={{ color: verdicts[verdicts[AC ? "AC" : "PAC"]].color[0] }}>{score}</span>) : 0; 
+          }
         })))
         .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true, disablePadding: false }]);
 
