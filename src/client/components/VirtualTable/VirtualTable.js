@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { withRouter, RouterLink as Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { CircularProgress } from "@material-ui/core";
 import { Table,
   TableBody,
   TableHead,
@@ -12,7 +11,8 @@ import { Table,
   TablePagination,
   Paper,
   FormControlLabel,
-  Switch } from "@material-ui/core";
+  Switch,
+  CircularProgress } from "@material-ui/core";
 import axios from "axios";
 
 import { TablePaginationActions, VirtualTableToolbar } from "./components";
@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
   //  minWidth: 750,
+    tableLayout: "fixed"
   },
   headCell: {
     padding: theme.spacing(0, 1)
@@ -114,7 +115,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   }
 
   function sendQuery(form) {
-    const qs = new URLSearchParams({ page: page+1, ...form });
+    const qs = new URLSearchParams({ page: 1, ...form });
     history.push({ search: qs.toString() });
   }
   if (!data)
@@ -186,7 +187,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                 })}
               {
                 emptyRows > 0 && Array(emptyRows).fill().map((_, index) => (
-                  <TableRow key={index} style={{ height: 49 }}>
+                  <TableRow key={index}>
                     <TableCell colSpan={columns.length}>&nbsp;</TableCell> 
                   </TableRow>
                 ))

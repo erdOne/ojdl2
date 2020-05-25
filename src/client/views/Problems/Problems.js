@@ -9,12 +9,12 @@ import { VirtualTable } from "components";
 
 const columns = [
   { id: "pid", align: "right", numeric: true,
-    disablePadding: false, label: "#", style: { width: 75 } },
-  { id: "title", align: "left", numeric: false, disablePadding: false, label: "題目",
+    disablePadding: false, label: "#", style: { width: 60 } },
+  { id: "title", align: "left", numeric: false, disablePadding: false, label: "題目", style: { width: 150 },
     display: prob => prob.title },
-  { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "",
+  { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "", style: { width: 150 },
     display: prob => (<small style={{ color: "gray" }}> {prob.subtitle} </small>) },
-  { id: "updatedAt", align: "left", numeric: false, disablePadding: false, label: "上次修改",
+  { id: "updatedAt", align: "left", numeric: false, disablePadding: false, label: "上次修改", style: { width: 150 },
     display: prob => new Date(prob.updatedAt).toLocaleString() }
 ];
 

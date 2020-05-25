@@ -11,20 +11,20 @@ import languages from "common/languages";
 
 const columns = [
   { id: "sid", align: "right", numeric: true,
-    disablePadding: true, label: "#", style: { width: 75 },
+    disablePadding: true, label: "#", style: { width: 60 },
     display: sub=>sub.sid },
-  { id: "pid", align: "left", numeric: false, disablePadding: true, label: "題目",
+  { id: "pid", align: "left", numeric: false, disablePadding: true, label: "題目", style: { width: 150 },
     display: sub=>`#${sub.pid}: ${sub.problem.title}`},
-  { id: "handle", align: "left", numeric: false, disablePadding: true, label: "上傳者",
+  { id: "handle", align: "left", numeric: false, disablePadding: true, label: "上傳者", style: { width: 150 },
     display: sub=>sub.user.handle },
-  { id: "time", align: "right", numeric: true, disablePadding: true, label: "時間(ms)" },
-  { id: "memory", align: "right", numeric: true, disablePadding: true, label: "記憶體(KB)" },
-  { id: "verdict", align: "left", numeric: false, disablePadding: true, label: "結果",
+  { id: "time", align: "right", numeric: true, disablePadding: true, label: "時間(ms)", style: { width: 100 } },
+  { id: "memory", align: "right", numeric: true, disablePadding: true, label: "記憶體(KB)", style: { width: 100 } },
+  { id: "verdict", align: "right", numeric: false, disablePadding: true, label: "結果", style: { width: 75 },
     display: s=>(<span style={{ color: verdicts[s.verdict].color[0] }}>
       {verdicts[s.verdict].abbr}</span>) },
-  { id: "score", align: "right", numeric: true, disablePadding: true, label: "分數" },
-  { id: "language", align: "left", numeric: false, disablePadding: true, label: "語言" },
-  { id: "timestamp", align: "left", numeric: false, disablePadding: true, label: "上傳時間",
+  { id: "score", align: "right", numeric: true, disablePadding: true, label: "分數", style: { width: 75 } },
+  { id: "language", align: "right", numeric: false, disablePadding: true, label: "語言", style: { width: 75 } },
+  { id: "timestamp", align: "right", numeric: false, disablePadding: true, label: "上傳時間", style: { width: 150 },
     display: sub=>new Date(sub.timestamp).toLocaleString() },
 ];
 
