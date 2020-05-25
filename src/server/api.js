@@ -131,27 +131,35 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
       where.pid = tryParseInt(pid);
     if (title)
       where.title = { [Op.like]: `%${title}%` };
-    const { rows, count } = await ProbDB.findAndCountAll({
+    const { rows: probs, count: probCount } = await ProbDB.findAndCountAll({
       order, limit, offset, where,
       attributes: ["pid", "title", "subtitle", "updatedAt"]
     });
-    return { probs: rows, probCount: count };
+    const pids = probs.map(prob => prob.pid); 
+    const subs = await SubDB.findAll({
+      where: { uid: hashUidInDB(uid), pid: { [Op.in]: pids } }, attributes: ["pid", "verdict"]
+    });
+    return { probs, probCount, subs };
+  } else {
+    var probs = (await getCont({ uid, cid })).cont.problems;
+    var probCount = probs.length;
+    probs = probs
+      .filter(prob => !pid || prob.pid === tryParseInt(pid))
+      .filter(prob => !title || prob.title.match(new RegExp(`.*${title}.*`)))
+      .sort((a, b) => {
+        for (const [key, orderBy] of Object.entries(filters)) if(a[key] != b[key]) {
+          const d = a[key] - b[key];
+          return orderBy === "asc" ? d : -d;
+        }
+        return 0;
+      })
+      .slice(offset, limit);
+    const pids = probs.map(prob => prob.pid);
+    const subs = await SubDB.findAll({
+      where: { uid: hashUidInDB(uid), pid: { [Op.in]: pids }, cid }, attributes: ["pid", "verdict"]
+    });
+    return { probs, probCount, subs };
   }
-  var probs = (await getCont({ uid, cid })).cont.problems;
-  var probCount = probs.length;
-  if (pid)
-    probs = probs.filter(prob => prob.pid === pid);
-  if (title)
-    probs = probs.filter(prob => prob.title.match(new RegExp(`.*${title}.*`)));
-  probs = probs.sort((a, b) => {
-    for (const [key, orderBy] of Object.entries(filters)) if(a[key] != b[key]) {
-      const d = a[key] - b[key];
-      return orderBy === "asc" ? d : -d;
-    }
-    return 0;
-  });
-  probs = probs.slice(offset, limit);
-  return { probs, probCount };
 }
 
 export async function getProb({ uid, pid, cid }) {
@@ -162,12 +170,16 @@ export async function getProb({ uid, pid, cid }) {
     if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
     //console.log(prob.visibility, admin);
-    return { prob };
+    let AC = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } });
+    let tried = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: { [Op.ne]: verdicts.AC } } });
+    return { prob, AC, tried };
   } else {
     let { cont } = await getCont({ uid, cid }),
       prob = cont.problems[fromChars(pid)];
     if (!prob) throw "no such prob";
-    return { prob };
+    let AC = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } });
+    let tried = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: { [Op.ne]: verdicts.AC } } });
+    return { prob, AC, tried };
   }
 }
 

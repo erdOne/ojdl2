@@ -7,6 +7,7 @@ import { withSnackbar } from "notistack";
 
 import { Typography, CircularProgress, Button, Fab } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { CheckSharp, ChangeHistorySharp } from "@material-ui/icons";
 import { MDRenderer } from "components";
 import { SubtaskDisplay, SampleDisplay } from "./components";
 import styles from "./styles";
@@ -35,7 +36,8 @@ class Problem extends Component {
       .then(res=>{
         console.log(res.data);
         if (res.data.error) throw res.data;
-        this.setState({ prob: res.data.prob, dataLoaded: true });
+        this.setState({ prob: res.data.prob, status: res.data.AC ? "AC" : res.data.tried ? "TRIED" : null,
+          dataLoaded: true });
       }).catch(res=>{
         this.setState({ error: true, errMsg: res.msg });
       });
@@ -56,6 +58,7 @@ class Problem extends Component {
           <small style={{ fontSize: "", color: "gray" }}>
             {" #" + pid}
           </small>
+          {this.state.status && (this.state.status == "AC" ? (<CheckSharp />) : (<ChangeHistorySharp />))}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
           {this.state.prob.subtitle}

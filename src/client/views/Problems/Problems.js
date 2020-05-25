@@ -4,8 +4,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { CircularProgress } from "@material-ui/core";
+import { CheckSharp, ChangeHistorySharp } from "@material-ui/icons";
 
 import { VirtualTable } from "components";
+import verdicts from "../../common/verdicts.js";
 
 const columns = [
   { id: "pid", align: "right", numeric: true,
@@ -14,7 +16,9 @@ const columns = [
     display: prob => prob.title },
   { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "", style: { width: 150 },
     display: prob => (<small style={{ color: "gray" }}> {prob.subtitle} </small>) },
-  { id: "updatedAt", align: "left", numeric: false, disablePadding: false, label: "上次修改", style: { width: 150 },
+  { id: "status", align: "right", numeric: false, disablePadding: false, label: "狀態", style: { width: 75 },
+    display: prob => prob.status ? prob.status == "AC" ? (<CheckSharp />) : (<ChangeHistorySharp />) : null },
+  { id: "updatedAt", align: "right", numeric: false, disablePadding: false, label: "上次修改", style: { width: 150 },
     display: prob => new Date(prob.updatedAt).toLocaleString() }
 ];
 
@@ -35,7 +39,14 @@ function Problems(props) {
       }}
       api={{
         url: "/api/get_probs",
-        extract: data => [data.probs, data.probCount],
+        extract: ({ probs, probCount, subs }) => {
+          let stat = {};
+          for(const { pid, verdict } of subs) {
+            if (!stat[pid]) stat[pid] = "TRIED";
+            if (verdict === verdicts.AC) stat[pid] = "AC";
+          }
+          return [probs.map(prob => { return { ...prob, status: stat[prob.pid] } }), probCount];
+        },
         queryWhiteList: {
           "problem_name": null,
           "problem_id": null,
