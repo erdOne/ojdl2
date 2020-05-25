@@ -7,7 +7,7 @@ import { CircularProgress } from "@material-ui/core";
 import { CheckSharp, ChangeHistorySharp } from "@material-ui/icons";
 
 import { VirtualTable } from "components";
-import verdicts from "../../common/verdicts.js";
+import verdicts from "../../common/verdicts";
 
 const columns = [
   { id: "pid", align: "right", numeric: true,
@@ -17,7 +17,9 @@ const columns = [
   { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "", style: { width: 150 },
     display: prob => (<small style={{ color: "gray" }}> {prob.subtitle} </small>) },
   { id: "status", align: "right", numeric: false, disablePadding: false, label: "狀態", style: { width: 75 },
-    display: prob => prob.status ? prob.status == "AC" ? (<CheckSharp />) : (<ChangeHistorySharp />) : null },
+    display: prob => !prob.status ? null
+      : prob.status == "AC" ? (<CheckSharp style={{ height: 15, color: verdicts[verdicts.AC].color[0] }} />)
+        : (<ChangeHistorySharp style={{ height: 15, color: verdicts[verdicts.PAC].color[0] }} />) },
   { id: "updatedAt", align: "right", numeric: false, disablePadding: false, label: "上次修改", style: { width: 150 },
     display: prob => new Date(prob.updatedAt).toLocaleString() }
 ];

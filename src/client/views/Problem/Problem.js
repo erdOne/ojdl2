@@ -11,6 +11,7 @@ import { CheckSharp, ChangeHistorySharp } from "@material-ui/icons";
 import { MDRenderer } from "components";
 import { SubtaskDisplay, SampleDisplay } from "./components";
 import styles from "./styles";
+import verdicts from "../../common/verdicts";
 
 function mapStateToProps({ user }) {
   return { user };
@@ -58,7 +59,10 @@ class Problem extends Component {
           <small style={{ fontSize: "", color: "gray" }}>
             {" #" + pid}
           </small>
-          {this.state.status && (this.state.status == "AC" ? (<CheckSharp />) : (<ChangeHistorySharp />))}
+          {this.state.status &&
+            (this.state.status == "AC"
+              ? (<CheckSharp style={{ lineHeight: 1, color: verdicts[verdicts.AC].color[0] }} />)
+              : (<ChangeHistorySharp style={{ lineHeight: 1, color: verdicts[verdicts.PAC].color[0] }} />))}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
           {this.state.prob.subtitle}
