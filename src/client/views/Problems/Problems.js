@@ -47,7 +47,7 @@ function Problems(props) {
             if (!stat[pid]) stat[pid] = "TRIED";
             if (verdict === verdicts.AC) stat[pid] = "AC";
           }
-          return [probs.map(prob => { return { ...prob, status: stat[prob.pid] } }), probCount];
+          return [probs.map(prob => { return { ...prob, status: stat[cid ? prob.ppid : prob.pid] } }), probCount];
         },
         queryWhiteList: {
           "problem_name": null,

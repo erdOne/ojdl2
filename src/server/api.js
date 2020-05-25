@@ -154,7 +154,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
         return 0;
       })
       .slice(offset, limit);
-    const pids = probs.map(prob => prob.pid);
+    const pids = probs.map(prob => prob.ppid);
     const subs = await SubDB.findAll({
       where: { uid: hashUidInDB(uid), pid: { [Op.in]: pids }, cid }, attributes: ["pid", "verdict"]
     });
@@ -177,8 +177,8 @@ export async function getProb({ uid, pid, cid }) {
     let { cont } = await getCont({ uid, cid }),
       prob = cont.problems[fromChars(pid)];
     if (!prob) throw "no such prob";
-    let AC = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } });
-    let tried = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: { [Op.ne]: verdicts.AC } } });
+    let AC = await SubDB.count({ where: { uid: hashUidInDB(uid), pid: prob.ppid, verdict: verdicts.AC } });
+    let tried = await SubDB.count({ where: { uid: hashUidInDB(uid), pid: prob.ppid, verdict: { [Op.ne]: verdicts.AC } } });
     return { prob, AC, tried };
   }
 }
