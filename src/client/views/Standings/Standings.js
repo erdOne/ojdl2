@@ -103,8 +103,8 @@ class Standings extends Component {
   loadData() {
     axios.post("/api/get_subs", { uid: this.props.user.uid, cid: this.props.contest.cid })
       .then(res=>{
-        console.log(res.data);
-        console.log(this.props.contest);
+        //console.log(res.data);
+        //console.log(this.props.contest);
         this.setState({
           data: datasetFromData(new Date(this.props.contest.start), new Date(this.props.contest.end), res.data.subs),
           dataLoaded: true
@@ -134,13 +134,12 @@ class Standings extends Component {
           display: user => {
             const scoreP = user.scoresP[prob.ppid];
             const { score = 0, AC = false }  = scoreP || {};
-            return
-              scoreP ? (<span style={{ color: verdicts[verdicts[AC ? "AC" : "PAC"]].color[0] }}>{score}</span>) : 0; 
+            return scoreP ? (<span style={{ color: verdicts[verdicts[AC ? "AC" : "PAC"]].color[0] }}>{score}</span>) : 0;
           }
         })))
         .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true, disablePadding: false }]);
 
-    console.log("columns =", this.columns);
+    //console.log("columns =", this.columns);
     this.loadData();
   }
 
