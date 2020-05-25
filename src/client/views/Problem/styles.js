@@ -5,6 +5,9 @@ export default theme => ({
     right: 0,
     "& button": {
       width: 90
+    },
+    [theme.breakpoints.down('sm')]: {
+      position: "relative"
     }
   },
   root: {
