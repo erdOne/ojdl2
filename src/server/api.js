@@ -282,11 +282,19 @@ export async function getSubs({ uid, cid, order, limit, offset, filters = {} }) 
   var { user_name: handle, problem_id: pid, filter_verdict: verdict, filter_language: language } = filters;
   if (handle) {
     var user = await UserDB.findOne({ where: { handle } });
-    if (!user) return { subs: [], subCount: 0 };
+    if(!user) return { subs: [], subCount: 0 };
     where.uid = user.uid;
   }
-  if (pid)
-    where.pid = cid ? pid : tryParseInt(pid);
+  if (pid) {
+    if(cid) {
+      let { cont } = await getCont({ uid, cid });
+      let prob = cont.problems.find(prob => prob.pid === pid);
+      if(!prob) return { subs: [], subCount: 0 };
+      where.pid = prob.ppid;
+    } else {
+      where.pid = tryParseInt(pid);
+    }
+  }
   if (verdict)
     where.verdict = verdicts[verdict];
   if (language)
