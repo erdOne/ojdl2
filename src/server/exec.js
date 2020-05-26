@@ -62,7 +62,7 @@ export async function exec(sid) {
     var { jid, sub, prob } = await init(sid);
 
     var Comparator = getComparator(prob.testMethod), Tester = getTester(prob.testMethod),
-      comparator   = new Comparator(prob.param),
+      comparator   = new Comparator(prob.judgeParam),
       tester       = new Tester(sub.language),
       judger       = new Judger(tester, comparator, uploader);
 

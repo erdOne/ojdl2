@@ -31,7 +31,7 @@ class StringComparator extends Comparator {
 class FloatComparator extends Comparator {
   constructor(params) {
     super(params);
-    this.prec = params;
+    this.prec = new Big(params);
   }
 
   compareTerm(a, b) {
