@@ -126,6 +126,7 @@ class Standings extends Component {
 
   init() {
     if (!this.props.contest.inContest) return;
+    if (!this.props.contest.problems) return;
     this.initted = true;
     this.columns =
       [{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]

@@ -41,8 +41,8 @@ class Controller extends Component {
   onEnter({ match }) {
     axios.post("/api/get-cont", { uid: this.props.user.uid, cid: match.params.cid })
       .then(res => {
-        if (res.error)
-          this.props.history.go(-1);
+        if (res.data.error)
+          this.props.history.push("not-found");
         else this.props.enter(res.data.cont);
       });
     return null;

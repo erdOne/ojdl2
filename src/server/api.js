@@ -97,8 +97,9 @@ export async function getConts({ uid }) {
 
 export async function getCont({ uid, cid }) {
   var admin = await isAdmin({ uid });
-  var cont = (await ContDB.findByPk(cid)).get({ plain: true });
+  var cont = (await ContDB.findByPk(cid));
   if (!cont) throw "no such contest";
+  cont = cont.get({ plain: true });
   if (!admin && cont.visibility === "hidden")
     throw "you have no permission";
   if (cont.start > new Date() && !admin) {
