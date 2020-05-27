@@ -35,25 +35,27 @@ function Problems(props) {
     <VirtualTable columns={columns} title="Problems"
       config={{
         key: "pid",
-        order: [["pid", "asc"]],
         link: prob => `./problem/${prob.pid}`,
         typesetMath: true
       }}
       api={{
-        url: "/api/get_probs",
-        extract: ({ probs, probCount, subs }) => {
-          let stat = {};
-          for(const { pid, verdict } of subs) {
-            if (!stat[pid]) stat[pid] = "TRIED";
-            if (verdict === verdicts.AC) stat[pid] = "AC";
-          }
-          return [probs.map(prob => { return { ...prob, status: stat[cid ? prob.ppid : prob.pid] } }), probCount];
+        loadData: ({ limit, offset, filters }) => {
+          return axios.post("/api/get_probs", { uid, cid, order: [["pid", "asc"]], limit, offset, filters })
+            .then(res => {
+              if (res.data.error) throw res.data.msg;
+              const { probs, probCount, subs } = res.data;
+              let stat = {};
+              for(const { pid, verdict } of subs) {
+                if (!stat[pid]) stat[pid] = "TRIED";
+                if (verdict === verdicts.AC) stat[pid] = "AC";
+              }
+              return [probs.map(prob => { return { ...prob, status: stat[cid ? prob.ppid : prob.pid] } }), probCount];
+            });
         },
         queryWhiteList: {
           "problem_name": null,
           "problem_id": null,
-        },
-        args: { uid, cid }
+        }
       }}
     />
   );

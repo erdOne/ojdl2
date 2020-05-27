@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import axios from "axios";
 import verdicts from "common/verdicts";
 import { toChars } from "common/char";
-import { DataTable } from "components";
+import { VirtualTable } from "components";
 import { Line as LineChart } from "react-chartjs-2";
 
-import { CircularProgress } from "@material-ui/core";
+import { Link, CircularProgress } from "@material-ui/core";
 
 import "./chartjsTimeAdaptor";
 import "chartjs-plugin-colorschemes";
@@ -115,7 +115,8 @@ function Standings({ user, contest = {} }) {
     if (!contest || !contest.inContest) return;
     setColumns([{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]
       .concat(contest.problems.map((prob, i) => ({
-        label: `p${toChars(i)}`, align: "right", numeric: true, disablePadding: false, id: `${i}`,
+        id: `${i}`, align: "right", numeric: true, disablePadding: false, 
+        label: (<Link href={`./problem/${toChars(i)}`} style={{ textDecoration: "none" }}>{`p${toChars(i)}`}</Link>),
         display: user => {
           const scoreP = user.scoresP[prob.ppid];
           if (!scoreP) return 0;
@@ -149,11 +150,26 @@ function Standings({ user, contest = {} }) {
 
   return (
     <>
-      <DataTable
-        columns={columns}
-        rows={data}
-        title="Standings"
-        config={{ key: "user", defaultOrder: "desc", defaultOrderBy: "totalScore" }}
+      <VirtualTable columns={columns} title="Standings"
+        config={{
+          key: "user"
+        }}
+        api={{
+          loadData: ({ limit, offset, filters = {} }) => {
+            return new Promise((resolve, reject) => {
+              try {
+                const { user_name: handle } = filters;
+                const res = handle ? data.filter(({ user }) => user.indexOf(handle) !== -1) : data;
+                resolve([res.slice(offset, offset + limit), res.length]);
+              } catch(err) {
+                throw err;
+              }
+            });
+          },
+          queryWhiteList: {
+            "user_name": null
+          }
+        }}
       />
       <LineChart
         data={{

@@ -89,10 +89,12 @@ function visible(admin) {
 
 
 
-export async function getConts({ uid }) {
-  return { conts: await ContDB.findAll({ attributes: { exclude: ["problems"] },
-    where: visible(await isAdmin({ uid }))
-  }) };
+export async function getConts({ uid, limit, offset  }) {
+  const { rows: conts, count: contCount } = await ContDB.findAndCountAll({
+    limit, offset, where: visible(await isAdmin({ uid })),
+    attributes: { exclude: ["problems"] }
+  });
+  return { conts, contCount };
 }
 
 export async function getCont({ uid, cid }) {
@@ -146,7 +148,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
     var probCount = probs.length;
     probs = probs
       .filter(prob => !pid || prob.pid === tryParseInt(pid))
-      .filter(prob => !title || prob.title.match(new RegExp(`.*${title}.*`)))
+      .filter(prob => !title || prob.title.indexOf(title) !== -1)
       .sort((a, b) => {
         for (const [key, orderBy] of Object.entries(filters)) if(a[key] != b[key]) {
           const d = a[key] - b[key];

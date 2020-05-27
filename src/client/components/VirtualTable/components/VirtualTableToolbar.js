@@ -91,20 +91,22 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
           {title}
         </Typography>
       </div>
-      <form onSubmit={handleSubmit} className={classes.filters}> 
-        {Object.keys(queryWhiteList).map(term => {
-          const options = queryWhiteList[term];
-          return options ? (
-              <TextField select {...getOptionsProps(term)}>
-                {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-              </TextField>
-            ) : <TextField {...getOptionsProps(term)} />
-          ;
-        })}
-        <Button variant="contained" color="primary" type="submit" style={{ lineHeight: 2 }}>
-          Search
-        </Button>
-      </form>
+      {Object.keys(queryWhiteList).length && (
+        <form onSubmit={handleSubmit} className={classes.filters}> 
+          {Object.keys(queryWhiteList).map(term => {
+            const options = queryWhiteList[term];
+            return options ? (
+                <TextField select {...getOptionsProps(term)}>
+                  {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+                </TextField>
+              ) : <TextField {...getOptionsProps(term)} />
+            ;
+          })}
+          <Button variant="contained" color="primary" type="submit" style={{ lineHeight: 2 }}>
+            Search
+          </Button>
+        </form>
+      )}
     </Toolbar>
   );
 };

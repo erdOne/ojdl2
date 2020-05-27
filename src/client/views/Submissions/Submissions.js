@@ -40,20 +40,24 @@ function Submissions(props) {
     <VirtualTable columns={columns} title="Submissions"
       config={{
         key: "sid",
-        order: [["sid", "desc"]],
         link: sub => `./submission/${sub.sid}`,
         typesetMath: true
       }}
       api={{
-        url: "/api/get_subs",
-        extract: data => [data.subs, data.subCount],
+        loadData: ({ limit, offset, filters }) => {
+          return axios.post("/api/get_subs", { uid, cid, order: [["sid", "desc"]], limit, offset, filters })
+            .then(res => {
+              if (res.data.error) throw res.data.msg;
+              console.log(res.data);
+              return [res.data.subs, res.data.subCount];
+            });
+        },
         queryWhiteList: {
           "user_name": null,
           "problem_id": null,
           "filter_verdict": Object.keys(verdicts).filter(k => isNaN(parseInt(k))).sort(),
           "filter_language": Object.keys(languages).sort()
-        },
-        args: { uid, cid }
+        }
       }}
     />
   );

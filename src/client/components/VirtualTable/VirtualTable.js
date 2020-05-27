@@ -13,7 +13,6 @@ import { Table,
   FormControlLabel,
   Switch,
   CircularProgress } from "@material-ui/core";
-import axios from "axios";
 
 import { TablePaginationActions, VirtualTableToolbar } from "./components";
 
@@ -67,18 +66,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function useAPI({ url, order, page, rowsPerPage, extract, ...rest }) {
+function useAPI({ loadData, page, rowsPerPage, filters }) {
   const [data, setData] = useState(null);
   useEffect(() => {
     if (data) setData(([rows, rowsLength]) => [[], rowsLength]);
-    axios.post(url, { order, limit: rowsPerPage, offset: page * rowsPerPage, ...rest })
-      .then(res => {
-        if (res.data.error)
-          setData({ error: true, errMsg: res.data.msg });
-        else
-          setData(extract(res.data));
-      });
-  }, [order, page, rowsPerPage]);
+    loadData({ limit: rowsPerPage, offset: page * rowsPerPage, filters })
+      .then(res => setData(res))
+      .catch(msg => setData({ error: true, errMsg: msg }));
+  }, [loadData]);
   return data;
 }
 
@@ -91,10 +86,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   let filters = {};
   for(const key of qs.keys()) if(key in api.queryWhiteList) filters[key] = qs.get(key);
   const page = parseInt(qs.get("page") ?? 1) - 1;
-  const data = useAPI({
-    url: api.url, order: config.order, extract: api.extract,
-    filters, page, rowsPerPage, ...api.args
-  });
+  const data = useAPI({ loadData: api.loadData, filters, page, rowsPerPage });
 
   useEffect(() => {
     if (!config.typesetMath) return;

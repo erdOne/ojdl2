@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { CircularProgress } from "@material-ui/core";
 
-import { DataTable } from "components";
+import { VirtualTable } from "components";
 
 const columns = [
   { id: "cid", align: "right", numeric: true,
@@ -21,35 +21,27 @@ function mapStateToProps({ user }) {
   return { user };
 }
 
-class Contests extends Component {
-  static propTypes = {
-    /* FromState */
-    user: PropTypes.object
-  }
+const Contests = ({ user }) => (
+  <VirtualTable columns={columns} title="Contests"
+    config={{
+      key: "cid",
+      link: cont => `/contest/${cont.cid}/home`
+    }}
+    api={{
+      loadData: ({ limit, offset, filters }) => {
+        return axios.post("/api/get_conts", { uid: user.uid, order: [["cid", "asc"]], limit, offset, filters })
+          .then(res => {
+            if (res.data.error) throw res.data.msg;
+            return [res.data.conts, res.data.contCount];
+          });
+      },
+      queryWhiteList: {
+      }
+    }}
+  />
+);
 
-  constructor(props) {
-    super(props);
-    this.state = { dataLoaded: false };
-    axios.post("/api/get_conts", { uid: this.props.user.uid })
-      .then(res=>{
-        console.log(res.data);
-        this.setState({ rows: res.data.conts, dataLoaded: true });
-      });
-  }
-
-  render() {
-    if (this.state.dataLoaded)
-      return (
-        <DataTable columns={columns} rows={this.state.rows} title="Contests"
-          config={{ key: "cid", defaultOrder: "asc", defaultOrderBy: "cid",
-            link: cont=>`/contest/${cont.cid}/home`
-          }}
-        />
-      );
-    else
-      return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-
-  }
+Contests.propTypes = {
+  user: PropTypes.object
 }
-
 export default connect(mapStateToProps)(Contests);
