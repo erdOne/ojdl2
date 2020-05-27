@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -88,92 +88,89 @@ const chartOptions = {
   }
 };
 
-class Standings extends Component {
-  static propTypes = {
-    /* FromState */
-    user: PropTypes.object,
-    contest: PropTypes.object,
-  }
-  constructor(props) {
-    super(props);
-    this.state = { dataLoaded: false, chart: false };
-    this.init();
-  }
+// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
 
-  loadData() {
-    axios.post("/api/get_subs", { uid: this.props.user.uid, cid: this.props.contest.cid })
+  useEffect(() => {
+    savedCallback.current = callback;
+  });
+
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
+function Standings({ user, contest = {} }) {
+  const [data, setData] = useState(null);
+  const [columns, setColumns] = useState(null);
+
+  useEffect(() => {
+    if (!contest || !contest.inContest) return;
+    setColumns([{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]
+      .concat(contest.problems.map((prob, i) => ({
+        label: `p${toChars(i)}`, align: "right", numeric: true, disablePadding: false, id: `${i}`,
+        display: user => {
+          const scoreP = user.scoresP[prob.ppid];
+          if (!scoreP) return 0;
+          const { score, AC }  = scoreP;
+          return (
+            <span style={{ color: verdicts[verdicts[AC ? "AC" : "PAC"]].color[0] }}>
+              {score}
+            </span>
+          );
+        }
+      })))
+      .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true, disablePadding: false }]));
+  }, [contest]);
+
+  // auto refresh
+  useInterval(() => {
+    if (!contest || !contest.inContest) return;
+    axios.post("/api/get_subs", { uid: user.uid, cid: contest.cid })
       .then(res=>{
-        //console.log(res.data);
-        //console.log(this.props.contest);
-        this.setState({
-          data: datasetFromData(new Date(this.props.contest.start), new Date(this.props.contest.end), res.data.subs),
-          dataLoaded: true
-        });
+        if (res.data.error)
+          setData({ error: true, errMsg: res.msg });
+        else
+          setData(datasetFromData(new Date(contest.start), new Date(contest.end), res.data.subs));
       });
-  }
+  }, (!data || new Date() < new Date(contest.end)) ? 5000 : null);
 
-  componentDidMount() {
-    this.interval ||= setInterval(() => {
-      if (new Date(this.props.contest.end) > new Date())
-        this.loadData();
-      else clearInterval(this.interval);
-    }, 5000);
-  }
+  if (!data || !columns)
+    return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
+  if (data.error)
+    return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
 
-  componentDidUpdate() {
-    if (!this.initted) this.init();
-  }
+  return (
+    <>
+      <DataTable
+        columns={columns}
+        rows={data}
+        title="Standings"
+        config={{ key: "user", defaultOrder: "desc", defaultOrderBy: "totalScore" }}
+      />
+      <LineChart
+        data={{
+          datasets: data.map(u => ({
+            label: u.user,
+            data: u.scoresT
+          }))
+        }}
+        options={chartOptions}
+      />
+    </>
+  );
+}
 
-  init() {
-    if (!this.props.contest.inContest) return;
-    if (!this.props.contest.problems) return;
-    this.initted = true;
-    this.columns =
-      [{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]
-        .concat(this.props.contest.problems.map((prob, i) => ({
-          label: `p${toChars(i)}`, align: "right", numeric: true, disablePadding: false, id: `${i}`,
-          display: user => {
-            const scoreP = user.scoresP[prob.ppid];
-            const { score = 0, AC = false }  = scoreP || {};
-            return scoreP ? (<span style={{ color: verdicts[verdicts[AC ? "AC" : "PAC"]].color[0] }}>{score}</span>) : 0;
-          }
-        })))
-        .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true, disablePadding: false }]);
-
-    //console.log("columns =", this.columns);
-    this.loadData();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render() {
-    //const { classes } = this.props;
-    if (this.state.error)
-      return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
-    else if (!this.state.dataLoaded)
-      return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-    else return (
-      <>
-        <DataTable
-          columns={this.columns}
-          rows={this.state.data}
-          title="Standings"
-          config={{ key: "user", defaultOrder: "desc", defaultOrderBy: "totalScore" }}
-        />
-        <LineChart
-          data={{
-            datasets: this.state.data.map(u => ({
-              label: u.user,
-              data: u.scoresT
-            }))
-          }}
-          options={chartOptions}
-        />
-      </>
-    );
-  }
+Standings.propTypes = {
+  user: PropTypes.object,
+  contest: PropTypes.object
 }
 
 export default connect(mapStateToProps)(Standings);
