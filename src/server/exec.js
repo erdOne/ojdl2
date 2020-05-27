@@ -40,17 +40,6 @@ process.umask(0);
 function getJid(sid) { return `${sid}_${new Date() % 1000}_${Math.floor(Math.random() * 1000)}`; }
 
 async function init(sid) {
-  var jid = getJid(sid);
-  await fsP.mkdir(`${workdir}/${jid}`);
-  tryfork(execSync(`install -m 777 src/server/judge/helpers/* ${workdir}/${jid}/`), "OpenBox"); /* */
-  var sub = await SubDB.findByPk(sid);
-  if (!sub) throw ["Submission", 0, "submission doesn't exist."];
-  tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData"); /* */
-	var compiler = new Compiler(sub.language);
-  console.log("jizz");
-  await compiler.compile(jid, sid);
-  console.log(`Finished compiling of submission No. ${sid}.`);
-  var prob = await ProbDB.findByPk(sub.pid, { logging: false });
   return { jid, sub, prob };
 }
 
@@ -58,8 +47,18 @@ async function init(sid) {
 export async function exec(sid) {
   console.log(`Judging on submission No. ${sid}.`);
   var uploader = new Uploader(sid);
+  var jid = getJid(sid);
+  await fsP.mkdir(`${workdir}/${jid}`);
+  tryfork(execSync(`install -m 777 src/server/judge/helpers/* ${workdir}/${jid}/`), "OpenBox"); /* */
   try {
-    var { jid, sub, prob } = await init(sid);
+    var sub = await SubDB.findByPk(sid);
+    if (!sub) throw ["Submission", 0, "submission doesn't exist."];
+    var prob = await ProbDB.findByPk(sub.pid, { logging: false });
+    tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData"); /* */
+
+    var compiler = new Compiler(sub.language);
+    await compiler.compile(jid, sid);
+    console.log(`Finished compiling of submission No. ${sid}.`);
 
     var Comparator = getComparator(prob.testMethod), Tester = getTester(prob.testMethod),
       comparator   = new Comparator(prob.judgeParam),
@@ -70,8 +69,9 @@ export async function exec(sid) {
   } catch (e) {
     console.error(e);
     await uploader.upload(new ErrorResult(e));
+  } finally {
+    await fs.rmdir(`${workdir}/${jid}`, { recursive: true }, ()=>console.log("remove workdir", jid, "successfully"));
   }
-  fs.rmdir(`${workdir}/${jid}`, { recursive: true }, ()=>{});
   console.log(`Finished judging on submission No. ${sid}.`);
 }
 

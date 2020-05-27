@@ -53,7 +53,7 @@ const styles = theme => ({
   },
   action: {
     zIndex: 10,
-    borderRadius: [0, 0, 0, 4],
+    //borderRadius: [0, 0, 0, 4],
     padding: [0, 5],
     fontSize: "40%"
   },
