@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import axios from "axios";
-//import { withSnackbar } from "notistack";
+import { withSnackbar } from "notistack";
 
 import {
   Paper,
@@ -46,10 +46,12 @@ const styles = theme => ({
       color: "rgba(0, 0, 0, 0.8)"
     }
   },
-  action: {
+  actions: {
     position: "absolute",
     right: 0,
-    top: 0,
+    top: 0
+  },
+  action: {
     zIndex: 10,
     borderRadius: [0, 0, 0, 4],
     padding: [0, 5],
@@ -103,6 +105,7 @@ class Submission extends Component {
     this.onEdit = this.onEdit.bind(this);
     this.loadSub = this.loadSub.bind(this);
     this.openDialog = this.openDialog.bind(this);
+    this.copy = this.copy.bind(this);
     this.componentDidMount = this.componentDidUpdate = () => typesetMath();
   }
 
@@ -146,6 +149,12 @@ class Submission extends Component {
       dialogOpen: true,
       dialogContent
     });
+  }
+
+  copy(text) {
+    if (navigator.clipboard)
+      navigator.clipboard.writeText(text)
+        .then(()=>this.props.enqueueSnackbar("已成功複製"));
   }
 
   render() {
@@ -223,10 +232,18 @@ class Submission extends Component {
             </Table>
             {this.state.hasCode &&
               <div style={{ position: "relative" }}>
-                {this.props.user.isAdmin &&
-                <Button size="small" variant="contained" color="primary"
-                  className={classes.action} onClick={this.onEdit}>Edit+Rejudge</Button>
-                }
+                <div className={classes.actions}>
+                  {this.props.user.isAdmin &&
+                    <Button size="small" variant="contained" color="primary" onClick={this.onEdit}
+                      className={classes.action}>
+                      Edit+Rejudge
+                    </Button>
+                  }
+                  <Button size="small" variant="contained" color="primary" onClick={() => this.copy(this.state.code)}
+                    className={classes.action}>
+                    Copy
+                  </Button>
+                </div>
                 <Editor mode={languages[sub.language].mode} className={classes.editor}
                   onChange={code => this.setState({ code })} code={this.state.code}
                   readOnly={!this.props.user.isAdmin}/>
@@ -245,5 +262,4 @@ class Submission extends Component {
   }
 }
 
-
-export default connect(mapStateToProps)(withRouter(withStyles(styles)(Submission)));
+export default connect(mapStateToProps)(withSnackbar(withRouter(withStyles(styles)(Submission))));
