@@ -7,7 +7,7 @@ import { withSnackbar } from "notistack";
 
 import { Typography, CircularProgress, Button, Fab } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { CheckSharp, ChangeHistorySharp } from "@material-ui/icons";
+import { CheckSharp as AC, ChangeHistorySharp as Tried } from "@material-ui/icons";
 import { MDRenderer } from "components";
 import { SubtaskDisplay, SampleDisplay } from "./components";
 import styles from "./styles";
@@ -55,14 +55,14 @@ class Problem extends Component {
     return (
       <div className={classes.root}>
         <Typography variant="h1" style={{ marginBottom: 10 }}>
+          {this.state.status &&
+            (this.state.status == "AC"
+              ? (<AC fontSize="large" style={{ verticalAlign: "text-top", color: verdicts[verdicts.AC].color[0] }} />)
+              : (<Tried fontSize="large" style={{ verticalAlign: "text-top", color: verdicts[verdicts.PAC].color[0] }} />))}
           {this.state.prob.title}
           <small style={{ fontSize: "", color: "gray" }}>
             {" #" + pid}
           </small>
-          {this.state.status &&
-            (this.state.status == "AC"
-              ? (<CheckSharp style={{ lineHeight: 1, color: verdicts[verdicts.AC].color[0] }} />)
-              : (<ChangeHistorySharp style={{ lineHeight: 1, color: verdicts[verdicts.PAC].color[0] }} />))}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
           {this.state.prob.subtitle}
@@ -97,7 +97,7 @@ class Problem extends Component {
             )
           }
           <big><MDRenderer source={this.state.prob.note} /></big>
-          {this.state.prob.difficulty === undefined ? null :
+          {this.state.prob.difficulty &&
             <div>
               <Fab disabled classes={{ root: classes.fab, disabled: classes.disabled }}>
                 {this.state.prob.difficulty}
