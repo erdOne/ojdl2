@@ -68,8 +68,8 @@ const styles = theme => ({
   }
 });
 
-function mapStateToProps({ user }) {
-  return { user };
+function mapStateToProps({ user, contest }) {
+  return { user, contest };
 }
 
 function typesetMath() {
@@ -90,6 +90,7 @@ class Submission extends Component {
     classes: PropTypes.object.isRequired,
     /* FromState */
     user: PropTypes.object,
+    contest: PropTypes.object,
     /* FromRouter */
     match: PropTypes.object,
     history: PropTypes.object,
@@ -161,104 +162,104 @@ class Submission extends Component {
     const { classes } = this.props;
     if (this.state.error)
       return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
-    else if (!this.state.dataLoaded)
+    if (!this.state.dataLoaded || (this.props.match.params.cid && !this.props.contest.inContest))
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-    else {
-      const { sub } = this.state, { openDialog } = this;
-      var verdict = verdicts[sub.verdict || verdicts.UN];
-      return (
-        <div className={classes.root}>
-          <Typography variant="h2" style={{ marginBottom: 10 }}>
-            Submission
-            <small style={{ fontSize: "", color: "gray" }}>
-              {" #" + sub.sid}
-            </small>
-          </Typography>
-          <Paper className={classes.paper}
-            style={{ borderColor: verdict.color[1], borderWidth: sub.result.pending ? 0 : 1 }}>
-            <Table className={classes.table} size="small">
-              <TableHead>
-                <TableRow className={classes.bold}
-                  style={{ backgroundColor: sub.result.pending ? undefined : verdict.color[2] }}>
-                  <TableCell>題目</TableCell>
-                  <TableCell>上傳者</TableCell>
-                  <TableCell>語言</TableCell>
-                  <TableCell>繳交時間</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <Link to={`/problem/${sub.pid}`} className={classes.link}>
-                      {`${sub.pid} - ${sub.problem.title}`}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{sub.user.handle}</TableCell>
-                  <TableCell>{languages[sub.language].text}</TableCell>
-                  <TableCell>{new Date(sub.createdAt).toLocaleString()}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <Table className={classes.table} size="small">
-              <TableHead className={classes.bold}>
-                <TableRow className={classes.bold}>
-                  <TableCell></TableCell>
-                  <TableCell>Total time (ms)</TableCell>
-                  <TableCell>Max Memory (KB)</TableCell>
-                  <TableCell>Score</TableCell>
-                  <TableCell>Result</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell></TableCell>
-                  <TableCell>{sub.result.time}</TableCell>
-                  <TableCell>{sub.result.memory}</TableCell>
-                  <TableCell className={classes.bold}>{sub.result.score}</TableCell>
-                  <TableCell className={classes.bold}>
-                    <Verdict
-                      verdict={sub.result.verdict}
-                      msg={sub.result.msg}
-                      openDialog={openDialog}
-                    />
-                  </TableCell>
-                </TableRow>
-                {
-                  sub.result.subtaskResult.map((subRes, key) =>
-                    <SubtaskResultDisplay {...{ subRes, key, classes, openDialog }}/>
-                  )
-                }
-              </TableBody>
-            </Table>
-            {this.state.hasCode &&
-              <div style={{ position: "relative" }}>
-                <div className={classes.actions}>
-                  {this.props.user.isAdmin &&
-                    <Button size="small" variant="contained" color="primary" onClick={this.onEdit}
-                      className={classes.action}>
-                      Edit+Rejudge
-                    </Button>
-                  }
-                  <Button size="small" variant="contained" color="primary" onClick={() => this.copy(this.state.code)}
-                    className={classes.action}>
-                    Copy
-                  </Button>
-                </div>
-                <Editor mode={languages[sub.language].mode} className={classes.editor}
-                  onChange={code => this.setState({ code })} code={this.state.code}
-                  readOnly={!this.props.user.isAdmin}/>
-              </div>
-            }
-          </Paper>
-          <Dialog open={this.state.dialogOpen} onClose={()=>this.setState({ dialogOpen: false })}>
-            <DialogContent classes={{ root: classes.dialog }}>
-              <pre>{this.state.dialogContent}</pre>
-            </DialogContent>
-          </Dialog>
-        </div>
-      );
-    }
 
+    const { sub } = this.state, { openDialog } = this;
+    const { inContest } = this.props.contest;
+    const pid = inContest ? sub.pid = this.props.contest.problems.find(prob => prob.ppid === sub.pid).pid : sub.pid;
+    var verdict = verdicts[sub.verdict || verdicts.UN];
+    return (
+      <div className={classes.root}>
+        <Typography variant="h2" style={{ marginBottom: 10 }}>
+          Submission
+          <small style={{ fontSize: "", color: "gray" }}>
+            {" #" + sub.sid}
+          </small>
+        </Typography>
+        <Paper className={classes.paper}
+          style={{ borderColor: verdict.color[1], borderWidth: sub.result.pending ? 0 : 1 }}>
+          <Table className={classes.table} size="small">
+            <TableHead>
+              <TableRow className={classes.bold}
+                style={{ backgroundColor: sub.result.pending ? undefined : verdict.color[2] }}>
+                <TableCell>題目</TableCell>
+                <TableCell>上傳者</TableCell>
+                <TableCell>語言</TableCell>
+                <TableCell>繳交時間</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <Link to={`../problem/${pid}`} className={classes.link}>
+                    {`#${pid}: ${sub.problem.title}`}
+                  </Link>
+                </TableCell>
+                <TableCell>{sub.user.handle}</TableCell>
+                <TableCell>{languages[sub.language].text}</TableCell>
+                <TableCell>{new Date(sub.createdAt).toLocaleString()}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <Table className={classes.table} size="small">
+            <TableHead className={classes.bold}>
+              <TableRow className={classes.bold}>
+                <TableCell></TableCell>
+                <TableCell>Total time (ms)</TableCell>
+                <TableCell>Max Memory (KB)</TableCell>
+                <TableCell>Score</TableCell>
+                <TableCell>Result</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell>{sub.result.time}</TableCell>
+                <TableCell>{sub.result.memory}</TableCell>
+                <TableCell className={classes.bold}>{sub.result.score}</TableCell>
+                <TableCell className={classes.bold}>
+                  <Verdict
+                    verdict={sub.result.verdict}
+                    msg={sub.result.msg}
+                    openDialog={openDialog}
+                  />
+                </TableCell>
+              </TableRow>
+              {
+                sub.result.subtaskResult.map((subRes, key) =>
+                  <SubtaskResultDisplay {...{ subRes, key, classes, openDialog }}/>
+                )
+              }
+            </TableBody>
+          </Table>
+          {this.state.hasCode &&
+            <div style={{ position: "relative" }}>
+              <div className={classes.actions}>
+                {this.props.user.isAdmin &&
+                  <Button size="small" variant="contained" color="primary" onClick={this.onEdit}
+                    className={classes.action}>
+                    Edit+Rejudge
+                  </Button>
+                }
+                <Button size="small" variant="contained" color="primary" onClick={() => this.copy(this.state.code)}
+                  className={classes.action}>
+                  Copy
+                </Button>
+              </div>
+              <Editor mode={languages[sub.language].mode} className={classes.editor}
+                onChange={code => this.setState({ code })} code={this.state.code}
+                readOnly={!this.props.user.isAdmin}/>
+            </div>
+          }
+        </Paper>
+        <Dialog open={this.state.dialogOpen} onClose={()=>this.setState({ dialogOpen: false })}>
+          <DialogContent classes={{ root: classes.dialog }}>
+            <pre>{this.state.dialogContent}</pre>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
   }
 }
 

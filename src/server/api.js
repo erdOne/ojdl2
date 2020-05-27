@@ -133,7 +133,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
     if (pid)
       where.pid = tryParseInt(pid);
     if (title)
-      where.title = { [Op.like]: `%${title}%` };
+      where.title = { [Op.substring]: title.replace(/[%_]/g, (match, offset, string) => `\\${match}`) }; // % and _
     const { rows: probs, count: probCount } = await ProbDB.findAndCountAll({
       order, limit, offset, where,
       attributes: ["pid", "title", "subtitle", "updatedAt"]
@@ -147,7 +147,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
     var probs = (await getCont({ uid, cid })).cont.problems;
     var probCount = probs.length;
     probs = probs
-      .filter(prob => !pid || prob.pid === tryParseInt(pid))
+      .filter(prob => !pid || prob.pid === pid)
       .filter(prob => !title || prob.title.indexOf(title) !== -1)
       .sort((a, b) => {
         for (const [key, orderBy] of Object.entries(filters)) if(a[key] != b[key]) {
