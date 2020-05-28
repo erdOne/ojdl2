@@ -211,7 +211,7 @@ export async function submit({ pid, uid, cid, language, code }) {
   const { prob } = await getProb({ uid, pid, cid });
   if (cid)pid = prob.ppid;
   var lastSub = await SubDB.findOne({
-    order: sql.col("timestamp"),
+    order: [[sql.col("timestamp"), "DESC"]],
     where: { uid: hashUidInDB(uid) }
   });
   if (!(await isAdmin({ uid })) && lastSub && !isCDOver(lastSub.timestamp))
@@ -358,14 +358,13 @@ export async function replyPost({ poid, uid, reply }) {
 
 export async function addPost({ uid, cid = 0, content }) {
   await signInUid({ uid });
-  uid = hashUidInDB(uid);
   var lastPost = await PostDB.findOne({
-    order: sql.col("createdAt"),
-    where: { uid }
+    order: [[sql.col("createdAt"), "DESC"]],
+    where: { uid: hashUidInDB(uid) }
   });
   if (!(await isAdmin({ uid })) && lastPost && !isCDOver(lastPost.createdAt))
     throw "cd error";
-  var { poid } = await PostDB.create({ content, uid, cid });
+  var { poid } = await PostDB.create({ content, uid: hashUidInDB(uid), cid });
   return { poid };
 }
 
