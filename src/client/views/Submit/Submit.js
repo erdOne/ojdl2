@@ -75,12 +75,13 @@ class Submit extends Component {
     pid = pid[0];
     axios.post("/api/submit", { pid, uid, cid, language: lang.id, code })
       .then(res => {
-        if (res.error) throw new Error(res.errMsg);
-        else this.props.history.push(
-          `${this.props.match.params.pid ? ".." : "."}/submission/${res.data.sid}`
-        );
+        console.log(res.data);
+        if (res.data.error)
+          throw new Error(res.data.msg);
+        else
+          this.props.history.push(`${this.props.match.params.pid ? ".." : "."}/submission/${res.data.sid}`);
       })
-      .catch(err => this.setState({ error: true, errorMsg: err.message }));
+      .catch(err => this.setState({ error: true, errMsg: err.message }));
     return void 0;
   }
 
