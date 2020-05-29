@@ -310,7 +310,7 @@ class TestSuiteDisplay extends PureComponent {
   }
 
   render() {
-    const { classes, value } = this.props;
+    const { classes, value, downloadTestSuites } = this.props;
     var offsets = [1];
     for (var subtask of value)
       offsets.push(offsets[offsets.length - 1] + subtask.testcases.length);
@@ -318,7 +318,7 @@ class TestSuiteDisplay extends PureComponent {
       <Paper className={classes.paper}>
         <Typography variant="h3" style={{ marginBottom: 10 }}>
         Test suite
-          <Button onClick={this.props.downloadTestSuites} className={classes.buttons}
+          <Button onClick={downloadTestSuites} className={classes.buttons}
             variant="contained" color="primary">
             Download
           </Button>
@@ -329,10 +329,10 @@ class TestSuiteDisplay extends PureComponent {
           <input id="upload" multiple type="file" onChange={this.fileOnChange}
             className={classes.hidden} ref={this.props.fileUploadRef} />
           <label htmlFor="upload">
-            <Button component="span" variant="contained" color="primary">Upload</Button>
+            <Button component="span" variant="contained" color="primary" className={classes.buttons}>Upload</Button>
           </label>
           <TextField style={{ marginLeft: 8, width: 250, top: -8, marginTop: 0 }} margin="dense"
-            label="Uploaded files" value={this.state.fileDisplay} readOnly />
+            label="Uploaded files" value={this.state.fileDisplay} inputProps={{ disabled: true, readOnly: true }} />
         </Typography>
         <div className={classes.root}>
           {
