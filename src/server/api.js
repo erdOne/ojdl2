@@ -173,8 +173,8 @@ export async function getProb({ uid, pid, cid }) {
     if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
     //console.log(prob.visibility, admin);
-    let AC = await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }).then(sub => !!sub);
-    let tried = await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, } }).then(sub => !!sub);
+    let AC = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }));
+    let tried = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, } }));
     return { prob, AC, tried };
   } else {
     let { cont } = await getCont({ uid, cid }),
