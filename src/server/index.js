@@ -30,7 +30,7 @@ app.post("/api/:type", function(req, res) {
   if (!(type in api))
     res.sendStatus(400);
   else
-    api[type](req.body, req.files).then(x => {
+    api[type](req.body, req.files, res).then(x => {
       res.send({ error: false, ...x });
       res.end();
     }).catch(err => {
@@ -39,6 +39,17 @@ app.post("/api/:type", function(req, res) {
       res.end();
     });
 
+});
+
+app.get("/download/:filename", function(req, res) {
+  var filename = req.params.filename;
+  res.download(`workdir/${filename}`, filename, function(err) {
+    if (err) {
+      console.error(err);
+      res.status(404).end();
+    }
+    fs.unlink(`workdir/${filename}`, () => console.log(`Removed workdir/${filename} successfully`));
+  });
 });
 
 app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));

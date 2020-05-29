@@ -184,8 +184,16 @@ class Problem extends Component {
   }
 
   downloadTestSuites() {
-    this.props.enqueueSnackbar("The Feature is still a work-in-progress.");
-    //axios.post("/api/get_prob");
+    this.props.enqueueSnackbar("下載正在準備中");
+    const { uid } = this.props.user;
+    const { pid } = this.props.match.params;
+    axios.post("/api/download-test-suites", { uid, pid })
+      .then(res => {
+        if(res.data.error) throw res.data.msg;
+        const { filename } = res.data;
+        window.open(`/download/${filename}`);
+      })
+      .catch(msg => this.setState({ error: true, errMsg: msg }));
   }
 
   render() {

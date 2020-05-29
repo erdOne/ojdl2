@@ -173,15 +173,16 @@ export async function getProb({ uid, pid, cid }) {
     if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
     //console.log(prob.visibility, admin);
-    let AC = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } });
-    let tried = await SubDB.count({ where: { uid: hashUidInDB(uid), pid, verdict: { [Op.ne]: verdicts.AC } } });
+    let AC = await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }).then(sub => !!sub);
+    let tried = await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, } }).then(sub => !!sub);
     return { prob, AC, tried };
   } else {
     let { cont } = await getCont({ uid, cid }),
       prob = cont.problems[fromChars(pid)];
     if (!prob) throw "no such prob";
-    let AC = await SubDB.count({ where: { uid: hashUidInDB(uid), pid: prob.ppid, verdict: verdicts.AC } });
-    let tried = await SubDB.count({ where: { uid: hashUidInDB(uid), pid: prob.ppid, verdict: { [Op.ne]: verdicts.AC } } });
+    pid = prob.ppid;
+    let AC = await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }).then(sub => !!sub);
+    let tried = await SubDB.fineOne({ where: { uid: hashUidInDB(uid), pid: prob.ppid } }).then(sub => !!sub);
     return { prob, AC, tried };
   }
 }
@@ -251,6 +252,7 @@ function tryParseInt(...x) {
 }
 
 export async function addProb({ uid, prob }, files) {
+  if (!await isAdmin({ uid })) throw "you have no permission";
   prob = JSON.parse(prob);
   var cnt = 0;
   for (var subtask of prob.testSuite)
@@ -259,7 +261,6 @@ export async function addProb({ uid, prob }, files) {
       testcase.timeLimit = tryParseInt(testcase.timeLimit);
       testcase.memLimit = tryParseInt(testcase.memLimit);
     }
-  if (!await isAdmin({ uid })) throw "you have no permission";
   if (prob.pid)
     await ProbDB.update(prob, { where: { pid: prob.pid } });
   else
@@ -380,4 +381,14 @@ export async function getLastLanguage({ uid }) {
     where: { uid: hashUidInDB(uid) }
   });
   return lastSub ? languages[lastSub.language] : null;
+}
+
+export async function downloadTestSuites({ uid, pid }) {
+  if (!await isAdmin({ uid })) throw "you have no permission";
+  const prob = await ProbDB.findOne({ where: { pid } });
+  if (!prob) throw "no such prob";
+  const folderpath = `data/prob/${pid}`;
+  const filename = `${pid}_${new Date() % 1000}_${Math.floor(Math.random() * 1000)}.zip`;
+  execSync(`zip -j -r workdir/${filename} ${folderpath}`);
+  return { filename };
 }

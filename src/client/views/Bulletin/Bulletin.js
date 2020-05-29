@@ -35,9 +35,8 @@ class Bulletin extends Component {
 
   constructor(props) {
     super(props);
-    var params = this.props.match.params;
     this.state = { dataLoaded: false, error: false };
-    axios.post("/api/get_posts", { cid: params.cid, uid: this.props.user.uid })
+    axios.post("/api/get_posts", { cid: this.props.match.params.cid, uid: this.props.user.uid })
       .then(res=>{
         console.log(res.data);
         if (res.data.error) throw res.data;
