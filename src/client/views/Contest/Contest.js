@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -16,6 +16,9 @@ const styles = theme => ({
     right: 0,
     "& button": {
       width: 90
+    },
+    [theme.breakpoints.down("sm")]: {
+      position: "relative"
     }
   },
   root: {
@@ -24,37 +27,12 @@ const styles = theme => ({
   disabled: {}
 });
 
-function mapStateToProps({ user }) {
-  return { user };
+function mapStateToProps({ user, contest }) {
+  return { user, contest };
 }
 
-class Contest extends Component {
-  static propTypes = {
-    /* FromStyle */
-    classes: PropTypes.object.isRequired,
-    /* FromState */
-    user: PropTypes.object,
-    /* FromRouter */
-    match: PropTypes.object,
-    /* FromSnackbar */
-    enqueueSnackbar: PropTypes.func
-  };
-
-  constructor(props) {
-    super(props);
-    var params = this.props.match.params;
-    this.state = { dataLoaded: false, error: false };
-    axios.post("/api/get_cont", { cid: params.cid, uid: this.props.user.uid })
-      .then(res=>{
-        console.log(res.data);
-        if (res.data.error) throw res.data;
-        this.setState({ cont: res.data.cont, dataLoaded: true });
-      }).catch(res=>{
-        this.setState({ error: true, errMsg: res.msg });
-      });
-  }
-
-  componentDidUpdate() {
+function Contest({ classes, user, contest }) {
+  useEffect(() => {
     try {
       window.MathJax.startup.promise = window.MathJax.startup.promise.then(
         ()=>window.MathJax.typesetPromise()
@@ -62,32 +40,38 @@ class Contest extends Component {
     } catch (e) {
       console.log("cannot typeset");
     }
-  }
+  });
 
-  render() {
-    const { classes } = this.props;
-    if (this.state.error)
-      return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
-    if (!this.state.dataLoaded)
-      return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
-    const { cid } = this.state.cont;
-    return (
-      <div className={classes.root}>
-        <div className={classes.actions}>
-          {this.props.user.isAdmin &&
-              <Link to={`/edit/contest/${cid}`}
-                style={{ textDecoration: "none", margin: 10 }}
-              >
-                <Button variant="contained" color="primary">Edit</Button>
-              </Link>
-          }
-        </div>
-        <Typography variant="body1" component="div" className={classes.text}>
-          <MDRenderer source={this.state.cont.content} />
-        </Typography>
+  if (!contest.inContest)
+    return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
+  const { cid, content = "" } = contest;
+  return (
+    <div className={classes.root}>
+      <Typography variant="body1" component="div" className={classes.text}>
+        <MDRenderer source={content} />
+      </Typography>
+      <div className={classes.actions}>
+        {user.isAdmin &&
+            <Link to={`/edit/contest/${cid}`}
+              style={{ textDecoration: "none", margin: 10 }}
+            >
+              <Button variant="contained" color="primary">Edit</Button>
+            </Link>
+        }
       </div>
-    );
-  }
+    </div>
+  );
 }
 
+Contest.propTypes = {
+  /* FromStyle */
+  classes: PropTypes.object.isRequired,
+  /* FromState */
+  user: PropTypes.object,
+  contest: PropTypes.object,
+  /* FromRouter */
+  match: PropTypes.object,
+  /* FromSnackbar */
+  enqueueSnackbar: PropTypes.func
+};
 export default connect(mapStateToProps)(withSnackbar(withStyles(styles)(Contest)));
