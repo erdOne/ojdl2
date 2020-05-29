@@ -73,7 +73,7 @@ export async function getSub({ sid, uid, cid, withData }) {
       model: ProbDB,
       attributes: ["title"]
     }, { model: UserDB, attributes: ["handle"] });
-  var sub = await SubDB.findByPk(sid, { include, logging: withData });
+  var sub = await SubDB.findByPk(sid, { include });
   if (!sub) throw "no such sub";
   var file = { hasData: false };
   if (withData && (hashUidInDB(uid) === sub.uid || admin)) {

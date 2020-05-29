@@ -9,5 +9,5 @@ solution.on("close", c => {
 		code = c;
 	});
 interactor.on("close", () => process.exit(code));
-interactor.on("error", e => { console.error(e), process.exit(1); });
-solution.on("error", e => { console.error(e), process.exit(1); });
+interactor.on("error", e => { console.error("Interactor Error:", e), process.exit(71); });
+solution.on("error", e => { console.error("Runtime Error:", e), process.exit(22); });
