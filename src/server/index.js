@@ -41,12 +41,12 @@ app.post("/api/:type", function(req, res) {
 
 });
 
-app.get("/download/:filename", function(req, res) {
+app.get("/download/:filename", function(req, res, next) {
   var filename = req.params.filename;
   res.download(`workdir/${filename}`, filename, function(err) {
     if (err) {
       console.error(err);
-      res.status(404).end();
+      next();
     }
     fs.unlink(`workdir/${filename}`, () => console.log(`Removed workdir/${filename} successfully`));
   });
