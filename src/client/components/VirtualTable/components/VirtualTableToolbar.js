@@ -91,7 +91,7 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
           {title}
         </Typography>
       </div>
-      {Object.keys(queryWhiteList).length && (
+      {Object.keys(queryWhiteList).length > 0 && (
         <form onSubmit={handleSubmit} className={classes.filters}> 
           {Object.keys(queryWhiteList).map(term => {
             const options = queryWhiteList[term];
