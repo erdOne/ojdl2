@@ -131,7 +131,7 @@ class Sidebar extends React.Component {
           <Item exact href="/add/contest" icon={<Add />} title="Add contest" display={Boolean(isAdmin)} />
           <Divider />
           <Item exact href="/account" icon={<Person />} title="Profile" display={isActive} clean />
-          <Item onClick={this.handleLeave} icon={<Cancel />} title="Sign out" display={isActive} />
+          <Item href="" onClick={this.handleLeave} icon={<Cancel />} title="Sign out" display={isActive} clean />
           <Item href="/sign-in" icon={<ExitToApp />} title="Sign in" display={!isActive} clean />
           <Item href="/sign-up" icon={<FiberNew />} title="Sign up" display={!isActive} clean />
         </List>
