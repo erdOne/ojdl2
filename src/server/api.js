@@ -181,8 +181,8 @@ export async function getProb({ uid, pid, cid }) {
       prob = cont.problems[fromChars(pid)];
     if (!prob) throw "no such prob";
     pid = prob.ppid;
-    let AC = await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }).then(sub => !!sub);
-    let tried = await SubDB.fineOne({ where: { uid: hashUidInDB(uid), pid: prob.ppid } }).then(sub => !!sub);
+    let AC = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }));
+    let tried = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, } }));
     return { prob, AC, tried };
   }
 }
