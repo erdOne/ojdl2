@@ -54,25 +54,15 @@ export async function signInUid({ uid }) {
   return { isAdmin: user.admin };
 }
 
-const visibleSub = (cid = 0, admin) => ({
-  model: ContDB.unscoped(),
-  attributes: [],
-  where: admin ? {} : {
-    [Op.or]: [
-      { visibility: "visible", cid, start: { [Op.lte]: new Date() } },
-      { visibility: "hidden", end: { [Op.lte]: new Date() } }
-    ]
-  }
-});
-
 export async function getSub({ sid, uid, cid, withData }) {
   var admin = await isAdmin({ uid });
-  var include = [visibleSub(cid, admin)];
+  var include = [{
+    model: ContDB.unscoped(),
+    attributes: [],
+    where: admin || !cid ? {} : { cid, end: { [Op.lte]: new Date() } }
+  }];
   if (withData)
-    include.push({
-      model: ProbDB,
-      attributes: ["title"]
-    }, { model: UserDB, attributes: ["handle"] });
+    include.push({ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] });
   var sub = await SubDB.findByPk(sid, { include });
   if (!sub) throw "no such sub";
   var file = { hasData: false };
@@ -86,8 +76,6 @@ export async function getSub({ sid, uid, cid, withData }) {
 function visible(admin) {
   return admin ? { visibility: { [Op.not]: "" } } : { visibility: "visible" };
 }
-
-
 
 export async function getConts({ uid, limit, offset  }) {
   const { rows: conts, count: contCount } = await ContDB.findAndCountAll({
