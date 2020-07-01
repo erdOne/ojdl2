@@ -43,14 +43,17 @@ app.post("/api/:type", function(req, res) {
 
 app.get("/download/:filename", function(req, res, next) {
   var filename = req.params.filename;
-  if (!filename.match(/[\d]+_[\d]+_[\d]+\.zip/)) next();
-  res.download(`workdir/${filename}`, filename, function(err) {
-    if (err) {
-      console.error(err);
-      next();
-    }
-    fs.unlink(`workdir/${filename}`, () => console.log(`Removed workdir/${filename} successfully`));
-  });
+  if (filename.match(/[\d]+_[\d]+_[\d]+\.zip/)) {
+    res.download(`workdir/${filename}`, filename, function(err) {
+      if (err) {
+        console.error(err);
+        next();
+      }
+      fs.unlink(`workdir/${filename}`, () => console.log(`Removed workdir/${filename} successfully`));
+    });
+  } else {
+    next();
+  }
 });
 
 app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
