@@ -4,7 +4,7 @@ export default {
     id: "c++17",
     mode: "text/x-c++src",
     text: "C++17 (gcc)",
-    buildArgs: ["-e", "--processes=5", "--", "/usr/local/bin/g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
+    buildArgs: ["--cg", "--env=PATH=/bin:/usr/local/bin", "--processes", "--", "/usr/local/bin/g++", "-v", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.cpp",
     executable: "main.out"
@@ -13,7 +13,7 @@ export default {
     id: "c",
     mode: "text/x-csrc",
     text: "C (gcc)",
-    buildArgs: ["-e", "--processes=5", "--", "/usr/local/bin/gcc", "main.c", "-o", "main.out"],
+    buildArgs: ["--cg", "--env=PATH=/bin:/usr/local/bin", "--processes", "--", "/usr/local/bin/gcc", "main.c", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.c",
     executable: "main.out"
