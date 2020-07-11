@@ -56,19 +56,26 @@ export async function signInUid({ uid }) {
 
 export async function getSub({ sid, uid, cid, withData }) {
   var admin = await isAdmin({ uid });
-  var include = [{
+  var include = (
+    withdata ? [{ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] }] : []
+  ).concat([{
     model: ContDB.unscoped(),
-    attributes: [],
-    where: admin || !cid ? {} : { cid, end: { [Op.lte]: new Date() } }
-  }];
-  if (withData)
-    include.push({ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] });
+    attributes: ["start", "end"]
+    // where: admin || !cid ? {} : { cid }
+  }]);
   var sub = await SubDB.findByPk(sid, { include });
-  if (!sub) throw "no such sub";
+  if (!sub || (sub.cid && cid && cid != sub.cid)) throw "no such sub";
+  if (sub.cid) {
+    if (!admin && (hashUidInDB(uid) !== sub.uid)) {
+      var now = new Date();
+      var { start, end } = sub.cont;
+      if (start <= now && now <= end) throw "contest is running, you have no permission";
+    }
+  }
   var file = { hasData: false };
   if (withData && (hashUidInDB(uid) === sub.uid || admin)) {
-    file.hasData = true;
     file.data = fs.readFileSync(`./data/sub/${sid}`, { encoding: "utf-8" });
+    file.hasData = true;
   }
   return { sub, file };
 }
