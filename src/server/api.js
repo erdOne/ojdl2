@@ -57,7 +57,7 @@ export async function signInUid({ uid }) {
 export async function getSub({ sid, uid, cid, withData }) {
   var admin = await isAdmin({ uid });
   var include = (
-    withdata ? [{ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] }] : []
+    withData ? [{ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] }] : []
   ).concat([{
     model: ContDB.unscoped(),
     attributes: ["start", "end"]
