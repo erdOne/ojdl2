@@ -54,8 +54,9 @@ const styles = theme => ({
   action: {
     zIndex: 10,
     //borderRadius: [0, 0, 0, 4],
-    padding: [0, 5],
-    fontSize: "40%"
+    padding: [2, 15],
+    margin: [2, 1],
+    fontSize: "max(8px, 40%)"
   },
   dialog: {
     "&:first-child": {
@@ -237,12 +238,12 @@ class Submission extends Component {
             <div style={{ position: "relative" }}>
               <div className={classes.actions}>
                 {this.props.user.isAdmin &&
-                  <Button size="small" variant="contained" color="primary" onClick={this.onEdit}
+                  <Button variant="contained" color="primary" onClick={this.onEdit}
                     className={classes.action}>
                     Edit+Rejudge
                   </Button>
                 }
-                <Button size="small" variant="contained" color="primary" onClick={() => this.copy(this.state.code)}
+                <Button variant="contained" color="primary" onClick={() => this.copy(this.state.code)}
                   className={classes.action}>
                   Copy
                 </Button>
