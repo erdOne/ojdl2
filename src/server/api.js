@@ -68,7 +68,8 @@ export async function getSub({ sid, uid, cid, withData }) {
   if (sub.cid) {
     if (!admin && (hashUidInDB(uid) !== sub.uid)) {
       var now = new Date();
-      var { start, end } = sub.cont;
+      console.log(sub);
+      var { start, end } = sub.contest;
       if (start <= now && now <= end) throw "contest is running, you have no permission";
     }
   }
