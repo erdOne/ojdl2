@@ -13,11 +13,17 @@ exports.db = {
   password: "password"
 };
 
+function getChallenge(path) {
+  if(existsSync(path)) {
+    const [ url, response ] = readFileSync(path).split('\n');
+    return { url, response };
+  } else {
+    return { url: "/foo/jizz", response: "" };
+  }
+}
+
 exports.credentials = {
-  challenge: {
-    url: "/foo/bar",
-    response: "response"
-  },
+  challenge: getChallenge("/path/to/challenge.txt"),
   certs: {
     cert: readFileSync("./fullchain.pem"),
     key: readFileSync("./privkey.pem")

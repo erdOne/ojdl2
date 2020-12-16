@@ -7,3 +7,4 @@ data
 public/dist/index.js
 workdir/**
 *.log
+*-challenge.txt
