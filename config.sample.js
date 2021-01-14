@@ -15,7 +15,7 @@ exports.db = {
 
 function getChallenge(path) {
   if(existsSync(path)) {
-    const [ url, response ] = readFileSync(path).split('\n');
+    const [ url, response ] = readFileSync(path, 'utf-8').split('\n');
     return { url, response };
   } else {
     return { url: "/foo/jizz", response: "" };
