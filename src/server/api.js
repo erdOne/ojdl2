@@ -112,6 +112,8 @@ export async function getCont({ uid, cid }) {
       where: { pid: { [Op.in]: cont.problems } }
     });
     for (let i in cont.problems) {
+      // console.log(cont.problems[i]);
+      // console.log(probs.find(e => e.pid === cont.problems[i]));
       cont.problems[i] = probs.find(e => e.pid === cont.problems[i]).get({ plain: true });
       cont.problems[i].ppid = cont.problems[i].pid;
       cont.problems[i].pid = toChars(i);
@@ -322,8 +324,13 @@ export async function getDashboardData({ uid }) {
 }
 
 export async function addCont({ uid, cont }) {
-  cont.problems = cont.problems.map(i => parseInt(i));
+  let problems = cont.problems.map(i => parseInt(i));
   if (!await isAdmin({ uid })) throw "you have no permission";
+  for(let pid in problems) {
+    let prob = await ProbDB.findByPk(pid);
+    if (!prob) throw "no such prob";
+  }
+  cont.problems = problems;
   if (cont.cid)
     await ContDB.update(cont, { where: { cid: cont.cid } });
   else
