@@ -326,9 +326,9 @@ export async function getDashboardData({ uid }) {
 export async function addCont({ uid, cont }) {
   let problems = cont.problems.map(i => parseInt(i));
   if (!await isAdmin({ uid })) throw "you have no permission";
-  for(let pid in problems) {
+  for(let pid of problems) {
     let prob = await ProbDB.findByPk(pid);
-    if (!prob) throw "no such prob";
+    if (!prob) throw `no such prob ${pid}`;
   }
   cont.problems = problems;
   if (cont.cid)
