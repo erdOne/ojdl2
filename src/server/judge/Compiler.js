@@ -11,16 +11,15 @@ export default class Compiler {
     fs.copyFileSync(`./data/sub/${sid}`, `./workdir/${jid}/${this.lang.source}`);
     if (!this.lang.buildArgs) return;
     var { boxExec, boxClean } = await global.sandBoxQueue.request();
-    const args = ['-v', '-v', `--dir=/box=${process.cwd()}/workdir/${jid}:rw`, "--time=2", "--run"];
+    const COMPILE_TIME_LIMIT = 2.0; // second
+    const args = [`--dir=/box=${process.cwd()}/workdir/${jid}:rw`,
+      `--time=${COMPILE_TIME_LIMIT}`, `--wall-time=${COMPILE_TIME_LIMIT * 1.1}`, "--run"];
     try {
       // console.log(...args, ...this.lang.buildArgs)
-      tryfork(await boxExec(...args, ...this.lang.buildArgs), "Build");
+      tryfork(await boxExec(...args, ...this.lang.buildArgs), "Compile");
       tryfork(await boxExec(...args, "/bin/chmod", "755", this.lang.executable), "Give Permission");
-    } catch (e) {
+    } finally {
       boxClean();
-      if (e instanceof Array) throw e;
-      throw ["Compiler", 0, e];
     }
-    boxClean();
   }
 }
