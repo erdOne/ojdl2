@@ -16,6 +16,8 @@ const columns = [
     display: prob => prob.title },
   { id: "subtitle", align: "left", numeric: false, disablePadding: false, label: "", style: { width: 150 },
     display: prob => (<small style={{ color: "gray" }}> {prob.subtitle} </small>) },
+  { id: "visibility", align: "right", numeric: false, disablePadding: false, label: "權限", style: { width: 75 },
+    display: prob => prob.visibility },
   { id: "status", align: "right", numeric: false, disablePadding: false, label: "狀態", style: { width: 75 },
     display: prob => !prob.status ? null
       : prob.status == "AC" ? (<CheckSharp style={{ height: 15, color: verdicts[verdicts.AC].color[0] }} />)
