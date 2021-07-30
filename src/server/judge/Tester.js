@@ -11,10 +11,10 @@ function testArgs({ jid, tid }, { timeLimit, memLimit }) {
     "--extra-time=" + timeLimit / 1000 * 0.1,
     "--wall-time=" + timeLimit / 1000 * 10,
     "--cg",
-    //"-v",
-    //"--stack=" + memLimit,
-    "--cg-mem=" + memLimit * 2,
-    "--mem=" + memLimit * 2,
+    // "-v",
+    // "--stack=" + memLimit,
+    "--cg-mem=" + memLimit * 4,
+    "--mem=" + memLimit * 4,
     "-e",
     "--processes",
     "--run",
@@ -27,7 +27,7 @@ function statusToErrCode(exitsig, msg) {
   if (msg === "Caught fatal signal 9\n") return verdicts.MLE;
   if (msg === "Caught fatal signal 11\n") return verdicts.SF;
   if (exitsig === 2) throw new Error(msg);
-  //console.log(exitsig, msg);
+  console.log(exitsig, msg);
   if (exitsig) return verdicts.RE;
   return verdicts.UN;
 }
@@ -46,18 +46,29 @@ export default class Tester {
     timeLimit = parseInt(timeLimit); memLimit = parseInt(memLimit);
     var args = testArgs({ jid, tid }, { timeLimit, memLimit }),
       result = await boxExec(...args, ...this.getArgs(tid));
-		boxClean();
+    // console.log(args, this.getArgs(tid), result.stderr);
+    // console.log(result.stderr);
+    await boxClean();
     return {
-      verdict: statusToErrCode(result.status, result.stderr),
-      msg: result.status ? result.stderr.substr(0, 256) : null
+      verdict: statusToErrCode(result.status, result.stderr.substr(0, 512)),
+      msg: result.status ? result.stderr.substr(0, 512) : null
     };
   }
 }
 
 export class InteractiveTester extends Tester {
   getArgs(tid) {
-    var pipeargs = x => `/bin/pipexec -- [ int /box/judge /box/${tid}.in ] [ sol ${x} ]`;
-    return ["./interact.js", "/box/judge", `/box/${tid}.in`, `/box/${tid}.out`, ...this.lang.execArgs];
+    return ["/box/interact.js", "/box/judge", `/box/${tid}.in`, `/box/${tid}.out`, ...this.lang.execArgs];
+    /* pipexec researching
+    return ['/bin/pipexec', '--',
+      '[', 'J', '/box/judge', `/box/${tid}.in`, `/box/${tid}.out`, ']',
+      '[', 'P', ...this.lang.execArgs, ']',
+      '[', 'C', '/bin/cat', ']',
+      '"{J:1>P:0}"',
+      '"{P:1>J:0}"',
+      '"{J:2>C:0}"',
+    ];
+    */
   }
 }
 

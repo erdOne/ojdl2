@@ -134,7 +134,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
       where.title = { [Op.substring]: title.replace(/[%_]/g, (match, offset, string) => `\\${match}`) }; // % and _
     const { rows: probs, count: probCount } = await ProbDB.findAndCountAll({
       order, limit, offset, where,
-      attributes: ["pid", "title", "subtitle", "updatedAt"]
+      attributes: ["pid", "title", "subtitle", "updatedAt", "visibility"]
     });
     const pids = probs.map(prob => prob.pid); 
     const subs = await SubDB.findAll({
