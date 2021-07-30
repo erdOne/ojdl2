@@ -71,6 +71,7 @@
     "express-fileupload": "^1.1.6",
     "highlight.js": "^9.18.1",
     "hsts": "^2.2.0",
+    "http": "0.0.1-security",
     "jss": "^10.3.0",
     "jss-plugin-expand": "^10.3.0",
     "jss-preset-default": "^10.3.0",
