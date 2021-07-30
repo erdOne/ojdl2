@@ -53,6 +53,8 @@ export async function exec(sid) {
   try {
     var sub = await SubDB.findByPk(sid);
     if (!sub) throw ["Submission", 0, "submission doesn't exist."];
+    if ((await fsP.readdir(`data/prob/${sub.pid}`)).length == 0)
+      throw ["Testcasedir", 0, "no file in testcase directory"];
     var prob = await ProbDB.findByPk(sub.pid, { logging: false });
     tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData"); /* */
 
