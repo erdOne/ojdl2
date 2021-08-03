@@ -23,7 +23,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Delete as DeleteIcon } from "@material-ui/icons";
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
 
-import { MDEditor } from "components";
+import { MDEditor } from "client/components";
 import styles from "./styles";
 
 

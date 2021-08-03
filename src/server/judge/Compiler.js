@@ -1,5 +1,5 @@
 import fs from "fs";
-import languages from "../../client/common/languages.js";
+import languages from "../../common/languages.js";
 import { tryfork } from "../utils.js";
 
 export default class Compiler {

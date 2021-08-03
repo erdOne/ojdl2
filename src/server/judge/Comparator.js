@@ -1,5 +1,5 @@
 import fs from "fs";
-import Codes from "../../client/common/verdicts.js";
+import Codes from "../../common/verdicts.js";
 import { ord } from "../utils.js";
 import { parseMeta, metaToErrCode, readOutput } from "./comparatorUtils.js";
 import { TestResult } from "./results.js";

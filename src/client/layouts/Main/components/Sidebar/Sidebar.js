@@ -23,7 +23,7 @@ import {
   Chat,
   Home } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import { signOut } from "actions";
+import { signOut } from "client/actions";
 
 import { SidebarItem } from "./components";
 

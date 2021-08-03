@@ -1,5 +1,5 @@
 import { promises as fsP } from "fs";
-import verdicts from "../../client/common/verdicts.js";
+import verdicts from "../../common/verdicts.js";
 
 export function parseMeta(data) {
   return Object.fromEntries(data.split("\n").map(item =>

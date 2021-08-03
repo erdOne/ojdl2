@@ -12,7 +12,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { hashPswAtClient, hashUid } from "common/hash";
-import { signIn } from "actions";
+import { signIn } from "client/actions";
 
 const styles = theme => ({
   form: {

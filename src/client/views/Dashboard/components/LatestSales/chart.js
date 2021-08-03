@@ -1,4 +1,4 @@
-import palette from "theme/palette";
+import palette from "client/theme/palette";
 
 export const options = {
   responsive: true,

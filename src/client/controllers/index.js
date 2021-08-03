@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
 
-import { enterContest, leaveContest } from "actions";
+import { enterContest, leaveContest } from "client/actions";
 
 function mapStateToProps({ contest, user }) {
   //var inContest = !!state.contest;

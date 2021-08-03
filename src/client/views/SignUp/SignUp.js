@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Grid, IconButton } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Quotes } from "components";
+import { Quotes } from "client/components";
 import { SignUpForm } from "./components";
 
 

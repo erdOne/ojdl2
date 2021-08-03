@@ -1,5 +1,5 @@
-import { ENTER_CONTEST, LEAVE_CONTEST } from "actions/actions";
-import { createReducer } from "./utils";
+import { ENTER_CONTEST, LEAVE_CONTEST } from "client/actions/actions";
+import { createReducer } from "./utils.js";
 
 function leaveContest(state, action) {
   return { inContest: false };

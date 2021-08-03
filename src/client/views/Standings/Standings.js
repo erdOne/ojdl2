@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import verdicts from "common/verdicts";
 import { toChars } from "common/char";
-import { VirtualTable } from "components";
+import { VirtualTable } from "client/components";
 import { Line as LineChart } from "react-chartjs-2";
 
 import { Link, CircularProgress } from "@material-ui/core";

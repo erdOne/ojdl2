@@ -7,7 +7,7 @@ const gwebpack = x => require("webpack-stream")(x, webpack);
 const ftp = require("vinyl-ftp");
 //const { ftpServer } = require("./secrets.js");
 var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
-//const path = require("path");
+const path = require("path");
 
 const { readFileSync } = require("fs");
 const babelrc = JSON.parse(readFileSync("./.babelrc"));
@@ -30,7 +30,7 @@ const paths = {
     dest: "public/dist",
     destfilename: "index.js"
   },
-  upload: ["public/**/*", "src/server/**/*", "src/client/common/*", "package*.json"]
+  upload: ["public/**/*", "src/server/**/*", "src/common/*", "package*.json"]
 };
 
 /* Not all tasks need to use streams, a gulpfile is just another node program
@@ -78,7 +78,11 @@ function scripts() {
         minimize: false
       },
       resolve: {
-        modules: ["node_modules", "src/client"]
+        modules: ["node_modules"],
+        alias: {
+            common: path.resolve(__dirname, "./src/common"),
+            client: path.resolve(__dirname, "./src/client")
+        }
       }
     }))
   // .pipe(babel({

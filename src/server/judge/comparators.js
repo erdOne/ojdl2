@@ -1,6 +1,6 @@
 import Comparator from "./Comparator.js";
 import { execSync } from "child_process";
-import Codes from "../../client/common/verdicts.js";
+import Codes from "../../common/verdicts.js";
 import Big from "big.js";
 import { readFileSync } from "fs";
 import { readOutput } from "./comparatorUtils.js";

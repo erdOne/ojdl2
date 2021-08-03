@@ -16,7 +16,7 @@ import {
   Slider } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
-import { MDEditor } from "components";
+import { MDEditor } from "client/components";
 import { TestSuiteDisplay, SamplesDisplay } from "./components";
 
 const styles = theme => ({

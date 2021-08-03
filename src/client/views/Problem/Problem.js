@@ -8,10 +8,10 @@ import { withSnackbar } from "notistack";
 import { Typography, CircularProgress, Button, Fab } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { CheckSharp as AC, ChangeHistorySharp as Tried } from "@material-ui/icons";
-import { MDRenderer } from "components";
+import { MDRenderer } from "client/components";
 import { SubtaskDisplay, SampleDisplay } from "./components";
 import styles from "./styles";
-import verdicts from "../../common/verdicts";
+import verdicts from "common/verdicts";
 
 function mapStateToProps({ user }) {
   return { user };

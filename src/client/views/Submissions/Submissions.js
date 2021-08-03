@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { Link, CircularProgress } from "@material-ui/core";
 
-import { VirtualTable } from "components";
+import { VirtualTable } from "client/components";
 import verdicts from "common/verdicts";
 import languages from "common/languages";
 

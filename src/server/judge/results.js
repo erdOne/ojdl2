@@ -1,4 +1,4 @@
-import verdicts from "../../client/common/verdicts.js";
+import verdicts from "../../common/verdicts.js";
 
 function fullError(err) {
   return err.message + "\n" + (err.stack || "");

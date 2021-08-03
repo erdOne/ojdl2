@@ -18,7 +18,7 @@ import {
   DialogContent,
   CircularProgress } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import Editor from "components/Editor";
+import Editor from "client/components/Editor";
 import { SubtaskResultDisplay, Verdict } from "./components";
 import verdicts from "common/verdicts";
 import languages from "common/languages";

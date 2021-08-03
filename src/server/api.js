@@ -4,10 +4,10 @@ import fs from "fs";
 import { UserDB, SubDB, ProbDB, ContDB, PostDB } from "./databases.js";
 import { exec, execUnlimited } from "./exec.js";
 import { execSync } from "child_process";
-import { hashUid, hashPswInDB, hashUidInDB } from "../client/common/hash.js";
-import verdicts from "../client/common/verdicts.js";
-import languages from "../client/common/languages.js";
-import { toChars, fromChars } from "../client/common/char.js";
+import { hashUid, hashPswInDB, hashUidInDB } from "../common/hash.js";
+import verdicts from "../common/verdicts.js";
+import languages from "../common/languages.js";
+import { toChars, fromChars } from "../common/char.js";
 import sql, { Op } from "sequelize";
 
 export async function getUser({ uid }) {

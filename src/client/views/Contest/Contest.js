@@ -7,7 +7,7 @@ import { withSnackbar } from "notistack";
 
 import { Typography, CircularProgress, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { MDRenderer } from "components";
+import { MDRenderer } from "client/components";
 
 const styles = theme => ({
   actions: {

@@ -1,5 +1,5 @@
-import languages from "../../client/common/languages.js";
-import verdicts from "../../client/common/verdicts.js";
+import languages from "../../common/languages.js";
+import verdicts from "../../common/verdicts.js";
 
 function testArgs({ jid, tid }, { timeLimit, memLimit }) {
   return [

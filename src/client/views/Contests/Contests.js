@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { CircularProgress } from "@material-ui/core";
 
-import { VirtualTable } from "components";
+import { VirtualTable } from "client/components";
 
 const columns = [
   { id: "cid", align: "right", numeric: true,

@@ -5,8 +5,8 @@ import { Typography, Paper, Button } from "@material-ui/core";
 import { Send as SendIcon } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 
-import AutoSuggestWrapper from "components/AutoSuggestWrapper";
-import Editor from "components/Editor";
+import AutoSuggestWrapper from "client/components/AutoSuggestWrapper";
+import Editor from "client/components/Editor";
 
 const styles = theme => ({
   paper: {

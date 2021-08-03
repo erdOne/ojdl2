@@ -14,7 +14,7 @@ import {
   Delete as DeleteIcon
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import { Editor } from "components";
+import { Editor } from "client/components";
 import { SampleDisplayStyles as styles } from "./styles";
 
 function splice(arr, ...args) { arr.splice(...args); return arr; }

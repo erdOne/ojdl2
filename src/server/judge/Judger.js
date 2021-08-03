@@ -1,5 +1,5 @@
 import { ErrorResult, ErrorTestResult, Result } from "./results.js";
-import verdicts from "../../client/common/verdicts.js";
+import verdicts from "../../common/verdicts.js";
 
 class TestcaseJudger {
   constructor(Tester, Comparator) {

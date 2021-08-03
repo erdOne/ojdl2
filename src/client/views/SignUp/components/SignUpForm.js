@@ -5,7 +5,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
-import { deepAssign } from "utils";
+import { deepAssign } from "client/utils";
 import {
   Button,
   TextField,
@@ -15,7 +15,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { hashPswAtClient, hashUid } from "common/hash";
-import { signIn } from "actions";
+import { signIn } from "client/actions";
 
 
 const fieldTypes = {

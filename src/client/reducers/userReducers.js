@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT } from "actions/actions";
+import { SIGN_IN, SIGN_OUT } from "client/actions/actions";
 import { createReducer } from "./utils.js";
 import axios from "axios";
 

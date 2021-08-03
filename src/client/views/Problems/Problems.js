@@ -6,8 +6,8 @@ import { connect } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 import { CheckSharp, ChangeHistorySharp } from "@material-ui/icons";
 
-import { VirtualTable } from "components";
-import verdicts from "../../common/verdicts";
+import { VirtualTable } from "client/components";
+import verdicts from "common/verdicts";
 
 const columns = [
   { id: "pid", align: "right", numeric: true,
