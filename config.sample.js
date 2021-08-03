@@ -1,4 +1,4 @@
-const { readFileSync } = require("fs");
+const { readFileSync, existsSync } = require("fs");
 
 exports.ports = {
   http: 80,
@@ -14,20 +14,27 @@ exports.db = {
 };
 
 function getChallenge(path) {
-  if(existsSync(path)) {
+  if (existsSync(path)) {
     const [ url, response ] = readFileSync(path, 'utf-8').split('\n');
     return { url, response };
   } else {
-    return { url: "/foo/jizz", response: "" };
+    return { url: "/challenge/url", response: "" };
+  }
+}
+
+function getCerts(certPath, keyPath) {
+  if (existsSync(certPath) && existsSync(keyPath)) {
+    const cert = readFileSync(certPath);
+    const key = readFileSync(keyPath);
+    return { cert, key };
+  } else {
+    return { cert: "", key: "" };
   }
 }
 
 exports.credentials = {
   challenge: getChallenge("/path/to/challenge.txt"),
-  certs: {
-    cert: readFileSync("./fullchain.pem"),
-    key: readFileSync("./privkey.pem")
-  }
+  certs: getCerts("/path/to/fullchain.pem", "/path/to/privkey.pem")
 };
 
 exports.sandbox = {
