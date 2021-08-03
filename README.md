@@ -1,6 +1,8 @@
 ## Usage
 
-1. install gulp
-2. install & configure MariaDB
-3. create `config.js` from `config.sample.js` and adjust the configs.
-4. `npm install && gulp default && sudo npm start`
+1. Install gulp
+2. Install isolate
+3. Install & configure MariaDB
+4. Initialize the database structure by `mysql <src/server/databases/OJDL.initialize.sql`
+5. Create `config.js` from `config.sample.js` and adjust the configs.
+6. `npm install && gulp default && sudo npm start`
