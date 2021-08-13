@@ -62,7 +62,8 @@ function scripts() {
           ]
         }]
       },
-      mode: "development",
+      // mode: "development",
+      mode: "production",
       plugins: [
         new webpack.ProvidePlugin({
           "React": "react",
