@@ -146,7 +146,7 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                       key={id}
                       align={align}
                       style={style}
-                      padding={disablePadding ? "none" : "default"}
+                      padding={disablePadding ? "none" : "normal"}
                       className={classes.headCell}
                     >
                      {label}
@@ -207,8 +207,8 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                     inputProps: { "aria-label": "rows per page" },
                     native: true,
                   }}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                   ActionsComponent={TablePaginationActions}
                 />
               </TableRow>
