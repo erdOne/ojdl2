@@ -3,9 +3,9 @@ import { combineReducers } from "redux";
 import userReducer from "./userReducers.js";
 import contestReducer from "./contestReducers.js";
 
-export default async () => {
+export default () => {
   return combineReducers({
-    user: await userReducer,
+    user: userReducer,
     contest: contestReducer
   });
 };
