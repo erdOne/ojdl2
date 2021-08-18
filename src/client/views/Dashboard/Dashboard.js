@@ -39,7 +39,7 @@ class Dashboard extends Component {
     var active = this.props.user.active;
     this.state = { dataLoaded: !active, active };
     if (active)
-      axios.post("/api/get_dashboard_data", { uid: this.props.user.uid })
+      axios.post("/api/get-dashboard-data", { uid: this.props.user.uid })
         .then(res=>{
           console.log(res);
           this.setState({ ...res.data, dataLoaded: true });
@@ -62,10 +62,11 @@ class Dashboard extends Component {
       totalScore, data;
     {
       const days = 1000 * 60 * 60 * 24;
+      const submissions = user?.submissions || [];
       let curDate = Math.floor(new Date() / days),
         ACSet = new Set(), scoreMap = new Map(),
-        totalDays = user.submissions.length > 0 ?
-          curDate - Math.floor(new Date(user.submissions[0].timestamp) / days) + 1 : 1;
+        totalDays = submissions.length > 0 ?
+          curDate - Math.floor(new Date(submissions[0].timestamp) / days) + 1 : 1;
       data = {
         labels: Array.fromFn(totalDays, i => new Date(new Date() - i * days)
           .toLocaleDateString(undefined, { month: "short", day: "numeric" })
@@ -73,7 +74,7 @@ class Dashboard extends Component {
         ACs: Array.init(totalDays, 0),
         Subs: Array.init(totalDays, 0),
       };
-      for (let s of user.submissions.reverse()) {
+      for (let s of submissions.reverse()) {
         s.timestamp = new Date(s.timestamp);
         var sDate = curDate - Math.floor(s.timestamp / days);
         if (sDate === streak)streak++;
