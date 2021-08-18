@@ -7,7 +7,6 @@ export default {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
-    initialAutoIncrement: 7000
   },
   title: {
     type: Sequelize.STRING,
