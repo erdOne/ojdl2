@@ -1,2 +1,2 @@
 export { default as AddPost } from "./AddPost";
-export { default as VisibilitySwitch } from "./VisibilitySwitch";
+export { default as ToggleSwitch } from "./ToggleSwitch";

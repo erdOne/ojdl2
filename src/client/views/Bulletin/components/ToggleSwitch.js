@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import { FormControlLabel, Switch } from "@material-ui/core";
 
 
-class VisibilitySwitch extends Component {
+class ToggleSwitch extends Component {
   static propTypes = {
     handleToggle: PropTypes.func,
     checked: PropTypes.bool,
-    poid: PropTypes.number
+    poid: PropTypes.number,
+    label: PropTypes.string
   }
 
   static defaultProps = {
@@ -31,10 +32,10 @@ class VisibilitySwitch extends Component {
     return (
       <FormControlLabel
         control={<Switch checked={this.state.checked} onChange={this.toggleChecked} />}
-        label="Visible"
+        label={this.props.label}
       />
     );
   }
 }
 
-export default VisibilitySwitch;
+export default ToggleSwitch;

@@ -353,7 +353,7 @@ export async function getPosts({ cid = 0, uid }) {
   return {
     posts: await PostDB.findAll({
       include: [{ model: UserDB, attributes: ["handle"] }],
-      order: [[sql.col("updatedAt"), "DESC"]],
+      order: [[sql.col("pinned"), "DESC"], [sql.col("updatedAt"), "DESC"]],
       where: {
         [Op.or]: {
           uid: hashUidInDB(uid),
@@ -383,12 +383,15 @@ export async function addPost({ uid, cid = 0, content }) {
   return { poid };
 }
 
-export async function alterPost({ poid, uid, visibility, content }) {
+export async function alterPost({ poid, uid, visibility, content, pinned }) {
   if (!await isAdmin({ uid })) throw "you have no permission";
   if (visibility)
     await PostDB.update({ visibility }, { where: { poid } });
   if (content)
     await PostDB.update({ content }, { where: { poid } });
+  if (pinned !== null)
+    await PostDB.update({ pinned }, { where: { poid } });
+  // console.log("ALTER POST", { visibility, content, pinned });
   return null;
 }
 

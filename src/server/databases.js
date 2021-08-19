@@ -32,7 +32,7 @@ PostDB.belongsTo(ContDB, { foreignKey: "cid" });
 PostDB.belongsTo(UserDB, { foreignKey: "uid" });
 
 async function initModel() {
-  const option = {};
+  const option = { alter: true };
   try {
     await sequelize.sync(option);
     // create placeholder (cid = 0)
@@ -45,13 +45,6 @@ async function initModel() {
   } catch (err) {
     console.error(err);
   }
-  /*
-  UserDB.sync(option);
-  SubDB.sync(option);
-  PostDB.sync(option);
-  ProbDB.sync(option);
-  ContDB.sync(option)
-  */
 }
 
 async function init() {

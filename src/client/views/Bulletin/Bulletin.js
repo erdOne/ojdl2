@@ -8,8 +8,9 @@ import axios from "axios";
 
 import { Typography, Divider, CircularProgress, Paper as RawPaper } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { PriorityHigh as PriorityHighIcon, LowPriority as PriorityLowIcon } from "@material-ui/icons";
 
-import { AddPost, VisibilitySwitch } from "./components";
+import { AddPost, ToggleSwitch } from "./components";
 
 function mapStateToProps({ user }) {
   return { user };
@@ -51,10 +52,10 @@ class Bulletin extends Component {
     axios.post("/api/add-post", {
       content, cid: this.props.match.params.cid, uid: this.props.user.uid
     }).then(res => {
-      if (res.data.error) throw res.data;
+      if (res.data.error) throw res.data.msg;
       this.props.history.go(0);
     }).catch(err => {
-      this.props.enqueueSnackbar(err.msg);
+      this.props.enqueueSnackbar(err);
     });
   }
 
@@ -62,22 +63,22 @@ class Bulletin extends Component {
     axios.post("/api/reply-post", {
       poid, reply, uid: this.props.user.uid
     }).then(res => {
-      if (res.data.error) throw res.data;
+      if (res.data.error) throw res.data.msg;
       this.props.enqueueSnackbar("Success");
     }).catch(err => {
-      this.props.enqueueSnackbar(err.msg);
+      this.props.enqueueSnackbar(err);
     });
   }
 
-  handleToggle(poid, visibility) {
+  handleToggleVisibility(poid, visibility) {
     visibility = visibility ? "visible" : "hidden";
     axios.post("/api/alter-post", {
       poid, visibility, uid: this.props.user.uid
     }).then(res => {
-      if (res.data.error) throw res.data;
+      if (res.data.error) throw res.data.msg;
       this.props.enqueueSnackbar("Success");
     }).catch(err => {
-      this.props.enqueueSnackbar(err.msg);
+      this.props.enqueueSnackbar(err);
     });
   }
 
@@ -85,10 +86,22 @@ class Bulletin extends Component {
     axios.post("/api/alter-post", {
       poid, content, uid: this.props.user.uid
     }).then(res => {
-      if (res.data.error) throw res.data;
+      if (res.data.error) throw res.data.msg;
       this.props.enqueueSnackbar("Success");
     }).catch(err => {
-      this.props.enqueueSnackbar(err.msg);
+      this.props.enqueueSnackbar(err);
+    });
+  }
+
+  handleTogglePinned(poid, pinned) {
+    axios.post("/api/alter-post", {
+      poid, pinned, uid: this.props.user.uid
+    }).then(res => {
+      if (res.data.error) throw res.data.msg;
+      // this.props.enqueueSnackbar("Success");
+      this.props.history.go(0);
+    }).catch(err => {
+      this.props.enqueueSnackbar(err);
     });
   }
 
@@ -113,6 +126,11 @@ class Bulletin extends Component {
       {
         this.state.posts.map(post =>
           <Paper key={post.poid}>
+            {
+              post.pinned
+              ? <PriorityHighIcon fontSize="small" style={{ float: "right" }} />
+              : <PriorityLowIcon fontSize="small" style={{ float: "right" }} />
+            }
             <Typography variant="caption">
               {post.user.handle} at {new Date(post.createdAt).toLocaleString()}
             </Typography>
@@ -121,6 +139,14 @@ class Bulletin extends Component {
                 (<AddPost poid={post.poid} value={post.content} label="Content"
                   buttonText="update"
                   handleSubmit={this.handleEdit}
+                  secondaryAction={
+                    <ToggleSwitch
+                      poid={post.poid}
+                      checked={post.pinned}
+                      handleToggle={this.handleTogglePinned}
+                      label="pinned"
+                    />
+                  }
                 />)
                 : <Typography>{post.content}</Typography>
             }
@@ -130,10 +156,11 @@ class Bulletin extends Component {
                   buttonText="reply"
                   handleSubmit={this.handleReply}
                   secondaryAction={
-                    <VisibilitySwitch
+                    <ToggleSwitch
                       poid={post.poid}
                       checked={post.visibility === "visible"}
-                      handleToggle={this.handleToggle}
+                      handleToggle={this.handleToggleVisibility}
+                      label="visible"
                     />
                   }
                 />)

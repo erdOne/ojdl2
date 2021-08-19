@@ -27,5 +27,10 @@ export default {
     type: Sequelize.ENUM("visible", "hidden"),
     allowNull: false,
     defaultValue: "hidden"
+  },
+  pinned: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 };
