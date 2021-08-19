@@ -17,9 +17,9 @@ function getChallenge(path) {
   if (existsSync(path)) {
     const [ url, response ] = readFileSync(path, "utf-8").split("\n");
     return { url, response };
-  } else {
+  } else
     return { url: "/challenge/url", response: "" };
-  }
+
 }
 
 function getCerts(certPath, keyPath) {
@@ -27,9 +27,9 @@ function getCerts(certPath, keyPath) {
     const cert = readFileSync(certPath);
     const key = readFileSync(keyPath);
     return { cert, key };
-  } else {
+  } else
     return { cert: "", key: "" };
-  }
+
 }
 
 exports.credentials = {
