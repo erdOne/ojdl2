@@ -52,7 +52,16 @@ function scripts() {
         filename: paths.scripts.destfilename
       },
       optimization: {
-        minimize: true
+        minimize: true,
+        splitChunks: {
+          cacheGroups: {
+            vendors: {
+              name: 'vendor',
+              test: /[\\/]node_modules[\\/]/,
+              chunks: 'all',
+            },
+          },
+        },
       },
       resolve: {
         modules: ["node_modules"],
