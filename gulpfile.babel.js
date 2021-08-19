@@ -56,9 +56,10 @@ function scripts() {
         splitChunks: {
           cacheGroups: {
             vendors: {
-              name: 'vendor',
+              name: "vendor",
               test: /[\\/]node_modules[\\/]/,
-              chunks: 'all',
+              chunks: "all",
+              filename: "vendor.index.js"
             },
           },
         },
@@ -73,7 +74,7 @@ function scripts() {
     }))
   // .pipe(babel({
   //     presets: ["@babel/preset-env"],
-  //     plugins: ['transform-react-jsx']
+  //     plugins: ["transform-react-jsx"]
   // }))
   //.pipe(uglify())
     .pipe(gulp.dest(paths.scripts.dest))
