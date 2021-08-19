@@ -36,7 +36,7 @@ class Bulletin extends Component {
   constructor(props) {
     super(props);
     this.state = { dataLoaded: false, error: false };
-    axios.post("/api/get_posts", { cid: this.props.match.params.cid, uid: this.props.user.uid })
+    axios.post("/api/get-posts", { cid: this.props.match.params.cid, uid: this.props.user.uid })
       .then(res=>{
         console.log(res.data);
         if (res.data.error) throw res.data;
@@ -90,7 +90,7 @@ class Bulletin extends Component {
       <Typography variant="h3">Bulletin</Typography>
       {this.props.user.active ?
         <Paper>
-          <AddPost handleSubmit={this.handleSubmit} label="Ask a question" />
+          <AddPost handleSubmit={this.handleSubmit} label="Ask a question / Make a post" />
         </Paper>
         : null}
       {this.state.posts.map(post =>

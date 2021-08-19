@@ -124,7 +124,7 @@ class Sidebar extends React.Component {
         <List>
           <Item href="/home" icon={<Home />} title="Home" display={inContest} />
           <Item href="/dashboard" icon={<Dashboard />} title="Dashboard" display={!inContest} />
-          <Item href="/bulletin" icon={<Chat />} title="Bulletin" display={inContest} />
+          <Item href="/bulletin" icon={<Chat />} title="Bulletin" />
           <Item href="/problems" icon={<Assignment />} title="Problems" />
           <Item href="/submissions" icon={<Storage />} title="Submissions" />
           <Item href="/submit" icon={<Publish />} title="Submit" />

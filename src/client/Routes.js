@@ -35,7 +35,7 @@ class Routes extends Component {
           <Route component={Dashboard} layout={Main} exact path={["/", "/dashboard"]} />
           <Route component={Problems} layout={Main} strict exact
             path={["/problems", "/contest/:cid/problems"]} />
-          <Route component={Bulletin} layout={Main} strict exact path="/contest/:cid/bulletin" />
+          <Route component={Bulletin} layout={Main} strict exact path={["/contest/:cid/bulletin", "/bulletin"]} />
           <Route component={Standings} layout={Main} strict exact path="/contest/:cid/standings" />
           <Route component={Contest} layout={Main} strict exact path="/contest/:cid/home" />
           <Route component={Submission} layout={Main} strict exact
