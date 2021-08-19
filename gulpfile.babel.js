@@ -3,7 +3,7 @@ const gulp = require("gulp");
 //const uglify = require("gulp-uglify");
 const webpack = require("webpack");
 const gwebpack = x => require("webpack-stream")(x, webpack);
-var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 const path = require("path");
 const { readFileSync } = require("fs");
 
