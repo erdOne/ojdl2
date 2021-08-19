@@ -1,8 +1,8 @@
-import React from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { Typography, Button, colors } from '@material-ui/core';
+import React from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/styles";
+import { Typography, Button, colors } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -11,10 +11,10 @@ const useStyles = makeStyles(theme => ({
   media: {
     paddingTop: theme.spacing(2),
     height: 80,
-    textAlign: 'center',
-    '& > img': {
-      height: '100%',
-      width: 'auto'
+    textAlign: "center",
+    "& > img": {
+      height: "100%",
+      width: "auto"
     }
   },
   content: {
@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     padding: theme.spacing(1, 2),
-    display: 'flex',
-    justifyContent: 'center'
+    display: "flex",
+    justifyContent: "center"
   }
 }));
 

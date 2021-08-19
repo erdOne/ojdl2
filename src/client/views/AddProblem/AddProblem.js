@@ -146,7 +146,7 @@ class Problem extends Component {
       for (var testcase of subtask.testcases) {
         const timeLimit = parseInt(testcase.timeLimit);
         const memLimit = parseInt(testcase.memLimit);
-        if(isNaN(timeLimit) || isNaN(memLimit)) {
+        if (isNaN(timeLimit) || isNaN(memLimit)) {
           this.props.enqueueSnackbar("請為所有測資設置時間及記憶體限制");
           return;
         }
@@ -157,7 +157,7 @@ class Problem extends Component {
     formData.set("prob", JSON.stringify(prob));
     for (var file of this.fileUploadRef.current.files)
       formData.append(file.name, file);
-		
+
     this.props.enqueueSnackbar("請靜候資料送出");
 
     axios.post("/api/add-prob", formData)
@@ -189,7 +189,7 @@ class Problem extends Component {
     const { pid } = this.props.match.params;
     axios.post("/api/download-test-suites", { uid, pid })
       .then(res => {
-        if(res.data.error) throw res.data.msg;
+        if (res.data.error) throw res.data.msg;
         const { filename } = res.data;
         window.open(`/download/${filename}`);
       })
@@ -210,12 +210,14 @@ class Problem extends Component {
     return (
       <div className={classes.root}>
         <Typography variant="h2" style={{ marginBottom: 10 }}>
-          {pid ? <>
+          {pid ?
+            <>
               Edit problem
               <small style={{ fontSize: "", color: "gray" }}>
                 {" #" + pid}
               </small>
-              </> : "Add problem"
+            </>
+            : "Add problem"
           }
         </Typography>
         <Typography variant="body1" component="div" className={classes.text}>

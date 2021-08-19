@@ -1,9 +1,6 @@
-import { Component } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
-import { CircularProgress } from "@material-ui/core";
 
 import { VirtualTable } from "client/components";
 
@@ -29,7 +26,8 @@ const Contests = ({ user }) => (
     }}
     api={{
       loadData: ({ limit, offset, filters }) => {
-        return axios.post("/api/get_conts", { uid: user.uid, order: [["cid", "asc"]], limit, offset, filters })
+        return axios.post("/api/get_conts",
+          { uid: user.uid, order: [["cid", "asc"]], limit, offset, filters })
           .then(res => {
             if (res.data.error) throw res.data.msg;
             return [res.data.conts, res.data.contCount];
@@ -43,5 +41,5 @@ const Contests = ({ user }) => (
 
 Contests.propTypes = {
   user: PropTypes.object
-}
+};
 export default connect(mapStateToProps)(Contests);

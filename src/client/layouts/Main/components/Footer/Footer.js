@@ -11,11 +11,12 @@ const styles = theme => ({
 });
 
 class Footer extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = { jizz: false };
   }
-  render(){
+
+  render() {
     const { className, classes, ...rest } = this.props;
     return (
       <div

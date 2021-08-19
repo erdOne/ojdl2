@@ -6,7 +6,7 @@ export default theme => ({
     "& button": {
       width: 90
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       position: "relative"
     }
   },

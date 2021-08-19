@@ -12,7 +12,7 @@ import fs from "fs";
 import * as api from "./api.js";
 import * as session_api from "./session-api.js";
 
-import config from "../../config.js"
+import config from "../../config.js";
 
 // ['log','warn','error'].forEach(a=>{let b=console[a];console[a]=(...c)=>{try{throw new Error}catch(d){b.apply(console,[d.stack.split('\n')[2].trim().substring(3).replace(__dirname,'').replace(/\s\(./,' at ').replace(/\)/,''),'\n',...c])}}}); // display current function
 /* ['log', 'warn', 'error'].forEach(t => {
@@ -33,7 +33,7 @@ app.use(hsts({ maxAge: 31536000 }));
 
 app.use(session({
   secret: config.cookie.secret,
-  name: 'uid',
+  name: "uid",
   saveUninitialized: false,
   resave: true,
   cookie: {
@@ -45,7 +45,7 @@ const snakeToCamel = (str) => str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
 app.post("/api/:type", function(req, res) {
   var type = snakeToCamel(req.params.type);
-  if (type in api) {
+  if (type in api)
     api[type](req.body, req.files)
       .then(x => {
         res.send({ error: false, ...x });
@@ -55,7 +55,7 @@ app.post("/api/:type", function(req, res) {
         res.send({ error: true, msg: String(err) });
         res.end();
       });
-  } else if (type in session_api) {
+  else if (type in session_api)
     session_api[type](req)
       .then(x => {
         res.send({ error: false, ...x });
@@ -65,14 +65,14 @@ app.post("/api/:type", function(req, res) {
         res.send({ error: true, msg: String(err) });
         res.end();
       });
-  } else {
+  else
     res.sendStatus(400);
-  }
+
 });
 
 app.get("/download/:filename", function(req, res, next) {
   var filename = req.params.filename;
-  if (filename.match(/[\d]+_[\d]+_[\d]+\.zip/)) {
+  if (filename.match(/[\d]+_[\d]+_[\d]+\.zip/))
     res.download(`workdir/${filename}`, filename, function(err) {
       if (err) {
         console.error(err);
@@ -80,9 +80,9 @@ app.get("/download/:filename", function(req, res, next) {
       }
       fs.unlink(`workdir/${filename}`, () => console.log(`Removed workdir/${filename} successfully`));
     });
-  } else {
+  else
     next();
-  }
+
 });
 
 app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
@@ -90,7 +90,7 @@ app.use("/images", express.static(path.join(__dirname, "../../public/images")));
 app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
 
 app.get(config.credentials.challenge.url, (req, res)=>{
-    res.send(config.credentials.challenge.response);
+  res.send(config.credentials.challenge.response);
 });
 
 app.use(function(req, res) {

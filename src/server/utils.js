@@ -56,8 +56,8 @@ export class Queue {
 import { spawn } from "child_process";
 
 export function spawnP(...args) {
-  const stdout_threshold = 1 << 25; // need to adjust when OLE implemented
-  const stderr_threshold = 1 << 25;
+  const stdoutThreshold = 1 << 25; // need to adjust when OLE implemented
+  const stderrThreshold = 1 << 25;
   return new Promise((res, rej)=>{
     // console.log(args);
     var proc = spawn(...args);
@@ -67,21 +67,16 @@ export function spawnP(...args) {
       stderr: ""
     };
     proc.stdout.on("data", data => {
-      // console.log("stdout", data.length);
-      if (obj.stdout.length + data.length >= stdout_threshold) {
-        // OLE
+      if (obj.stdout.length + data.length >= stdoutThreshold)
         obj.stderr = "!!! Output Limit Exceed !!!\n";
-      } else {
+      else
         obj.stdout += data;
-      }
+
     });
     proc.stderr.on("data", data => {
-      // console.log("stderr", data.length);
       obj.stderr += data;
-      if (obj.stderr.length >= stderr_threshold) {
-        obj.stderr = obj.stderr.substr(0, stderr_threshold);
-        obj.stderr += "...";
-      }
+      if (obj.stderr.length >= stderrThreshold)
+        obj.stderr = obj.stderr.substr(0, stderrThreshold) + "...";
     });
     proc.stderr.on("error", error => { obj.error = error; });
     proc.on("close", (status, signal) => res({ status, signal, ...obj }));

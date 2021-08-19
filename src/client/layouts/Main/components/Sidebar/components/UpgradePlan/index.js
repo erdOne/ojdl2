@@ -1,1 +1,1 @@
-export { default } from './UpgradePlan';
+export { default } from "./UpgradePlan";

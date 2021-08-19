@@ -74,15 +74,15 @@ function mapStateToProps({ user, contest }) {
 }
 
 function typesetMath() {
-    // typesetMath
-    try {
-      window.MathJax.startup.promise = window.MathJax.startup.promise.then(
-        ()=>window.MathJax.typesetPromise()
-      );
-    } catch (e) {
-      console.log("cannot typeset");
-      console.log(e);
-    }
+  // typesetMath
+  try {
+    window.MathJax.startup.promise = window.MathJax.startup.promise.then(
+      ()=>window.MathJax.typesetPromise()
+    );
+  } catch (e) {
+    console.log("cannot typeset");
+    console.log(e);
+  }
 }
 
 class Submission extends Component {
@@ -108,6 +108,7 @@ class Submission extends Component {
     this.loadSub = this.loadSub.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.copy = this.copy.bind(this);
+    this.copyCode = this.copyCode.bind(this);
     this.componentDidMount = this.componentDidUpdate = () => typesetMath();
   }
 
@@ -159,6 +160,10 @@ class Submission extends Component {
         .then(()=>this.props.enqueueSnackbar("已成功複製"));
   }
 
+  copyCode() {
+    this.copy(this.state.code);
+  }
+
   render() {
     const { classes } = this.props;
     if (this.state.error)
@@ -168,7 +173,9 @@ class Submission extends Component {
 
     const { sub } = this.state, { openDialog } = this;
     const { inContest } = this.props.contest;
-    const pid = inContest ? sub.pid = this.props.contest.problems.find(prob => prob.ppid === sub.pid).pid : sub.pid;
+    const pid = inContest
+      ? sub.pid = this.props.contest.problems.find(prob => prob.ppid === sub.pid).pid
+      : sub.pid;
     var verdict = verdicts[sub.verdict || verdicts.UN];
     return (
       <div className={classes.root}>
@@ -243,7 +250,7 @@ class Submission extends Component {
                     Edit+Rejudge
                   </Button>
                 }
-                <Button variant="contained" color="primary" onClick={() => this.copy(this.state.code)}
+                <Button variant="contained" color="primary" onClick={this.copyCode}
                   className={classes.action}>
                   Copy
                 </Button>

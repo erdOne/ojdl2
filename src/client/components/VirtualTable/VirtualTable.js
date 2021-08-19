@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     textOverflow: "ellipsis",
     overflowX: "hidden",
     whiteSpace: "nowrap",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       textOverflow: "clip",
       whiteSpace: "normal"
     }
@@ -77,14 +77,14 @@ function useAPI({ loadData, page, rowsPerPage, filters }) {
   return data;
 }
 
-function VirtualTable({ columns, config, api, history, location, title }) {
+function VirtualTable({ columns, config, api, history, title }) {
   const classes = useStyles();
 
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  let qs = new URLSearchParams(location.search);
+  let qs = new URLSearchParams(window.location.search);
   let filters = {};
-  for(const key of qs.keys()) if(key in api.queryWhiteList) filters[key] = qs.get(key);
+  for (const key of qs.keys()) if (key in api.queryWhiteList) filters[key] = qs.get(key);
   const page = parseInt(qs.get("page") ?? 1) - 1;
   const data = useAPI({ loadData: api.loadData, filters, page, rowsPerPage });
 
@@ -108,16 +108,16 @@ function VirtualTable({ columns, config, api, history, location, title }) {
     qs.set("page", newPage + 1);
     history.push({ search: qs.toString() });
   }
-  
+
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value));
-    qs.set("page", 1); 
+    qs.set("page", 1);
     history.push({ search: qs.toString() });
   }
 
   function sendQuery(form) {
-    const qs = new URLSearchParams({ page: 1, ...form });
-    history.push({ search: qs.toString() });
+    const nqs = new URLSearchParams({ page: 1, ...form });
+    history.push({ search: nqs.toString() });
   }
   if (!data)
     return (<div style={{ textAlign: "center" }}><CircularProgress /></div>);
@@ -130,7 +130,8 @@ function VirtualTable({ columns, config, api, history, location, title }) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <VirtualTableToolbar title={title} queryWhiteList={api.queryWhiteList} sendQuery={sendQuery} />
+        <VirtualTableToolbar title={title}
+          queryWhiteList={api.queryWhiteList} sendQuery={sendQuery} />
         <div className={classes.tableWrapper}>
           <Table
             className={classes.table}
@@ -149,13 +150,13 @@ function VirtualTable({ columns, config, api, history, location, title }) {
                       padding={disablePadding ? "none" : "normal"}
                       className={classes.headCell}
                     >
-                     {label}
+                      {label}
                     </TableCell>
                   ))
                 }
               </TableRow>
             </TableHead>
-            
+
             <TableBody>
               {
                 rows.map((row, index) => {
@@ -189,7 +190,9 @@ function VirtualTable({ columns, config, api, history, location, title }) {
               {
                 emptyRows > 0 && Array(emptyRows).fill().map((_, index) => (
                   <TableRow key={index}>
-                    <TableCell colSpan={columns.length} className={classes.tableCell}>&nbsp;</TableCell> 
+                    <TableCell colSpan={columns.length} className={classes.tableCell}>
+                      &nbsp;
+                    </TableCell>
                   </TableRow>
                 ))
               }
@@ -223,5 +226,29 @@ function VirtualTable({ columns, config, api, history, location, title }) {
     </div>
   );
 }
+
+VirtualTable.propTypes = {
+  api: PropTypes.shape({
+    loadData: PropTypes.func,
+    queryWhiteList: PropTypes.object
+  }),
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      align: PropTypes.string,
+      style: PropTypes.object,
+      disablePadding: PropTypes.bool,
+      label: PropTypes.string,
+      display: PropTypes.func
+    })
+  ),
+  config: PropTypes.shape({
+    key: PropTypes.string,
+    link: PropTypes.func,
+    typesetMath: PropTypes.bool
+  }),
+  title: PropTypes.string,
+  history: PropTypes.object
+};
 
 export default withRouter(VirtualTable);

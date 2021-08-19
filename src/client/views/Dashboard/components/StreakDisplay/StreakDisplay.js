@@ -48,7 +48,8 @@ static propTypes= {
   className: PropTypes.string,
   classes: PropTypes.object
 }
-render(){
+
+render() {
   const { className, classes, streak, ...rest } = this.props;
   return (
     <Card

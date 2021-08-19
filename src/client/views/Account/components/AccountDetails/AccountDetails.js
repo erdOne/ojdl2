@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState } from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/styles";
 import {
   Card,
   CardHeader,
@@ -11,7 +11,7 @@ import {
   Grid,
   Button,
   TextField
-} from '@material-ui/core';
+} from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -23,12 +23,12 @@ const AccountDetails = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    firstName: "Shen",
+    lastName: "Zhi",
+    email: "shen.zhi@devias.io",
+    phone: "",
+    state: "Alabama",
+    country: "USA"
   });
 
   const handleChange = event => {
@@ -40,16 +40,16 @@ const AccountDetails = props => {
 
   const states = [
     {
-      value: 'alabama',
-      label: 'Alabama'
+      value: "alabama",
+      label: "Alabama"
     },
     {
-      value: 'new-york',
-      label: 'New York'
+      value: "new-york",
+      label: "New York"
     },
     {
-      value: 'san-francisco',
-      label: 'San Francisco'
+      value: "san-francisco",
+      label: "San Francisco"
     }
   ];
 

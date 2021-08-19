@@ -1,1 +1,1 @@
-export { default } from './TasksProgress';
+export { default } from "./TasksProgress";

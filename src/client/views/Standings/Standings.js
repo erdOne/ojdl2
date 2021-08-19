@@ -104,6 +104,7 @@ function useInterval(callback, delay) {
       let id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
+    return null;
   }, [delay]);
 }
 
@@ -115,12 +116,13 @@ function Standings({ user, contest = {} }) {
     if (!contest || !contest.inContest) return;
     setColumns([{ id: "user", align: "left", numeric: false, disablePadding: false, label: "" }]
       .concat(contest.problems.map((prob, i) => ({
-        id: `${i}`, align: "right", numeric: true, disablePadding: false, 
-        label: (<Link href={`./problem/${toChars(i)}`} style={{ textDecoration: "none" }}>{`p${toChars(i)}`}</Link>),
-        display: user => {
-          const scoreP = user.scoresP[prob.ppid];
+        id: `${i}`, align: "right", numeric: true, disablePadding: false,
+        label: (<Link href={`./problem/${toChars(i)}`}
+          style={{ textDecoration: "none" }}>{`p${toChars(i)}`}</Link>),
+        display: usr => {
+          const scoreP = usr.scoresP[prob.ppid];
           if (!scoreP) return 0;
-          const { score, AC }  = scoreP;
+          const { score, AC } = scoreP;
           return (
             <span style={{ color: verdicts[verdicts[AC ? "AC" : "PAC"]].color[0] }}>
               {score}
@@ -128,7 +130,8 @@ function Standings({ user, contest = {} }) {
           );
         }
       })))
-      .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true, disablePadding: false }]));
+      .concat([{ id: "totalScore", label: "總分", align: "right", numeric: true,
+        disablePadding: false }]));
   }, [contest]);
 
   // auto refresh
@@ -156,15 +159,9 @@ function Standings({ user, contest = {} }) {
         }}
         api={{
           loadData: ({ limit, offset, filters = {} }) => {
-            return new Promise((resolve, reject) => {
-              try {
-                const { user_name: handle } = filters;
-                const res = handle ? data.filter(({ user }) => user.indexOf(handle) !== -1) : data;
-                resolve([res.slice(offset, offset + limit), res.length]);
-              } catch(err) {
-                throw err;
-              }
-            });
+            const { user_name: handle } = filters;
+            const res = handle ? data.filter(({ usr }) => usr.indexOf(handle) !== -1) : data;
+            return [res.slice(offset, offset + limit), res.length];
           },
           queryWhiteList: {
             "user_name": null
@@ -187,6 +184,6 @@ function Standings({ user, contest = {} }) {
 Standings.propTypes = {
   user: PropTypes.object,
   contest: PropTypes.object
-}
+};
 
 export default connect(mapStateToProps)(Standings);

@@ -42,7 +42,7 @@ async function initModel() {
       // const cont = await ContDB.findByPk(0);
       // console.log("empty contest created", cont);
     }
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   }
   /*
@@ -57,7 +57,7 @@ async function initModel() {
 async function init() {
   try {
     const pool = mariadb.createPool({
-      host: 'localhost',
+      host: "localhost",
       user: db.user,
       password: db.password,
     });
@@ -65,7 +65,7 @@ async function init() {
     await sequelize.authenticate();
     await initModel();
     console.log("Connection has been established successfully.");
-  } catch(err) {
+  } catch (err) {
     console.error("Unable to connect to the database.", err);
   }
 }

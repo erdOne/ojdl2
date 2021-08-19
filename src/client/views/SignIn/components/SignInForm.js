@@ -69,9 +69,9 @@ class SignInForm extends Component {
       password: hashPsw
     })
       .then(res => {
-        if (res.data.error) {
+        if (res.data.error)
           throw res.data.msg;
-        }
+
         var uid = hashUid(this.state.handle, hashPsw);
         this.props.handleSignIn(uid, res.data.isAdmin);
         this.props.enqueueSnackbar(`歡迎，${this.state.handle}～`);

@@ -1,18 +1,13 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import {
   Toolbar,
   Typography,
-  IconButton,
-  Tooltip,
   TextField,
-  Select,
   MenuItem,
-  Button,
-  InputLabel } from "@material-ui/core";
-import { Delete as DeleteIcon, FilterList as FilterListIcon } from "@material-ui/icons";
+  Button } from "@material-ui/core";
+import { FilterList as FilterListIcon } from "@material-ui/icons";
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +39,7 @@ const useToolbarStyles = makeStyles(theme => ({
     flexWrap: "wrap",
     alignItems: "center",
     flex: "0 0 auto",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       flex: "0 0 80%"
     }
   },
@@ -82,7 +77,7 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
       onChange: handleChangeForm,
       className: classes.textField
     };
-  };
+  }
 
   return (
     <Toolbar className={classes.root}>
@@ -91,15 +86,16 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
           {title}
         </Typography>
       </div>
+      <FilterListIcon />
       {Object.keys(queryWhiteList).length > 0 && (
-        <form onSubmit={handleSubmit} className={classes.filters}> 
+        <form onSubmit={handleSubmit} className={classes.filters}>
           {Object.keys(queryWhiteList).map(term => {
             const options = queryWhiteList[term];
             return options ? (
-                <TextField select {...getOptionsProps(term)}>
-                  {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-                </TextField>
-              ) : <TextField {...getOptionsProps(term)} />
+              <TextField select {...getOptionsProps(term)}>
+                {options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+              </TextField>
+            ) : <TextField {...getOptionsProps(term)} />
             ;
           })}
           <Button variant="contained" color="primary" type="submit" style={{ lineHeight: 2 }}>

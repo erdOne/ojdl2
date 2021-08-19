@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { withSnackbar } from "notistack";
 
 import { Typography, CircularProgress, Button } from "@material-ui/core";

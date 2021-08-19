@@ -5,7 +5,7 @@ import highlight from "highlight.js";
 
 export default class Highlight extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.codeRef = React.createRef();
   }

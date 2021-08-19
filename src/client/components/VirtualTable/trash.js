@@ -19,7 +19,7 @@ function EnhancedTableHead(props) {
       <TableRow className={classes.tableRow}>
         {headCells.map(headCell => {
           const { id, align, style, disablePadding } = headCell;
-          const sortDirection = order[id]; 
+          const sortDirection = order[id];
           return (
             <TableCell
               key={id}

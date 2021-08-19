@@ -2,7 +2,7 @@ import { Component } from "react";
 import { PropTypes } from "prop-types";
 import marked from "marked";
 import clsx from "clsx";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 
 marked.setOptions({
   gfm: true,
@@ -41,7 +41,9 @@ const styles = {
 class MDRenderer extends Component {
   static propTypes = {
     source: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    /* FromStyle */
+    classes: PropTypes.object
   }
 
   componentDidUpdate(prevProps) {

@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import moment from 'moment';
-import { makeStyles } from '@material-ui/styles';
+import React from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import moment from "moment";
+import { makeStyles } from "@material-ui/styles";
 import {
   Card,
   CardActions,
@@ -12,15 +12,15 @@ import {
   Divider,
   Button,
   LinearProgress
-} from '@material-ui/core';
+} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {},
   details: {
-    display: 'flex'
+    display: "flex"
   },
   avatar: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
     height: 110,
     width: 100,
     flexShrink: 0,
@@ -40,11 +40,11 @@ const AccountProfile = props => {
   const classes = useStyles();
 
   const user = {
-    name: 'Shen Zhi',
-    city: 'Los Angeles',
-    country: 'USA',
-    timezone: 'GTM-7',
-    avatar: '/images/avatars/avatar_11.png'
+    name: "Shen Zhi",
+    city: "Los Angeles",
+    country: "USA",
+    timezone: "GTM-7",
+    avatar: "/images/avatars/avatar_11.png"
   };
 
   return (
@@ -73,7 +73,7 @@ const AccountProfile = props => {
               color="textSecondary"
               variant="body1"
             >
-              {moment().format('hh:mm A')} ({user.timezone})
+              {moment().format("hh:mm A")} ({user.timezone})
             </Typography>
           </div>
           <Avatar

@@ -77,11 +77,11 @@ class Submit extends Component {
       .then(res => {
         console.log(res.data);
         if (res.data.error)
-          throw new Error(res.data.msg);
-        else
-          this.props.history.push(`${this.props.match.params.pid ? ".." : "."}/submission/${res.data.sid}`);
+          throw res.data.msg;
+        const url = `${this.props.match.params.pid ? ".." : "."}/submission/${res.data.sid}`;
+        this.props.history.push(url);
       })
-      .catch(err => this.setState({ error: true, errMsg: err.message }));
+      .catch(err => this.setState({ error: true, errMsg: err }));
     return void 0;
   }
 

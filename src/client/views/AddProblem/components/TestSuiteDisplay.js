@@ -252,6 +252,7 @@ class TestSuiteDisplay extends PureComponent {
       }))
     })),
     onChange: PropTypes.func,
+    downloadTestSuites: PropTypes.func,
     name: PropTypes.string.isRequired,
     fileUploadRef: PropTypes.any,
     /* FromStyle */
@@ -329,10 +330,14 @@ class TestSuiteDisplay extends PureComponent {
           <input id="upload" multiple type="file" onChange={this.fileOnChange}
             className={classes.hidden} ref={this.props.fileUploadRef} />
           <label htmlFor="upload">
-            <Button component="span" variant="contained" color="primary" className={classes.buttons}>Upload</Button>
+            <Button component="span" variant="contained" color="primary"
+              className={classes.buttons}>
+              Upload
+            </Button>
           </label>
           <TextField style={{ marginLeft: 8, width: 250, top: -8, marginTop: 0 }} margin="dense"
-            label="Uploaded files" value={this.state.fileDisplay} inputProps={{ disabled: true, readOnly: true }} />
+            label="Uploaded files" value={this.state.fileDisplay}
+            inputProps={{ disabled: true, readOnly: true }} />
         </Typography>
         <div className={classes.root}>
           {

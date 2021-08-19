@@ -22,14 +22,14 @@ const useStyles = makeStyles(theme => ({
 function TablePaginationActions(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const { count, page, rowsPerPage, onChangePage } = props;
+  const { count, page, rowsPerPage, onPageChange } = props;
   const lastPage = Math.ceil(count / rowsPerPage) - 1;
   return (
     <div className={classes.root}>
-      <IconButton onClick={e => onChangePage(e, 0)} disabled={page === 0}>
+      <IconButton onClick={e => onPageChange(e, 0)} disabled={page === 0}>
         {theme.direction === "rtl" ? <LastPage /> : <FirstPage />}
       </IconButton>
-      <IconButton onClick={e => onChangePage(e, page - 1)} disabled={page === 0}>
+      <IconButton onClick={e => onPageChange(e, page - 1)} disabled={page === 0}>
         {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
       <TextField
@@ -38,10 +38,10 @@ function TablePaginationActions(props) {
         margin="dense"
         hiddenLabel
       />
-      <IconButton onClick={e => onChangePage(e, page + 1)} disabled={page >= lastPage}>
+      <IconButton onClick={e => onPageChange(e, page + 1)} disabled={page >= lastPage}>
         {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </IconButton>
-      <IconButton onClick={e => onChangePage(e, lastPage)} disabled={page >= lastPage}>
+      <IconButton onClick={e => onPageChange(e, lastPage)} disabled={page >= lastPage}>
         {theme.direction === "rtl" ? <FirstPage /> : <LastPage />}
       </IconButton>
     </div>

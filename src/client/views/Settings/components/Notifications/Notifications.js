@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
+import React from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import { makeStyles } from "@material-ui/styles";
 import {
   Card,
   CardHeader,
@@ -13,13 +13,13 @@ import {
   Checkbox,
   Typography,
   Button
-} from '@material-ui/core';
+} from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   root: {},
   item: {
-    display: 'flex',
-    flexDirection: 'column'
+    display: "flex",
+    flexDirection: "column"
   }
 }));
 

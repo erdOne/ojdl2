@@ -13,11 +13,11 @@ class TestcaseJudger {
       do result = await this.Tester.test({ jid, tid }, { timeLimit, memLimit });
       while (result.verdict === verdicts.SE);
       var comparatorResult = await this.Comparator.compare({ jid, tid }, result);
-      if(comparatorResult.time > parseInt(timeLimit))
+      if (comparatorResult.time > parseInt(timeLimit))
         comparatorResult.vertict = verdicts.TLE;
-      if(comparatorResult.mem > parseInt(memLimit))
+      if (comparatorResult.mem > parseInt(memLimit))
         comparatorResult.vertict = verdicts.MLE;
-      return comparatorResult
+      return comparatorResult;
     } catch (err) {
       console.error("testcase judger got error:", err);
       return new ErrorTestResult(tid, err);

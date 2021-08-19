@@ -8,7 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 export default function SideBarItem({ href, onClick, icon, title }) {
   var inputProps = { key: title };
-  if(href){
+  if (href)
     inputProps.component = React.useMemo(
       () =>
         React.forwardRef((itemProps, ref) => (
@@ -16,10 +16,10 @@ export default function SideBarItem({ href, onClick, icon, title }) {
         )),
       [href],
     );
-  }
-  if(onClick){
+
+  if (onClick)
     inputProps.onClick = onClick;
-  }
+
   return (
     <ListItem button {...inputProps} >
       {icon ?

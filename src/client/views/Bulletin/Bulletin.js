@@ -111,13 +111,13 @@ class Bulletin extends Component {
               }
             />
             : post.reply ?
-            <>
-              <Divider />
-              <Typography variant="caption">
+              <>
+                <Divider />
+                <Typography variant="caption">
                 Reply at {new Date(post.updatedAt).toLocaleString()}
-              </Typography>
-              <Typography>{post.reply}</Typography>
-            </>
+                </Typography>
+                <Typography>{post.reply}</Typography>
+              </>
               : null}
         </Paper>
       )}

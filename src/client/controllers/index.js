@@ -36,6 +36,7 @@ class Controller extends Component {
   constructor(props) {
     super(props);
     this.onEnter = this.onEnter.bind(this);
+    this.onLeave = this.onLeave.bind(this);
   }
 
   onEnter({ match }) {
@@ -48,12 +49,16 @@ class Controller extends Component {
     return null;
   }
 
+  onLeave() {
+    this.props.leave();
+  }
+
   render() {
-    var { inContest, leave } = this.props;
+    const { inContest } = this.props;
     return (
       <Switch>
-        <Route path="/contest/:cid" component={inContest ? null : this.onEnter } />
-        <Route component={()=>((inContest && leave(), null))} />
+        <Route path="/contest/:cid" component={inContest ? null : this.onEnter} />
+        <Route component={!inContest ? null : this.onLeave} />
       </Switch>
     );
   }

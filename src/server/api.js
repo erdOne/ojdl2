@@ -65,14 +65,14 @@ export async function getSub({ sid, uid, cid, withData }) {
   }]);
   var sub = await SubDB.findByPk(sid, { include });
   if (!sub || (sub.cid && cid && cid != sub.cid)) throw "no such sub";
-  if (sub.cid) {
+  if (sub.cid)
     if (!admin && (hashUidInDB(uid) !== sub.uid)) {
       var now = new Date();
       console.log(sub);
       var { start, end } = sub.contest;
       if (start <= now && now <= end) throw "contest is running, you have no permission";
     }
-  }
+
   var file = { hasData: false };
   if (withData && (hashUidInDB(uid) === sub.uid || admin)) {
     file.data = fs.readFileSync(`./data/sub/${sid}`, { encoding: "utf-8" });
@@ -85,7 +85,7 @@ function visible(admin) {
   return admin ? { visibility: { [Op.not]: "" } } : { visibility: "visible" };
 }
 
-export async function getConts({ uid, limit, offset  }) {
+export async function getConts({ uid, limit, offset }) {
   const { rows: conts, count: contCount } = await ContDB.findAndCountAll({
     limit, offset, where: visible(await isAdmin({ uid })),
     attributes: { exclude: ["problems"] }
@@ -136,7 +136,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
       order, limit, offset, where,
       attributes: ["pid", "title", "subtitle", "updatedAt", "visibility"]
     });
-    const pids = probs.map(prob => prob.pid); 
+    const pids = probs.map(prob => prob.pid);
     const subs = await SubDB.findAll({
       where: { uid: hashUidInDB(uid), pid: { [Op.in]: pids } }, attributes: ["pid", "verdict"]
     });
@@ -148,7 +148,7 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
       .filter(prob => !pid || prob.pid === pid)
       .filter(prob => !title || prob.title.indexOf(title) !== -1)
       .sort((a, b) => {
-        for (const [key, orderBy] of Object.entries(filters)) if(a[key] != b[key]) {
+        for (const [key, orderBy] of Object.entries(filters)) if (a[key] != b[key]) {
           const d = a[key] - b[key];
           return orderBy === "asc" ? d : -d;
         }
@@ -267,7 +267,7 @@ export async function addProb({ uid, prob }, files) {
   if (files)
     for (let fileName in files)
       files[fileName].mv(`data/prob/${prob.pid}/${fileName}`).then(() =>
-        fileName == "judge.cpp" && 
+        fileName == "judge.cpp" &&
           execSync(`g++ -std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`)
       );
   return { pid: prob.pid };
@@ -284,24 +284,24 @@ export async function getSubs({ uid, cid, order, limit, offset, filters = {} }) 
   var { user_name: handle, problem_id: pid, filter_verdict: verdict, filter_language: language } = filters;
   if (handle) {
     var user = await UserDB.findOne({ where: { handle } });
-    if(!user) return { subs: [], subCount: 0 };
+    if (!user) return { subs: [], subCount: 0 };
     where.uid = user.uid;
   }
-  if (pid) {
-    if(cid) {
+  if (pid)
+    if (cid) {
       let { cont } = await getCont({ uid, cid });
       let prob = cont.problems.find(prob => prob.pid === pid);
-      if(!prob) return { subs: [], subCount: 0 };
+      if (!prob) return { subs: [], subCount: 0 };
       where.pid = prob.ppid;
     } else {
       where.pid = tryParseInt(pid);
     }
-  }
+
   if (verdict)
     where.verdict = verdicts[verdict];
   if (language)
     where.language = language;
-  let { rows, count } =  await SubDB.findAndCountAll({
+  let { rows, count } = await SubDB.findAndCountAll({
     order, limit, offset, where,
     include: [
       { model: UserDB, attributes: ["handle"] },
@@ -326,7 +326,7 @@ export async function getDashboardData({ uid }) {
 export async function addCont({ uid, cont }) {
   let problems = cont.problems.map(i => parseInt(i));
   if (!await isAdmin({ uid })) throw "you have no permission";
-  for(let pid of problems) {
+  for (let pid of problems) {
     let prob = await ProbDB.findByPk(pid);
     if (!prob) throw `no such prob ${pid}`;
   }

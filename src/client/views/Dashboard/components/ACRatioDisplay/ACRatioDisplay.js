@@ -86,21 +86,21 @@ const ACRatioDisplay = props => {
         <div className={classes.difference}>
           {isNaN(difference) ? "Seems like you are new here! Welcome!" :
             <>
-            { difference > 0 ?
-              <ArrowUpwardIcon className={clsx(classes.success, classes.differenceIcon)} /> :
-              <ArrowDownwardIcon className={clsx(classes.error, classes.differenceIcon)} />
-            }
-            <Typography
-              className={difference > 0 ? classes.success : classes.error}
-              variant="body2"
-            >{Math.abs(difference)}%&nbsp;
-            </Typography>
-            <Typography
-              className={classes.caption}
-              variant="caption"
-            >
+              { difference > 0 ?
+                <ArrowUpwardIcon className={clsx(classes.success, classes.differenceIcon)} /> :
+                <ArrowDownwardIcon className={clsx(classes.error, classes.differenceIcon)} />
+              }
+              <Typography
+                className={difference > 0 ? classes.success : classes.error}
+                variant="body2"
+              >{Math.abs(difference)}%&nbsp;
+              </Typography>
+              <Typography
+                className={classes.caption}
+                variant="caption"
+              >
               Since last week
-            </Typography>
+              </Typography>
             </>
           }
         </div>

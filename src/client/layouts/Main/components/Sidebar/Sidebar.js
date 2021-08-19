@@ -81,7 +81,8 @@ class Sidebar extends React.Component {
     if (!display) return null;
     const { contest } = this.props,
       pathPrefix = contest.inContest && !clean ? `/contest/${contest.cid}` : "";
-    if ((!exact && other.href !== undefined) || contest.cid===undefined) other.href = pathPrefix + other.href;
+    if ((!exact && other.href !== undefined) || contest.cid === undefined)
+      other.href = pathPrefix + other.href;
     return <SidebarItem {...other} />;
   }
 
@@ -90,7 +91,7 @@ class Sidebar extends React.Component {
     axios.post("/api/sign-out-cookie")
       .then(res => {
         if (res.data.error) throw res.data.msg;
-          this.props.enqueueSnackbar("成功登出，歡迎下次再來");
+        this.props.enqueueSnackbar("成功登出，歡迎下次再來");
         // console.log("cookie destroy success"))
       })
       .catch(err => console.log(err));
@@ -132,11 +133,14 @@ class Sidebar extends React.Component {
           <Item exact href="/" icon={<ArrowBack />} title="Leave Contest" display={inContest} />
           <Item href="/contests" icon={<GolfCourse />} title="Contests" display={!inContest} />
           { isAdmin ? <Divider /> : null }
-          <Item exact href="/add/problem" icon={<Edit />} title="Add problem" display={Boolean(isAdmin)} />
-          <Item exact href="/add/contest" icon={<Add />} title="Add contest" display={Boolean(isAdmin)} />
+          <Item exact href="/add/problem"
+            icon={<Edit />} title="Add problem" display={Boolean(isAdmin)} />
+          <Item exact href="/add/contest"
+            icon={<Add />} title="Add contest" display={Boolean(isAdmin)} />
           <Divider />
           <Item exact href="/account" icon={<Person />} title="Profile" display={isActive} clean />
-          <Item href="" onClick={this.handleLeave} icon={<Cancel />} title="Sign out" display={isActive} clean />
+          <Item href="" onClick={this.handleLeave}
+            icon={<Cancel />} title="Sign out" display={isActive} clean />
           <Item href="/sign-in" icon={<ExitToApp />} title="Sign in" display={!isActive} clean />
           <Item href="/sign-up" icon={<FiberNew />} title="Sign up" display={!isActive} clean />
         </List>

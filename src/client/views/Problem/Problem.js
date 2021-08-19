@@ -37,7 +37,8 @@ class Problem extends Component {
       .then(res=>{
         console.log(res.data);
         if (res.data.error) throw res.data;
-        this.setState({ prob: res.data.prob, status: res.data.AC ? "AC" : res.data.tried ? "TRIED" : null,
+        this.setState({ prob: res.data.prob,
+          status: res.data.AC ? "AC" : res.data.tried ? "TRIED" : null,
           dataLoaded: true });
       }).catch(res=>{
         this.setState({ error: true, errMsg: res.msg });
@@ -56,9 +57,11 @@ class Problem extends Component {
       <div className={classes.root}>
         <Typography variant="h1" style={{ marginBottom: 10 }}>
           {this.state.status &&
-            (this.state.status == "AC"
-              ? (<AC fontSize="large" style={{ verticalAlign: "text-top", color: verdicts[verdicts.AC].color[0] }} />)
-              : (<Tried fontSize="large" style={{ verticalAlign: "text-top", color: verdicts[verdicts.PAC].color[0] }} />))}
+            (this.state.status === "AC"
+              ? (<AC fontSize="large"
+                style={{ verticalAlign: "text-top", color: verdicts[verdicts.AC].color[0] }} />)
+              : (<Tried fontSize="large"
+                style={{ verticalAlign: "text-top", color: verdicts[verdicts.PAC].color[0] }} />))}
           {this.state.prob.title}
           <small style={{ fontSize: "", color: "gray" }}>
             {" #" + pid}

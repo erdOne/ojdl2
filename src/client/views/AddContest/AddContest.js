@@ -157,12 +157,14 @@ class AddContest extends Component {
     return (
       <div className={classes.root}>
         <Typography variant="h2" style={{ marginBottom: 10 }}>
-          {cid ? <>
-              Edit contest
+          {cid ?
+            <>
+                Edit contest
               <small style={{ fontSize: "", color: "gray" }}>
                 {" #" + cid}
               </small>
-              </> : "Add contest"
+            </>
+            : "Add contest"
           }
         </Typography>
         <Typography variant="body1" component="div" className={classes.text}>
@@ -220,9 +222,9 @@ class AddContest extends Component {
                       classes={{ primary: classes.listItemText }}
                       primary={
                         <>
-                        <Typography variant="subtitle2">
-                          {`p${toChars(i)}.  `}
-                        </Typography>
+                          <Typography variant="subtitle2">
+                            {`p${toChars(i)}.  `}
+                          </Typography>
                           <TextField
                             name={i.toString()} value={pid} error={error}
                             className={classes.textField}

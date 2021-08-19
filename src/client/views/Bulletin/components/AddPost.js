@@ -27,22 +27,22 @@ class AddPost extends Component {
 
   render() {
     return (<>
-        <TextField
-          label={this.props.label}
-          multiline
-          fullWidth
-          value={this.state.value}
-          onChange={e => this.setState({ value: e.target.value })}
-        />
-        <div style={{ textAlign: "right", marginTop: "10px" }}>
-          {this.props.secondaryAction}
-          <Button color="primary"
-            margin="normal" onClick={this.handleSubmit} >
-            <span style={{ marginRight: "10px" }}><SendIcon /></span>
+      <TextField
+        label={this.props.label}
+        multiline
+        fullWidth
+        value={this.state.value}
+        onChange={e => this.setState({ value: e.target.value })}
+      />
+      <div style={{ textAlign: "right", marginTop: "10px" }}>
+        {this.props.secondaryAction}
+        <Button color="primary"
+          margin="normal" onClick={this.handleSubmit} >
+          <span style={{ marginRight: "10px" }}><SendIcon /></span>
             send
-          </Button>
-        </div>
-      </>);
+        </Button>
+      </div>
+    </>);
   }
 }
 
