@@ -57,14 +57,16 @@ export async function signInUid({ uid }) {
 export async function getSub({ sid, uid, cid, withData }) {
   var admin = await isAdmin({ uid });
   var include = (
-    withData ? [{ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] }] : []
+    withData
+      ? [{ model: ProbDB, attributes: ["title"] }, { model: UserDB, attributes: ["handle"] }]
+      : []
   ).concat([{
     model: ContDB.unscoped(),
     attributes: ["start", "end"]
     // where: admin || !cid ? {} : { cid }
   }]);
   var sub = await SubDB.findByPk(sid, { include });
-  if (!sub || (sub.cid && cid && cid != sub.cid)) throw "no such sub";
+  if (!sub || (sub.cid && cid && cid !== sub.cid)) throw "no such sub";
   if (sub.cid)
     if (!admin && (hashUidInDB(uid) !== sub.uid)) {
       var now = new Date();
@@ -124,6 +126,13 @@ export async function getCont({ uid, cid }) {
   return { cont };
 }
 
+
+function tryParseInt(...x) {
+  var a = parseInt(...x);
+  if (isNaN(a)) throw "arguments error";
+  return a;
+}
+
 export async function getProbs({ uid, cid, order, limit, offset, filters = {} }) {
   var { problem_id: pid, problem_name: title } = filters;
   if (!cid) {
@@ -131,7 +140,8 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
     if (pid)
       where.pid = tryParseInt(pid);
     if (title)
-      where.title = { [Op.substring]: title.replace(/[%_]/g, (match, offset, string) => `\\${match}`) }; // % and _
+      where.title = { [Op.substring]: title.replace(/[%_]/g,
+        (match) => `\\${match}`) }; // % and _
     const { rows: probs, count: probCount } = await ProbDB.findAndCountAll({
       order, limit, offset, where,
       attributes: ["pid", "title", "subtitle", "updatedAt", "visibility"]
@@ -148,8 +158,8 @@ export async function getProbs({ uid, cid, order, limit, offset, filters = {} })
       .filter(prob => !pid || prob.pid === pid)
       .filter(prob => !title || prob.title.indexOf(title) !== -1)
       .sort((a, b) => {
-        for (const [key, orderBy] of Object.entries(filters)) if (a[key] != b[key]) {
-          const d = a[key] - b[key];
+        for (const [key, orderBy] of Object.entries(filters)) if (a[key] !== b[key]) {
+          const d = a[key] > b[key] ? 1 : -1;
           return orderBy === "asc" ? d : -d;
         }
         return 0;
@@ -171,7 +181,8 @@ export async function getProb({ uid, pid, cid }) {
     if (prob.visibility !== "visible" && !admin)
       throw "you have no permission";
     //console.log(prob.visibility, admin);
-    let AC = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }));
+    let AC = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid,
+      verdict: verdicts.AC } }));
     let tried = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, } }));
     return { prob, AC, tried };
   } else {
@@ -179,7 +190,8 @@ export async function getProb({ uid, pid, cid }) {
       prob = cont.problems[fromChars(pid)];
     if (!prob) throw "no such prob";
     pid = prob.ppid;
-    let AC = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, verdict: verdicts.AC } }));
+    let AC = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid,
+      verdict: verdicts.AC } }));
     let tried = !!(await SubDB.findOne({ where: { uid: hashUidInDB(uid), pid, } }));
     return { prob, AC, tried };
   }
@@ -243,12 +255,6 @@ export async function rejudge({ sid, uid, code }) {
   return null;
 }
 
-function tryParseInt(...x) {
-  var a = parseInt(...x);
-  if (isNaN(a)) throw "arguments error";
-  return a;
-}
-
 export async function addProb({ uid, prob }, files) {
   if (!await isAdmin({ uid })) throw "you have no permission";
   prob = JSON.parse(prob);
@@ -267,7 +273,7 @@ export async function addProb({ uid, prob }, files) {
   if (files)
     for (let fileName in files)
       files[fileName].mv(`data/prob/${prob.pid}/${fileName}`).then(() =>
-        fileName == "judge.cpp" &&
+        fileName === "judge.cpp" &&
           execSync(`g++ -std=c++17 data/prob/${prob.pid}/judge.cpp -o data/prob/${prob.pid}/judge`)
       );
   return { pid: prob.pid };
@@ -281,7 +287,12 @@ export async function getSubs({ uid, cid, order, limit, offset, filters = {} }) 
     .concat(0)
     .filter(c => !cid || c === parseInt(cid));
   var where = { cid: { [Op.in]: cids } };
-  var { user_name: handle, problem_id: pid, filter_verdict: verdict, filter_language: language } = filters;
+  var {
+    user_name: handle,
+    problem_id: pid,
+    filter_verdict: verdict,
+    filter_language: language
+  } = filters;
   if (handle) {
     var user = await UserDB.findOne({ where: { handle } });
     if (!user) return { subs: [], subCount: 0 };
@@ -290,7 +301,7 @@ export async function getSubs({ uid, cid, order, limit, offset, filters = {} }) 
   if (pid)
     if (cid) {
       let { cont } = await getCont({ uid, cid });
-      let prob = cont.problems.find(prob => prob.pid === pid);
+      let prob = cont.problems.find(p => p.pid === pid);
       if (!prob) return { subs: [], subCount: 0 };
       where.pid = prob.ppid;
     } else {

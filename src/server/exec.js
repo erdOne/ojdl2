@@ -39,9 +39,11 @@ process.umask(0);
 
 function getJid(sid) { return `${sid}_${new Date() % 1000}_${Math.floor(Math.random() * 1000)}`; }
 
+/*
 async function init(sid) {
   return { jid, sub, prob };
 }
+*/
 
 /* eslint-disable no-multi-spaces */
 export async function exec(sid) {
@@ -49,14 +51,14 @@ export async function exec(sid) {
   var uploader = new Uploader(sid);
   var jid = getJid(sid);
   await fsP.mkdir(`${workdir}/${jid}`);
-  tryfork(execSync(`install -m 777 src/server/judge/helpers/* ${workdir}/${jid}/`), "OpenBox"); /* */
+  tryfork(execSync(`install -m 777 src/server/judge/helpers/* ${workdir}/${jid}/`), "OpenBox");/**/
   try {
     var sub = await SubDB.findByPk(sid);
     if (!sub) throw ["Submission", 0, "submission doesn't exist."];
-    if ((await fsP.readdir(`data/prob/${sub.pid}`)).length == 0)
+    if ((await fsP.readdir(`data/prob/${sub.pid}`)).length === 0)
       throw ["Testcasedir", 0, "no file in testcase directory"];
     var prob = await ProbDB.findByPk(sub.pid, { logging: false });
-    tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData"); /* */
+    tryfork(execSync(`install -m 777 data/prob/${sub.pid}/* ${workdir}/${jid}/`), "TestData");/**/
 
     var compiler = new Compiler(sub.language);
     await compiler.compile(jid, sid);
