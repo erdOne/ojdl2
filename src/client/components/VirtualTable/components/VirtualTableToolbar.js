@@ -65,7 +65,6 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
   function handleSubmit(evt) {
     evt.preventDefault();
     sendQuery(form);
-    setForm({});
   }
 
   function getOptionsProps(key) {
@@ -86,7 +85,6 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
           {title}
         </Typography>
       </div>
-      <FilterListIcon />
       {Object.keys(queryWhiteList).length > 0 && (
         <form onSubmit={handleSubmit} className={classes.filters}>
           {Object.keys(queryWhiteList).map(term => {
@@ -99,6 +97,7 @@ const VirtualTableToolbar = ({ title, queryWhiteList, sendQuery }) => {
             ;
           })}
           <Button variant="contained" color="primary" type="submit" style={{ lineHeight: 2 }}>
+            <FilterListIcon />
             Search
           </Button>
         </form>
