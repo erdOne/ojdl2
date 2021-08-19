@@ -81,46 +81,74 @@ class Bulletin extends Component {
     });
   }
 
+  handleEdit(poid, content) {
+    axios.post("/api/alter-post", {
+      poid, content, uid: this.props.user.uid
+    }).then(res => {
+      if (res.data.error) throw res.data;
+      this.props.enqueueSnackbar("Success");
+    }).catch(err => {
+      this.props.enqueueSnackbar(err.msg);
+    });
+  }
+
   render() {
     if (this.state.error)
       return (<div style={{ "textAlign": "center" }}><h4>{this.state.errMsg}</h4></div>);
     if (!this.state.dataLoaded)
       return (<div style={{ "textAlign": "center" }}><CircularProgress /></div>);
+
+    const isAdmin = this.props.user.isAdmin;
     return <div>
       <Typography variant="h3">Bulletin</Typography>
-      {this.props.user.active ?
-        <Paper>
-          <AddPost handleSubmit={this.handleSubmit} label="Ask a question / Make a post" />
-        </Paper>
-        : null}
-      {this.state.posts.map(post =>
-        <Paper key={post.poid}>
-          <Typography variant="caption">
-            {post.user.handle} at {new Date(post.createdAt).toLocaleString()}
-          </Typography>
-          <Typography>{post.content}</Typography>
-          {this.props.user.isAdmin ?
-            <AddPost poid={post.poid} value={post.reply} label="Reply"
-              handleSubmit={this.handleReply}
-              secondaryAction={
-                <VisibilitySwitch
-                  poid={post.poid}
-                  checked={post.visibility === "visible"}
-                  handleToggle={this.handleToggle}
-                />
-              }
+      {
+        this.props.user.active ?
+          <Paper>
+            <AddPost handleSubmit={this.handleSubmit} label="Ask a question / Make a post"
+              buttonText="send"
             />
-            : post.reply ?
-              <>
-                <Divider />
-                <Typography variant="caption">
+          </Paper>
+          : null
+      }
+      {
+        this.state.posts.map(post =>
+          <Paper key={post.poid}>
+            <Typography variant="caption">
+              {post.user.handle} at {new Date(post.createdAt).toLocaleString()}
+            </Typography>
+            {
+              isAdmin ?
+                (<AddPost poid={post.poid} value={post.content} label="Content"
+                  buttonText="update"
+                  handleSubmit={this.handleEdit}
+                />)
+                : <Typography>{post.content}</Typography>
+            }
+            {
+              isAdmin ?
+                (<AddPost poid={post.poid} value={post.reply} label="Reply"
+                  buttonText="reply"
+                  handleSubmit={this.handleReply}
+                  secondaryAction={
+                    <VisibilitySwitch
+                      poid={post.poid}
+                      checked={post.visibility === "visible"}
+                      handleToggle={this.handleToggle}
+                    />
+                  }
+                />)
+                : post.reply ?
+                  (<>
+                    <Divider />
+                    <Typography variant="caption">
                 Reply at {new Date(post.updatedAt).toLocaleString()}
-                </Typography>
-                <Typography>{post.reply}</Typography>
-              </>
-              : null}
-        </Paper>
-      )}
+                    </Typography>
+                    <Typography>{post.reply}</Typography>
+                  </>)
+                  : null
+            }
+          </Paper>
+        )}
     </div>;
   }
 }

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { TextField, Button } from "@material-ui/core";
 import { Send as SendIcon } from "@material-ui/icons";
 
-
 class AddPost extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func,
@@ -35,11 +34,11 @@ class AddPost extends Component {
         onChange={e => this.setState({ value: e.target.value })}
       />
       <div style={{ textAlign: "right", marginTop: "10px" }}>
-        {this.props.secondaryAction}
+        {this.props.secondaryAction || (<></>)}
         <Button color="primary"
           margin="normal" onClick={this.handleSubmit} >
           <span style={{ marginRight: "10px" }}><SendIcon /></span>
-            send
+          {this.props.buttonText}
         </Button>
       </div>
     </>);

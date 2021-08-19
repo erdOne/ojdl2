@@ -383,9 +383,12 @@ export async function addPost({ uid, cid = 0, content }) {
   return { poid };
 }
 
-export async function alterPost({ poid, uid, visibility }) {
+export async function alterPost({ poid, uid, visibility, content }) {
   if (!await isAdmin({ uid })) throw "you have no permission";
-  await PostDB.update({ visibility }, { where: { poid } });
+  if (visibility)
+    await PostDB.update({ visibility }, { where: { poid } });
+  if (content)
+    await PostDB.update({ content }, { where: { poid } });
   return null;
 }
 
