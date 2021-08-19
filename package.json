@@ -5,6 +5,7 @@
   "main": "src/server/index.js",
   "scripts": {
     "start": "node -r esm src/server/index.js",
+    "build": "gulp default",
     "test": "node -r esm --inspect-brk=0.0.0.0:5858 src/server/index.js"
   },
   "repository": {
@@ -14,9 +15,9 @@
   "author": "erd1",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/erdOne/ojdl/issues"
+    "url": "https://github.com/erdOne/ojdl2/issues"
   },
-  "homepage": "https://github.com/erdOne/ojdl#readme",
+  "homepage": "https://github.com/erdOne/ojdl2#readme",
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
@@ -36,13 +37,11 @@
     "gulp-babel": "^8.0.0",
     "gulp-cached": "^1.1.1",
     "gulp-uglify": "^3.0.2",
-    "gutil": "^1.6.4",
     "hard-source-webpack-plugin": "^0.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "require-dir": "^1.2.0",
     "style-loader": "^1.2.1",
-    "vinyl-ftp": "^0.6.1",
     "webpack": "^4.20.2",
     "webpack-stream": "^5.2.1"
   },
