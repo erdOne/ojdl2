@@ -70,6 +70,7 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
+    "express-session": "^1.17.2",
     "highlight.js": "^9.18.1",
     "hsts": "^2.2.0",
     "http": "0.0.1-security",

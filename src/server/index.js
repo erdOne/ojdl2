@@ -3,6 +3,7 @@ import fileUpload from "express-fileupload";
 import path from "path";
 import logger from "morgan";
 import bodyParser from "body-parser";
+import session from "express-session";
 import * as api from "./api.js";
 
 import fs from "fs";
@@ -29,6 +30,48 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
 app.use(hsts({ maxAge: 31536000 }));
 
+app.use(session({
+  secret: 'test',
+  name: 'uid',
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 12 * 60 * 1000
+  }
+}));
+app.post("/api/cookie-make", async function(req, res) {
+  try {
+    const { uid } = req.body;
+    const user = await api["getUser"]({ uid });
+    req.session.uid = uid;
+    res.send({ error: false });
+  } catch(err) {
+    console.log("Cookie make error", err);
+    res.send({ error: true, msg: err });
+  }
+});
+app.post("/api/cookie-get-uid", async function (req, res) {
+  try {
+    const uid = req.session.uid;
+    if (!uid) throw "Invalid cookie!";
+    const user = await api["getUser"]({ uid });
+    res.send({ uid });
+  } catch(err) {
+    console.log("Cookie get error", err);
+    res.send({ uid: null });
+  }
+});
+app.post("/api/cookie-destroy", async function (req, res) {
+  try {
+    const uid = req.session.uid;
+    if (!uid) throw "Destroying empty cookie!";
+    req.session.destroy(() => console.log("session destroyed!"));
+    res.send({ error: false });
+  } catch(err) {
+    console.log("Cookie destroy error", err);
+    res.send({ error: true, msg: err });
+  }
+});
+
 const snakeToCamel = (str) => str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
 app.post("/api/:type", function(req, res) {
@@ -36,7 +79,7 @@ app.post("/api/:type", function(req, res) {
   if (!(type in api))
     res.sendStatus(400);
   else
-    api[type](req.body, req.files, res).then(x => {
+    api[type](req.body, req.files).then(x => {
       res.send({ error: false, ...x });
       res.end();
     }).catch(err => {

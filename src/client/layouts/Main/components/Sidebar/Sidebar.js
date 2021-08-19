@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import clsx from "clsx";
 import { withSnackbar } from "notistack";
+import axios from "axios";
 
 import { Drawer, List, Divider, IconButton } from "@material-ui/core";
 import {
@@ -86,9 +87,14 @@ class Sidebar extends React.Component {
   }
 
   handleLeave() {
-    window.sessionStorage.removeItem("uid");
     this.props.enqueueSnackbar("成功登出，歡迎下次再來");
     this.props.handleSignOut();
+    axios.post("/api/cookie-destroy")
+      .then(res => {
+        if (res.data.error) throw res.data.msg;
+        // console.log("cookie destroy success"))
+      })
+      .catch(err => console.log(err));
   }
 
   render() {

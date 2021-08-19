@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT } from "client/actions/actions";
+import { SIGN_IN, SIGN_OUT } from "client/actions/actions.js";
 import { createReducer } from "./utils.js";
 import axios from "axios";
 
@@ -11,11 +11,12 @@ function signIn(state, { uid, isAdmin }) {
 }
 
 async function getUserFromStorage() {
-  var uid = window.sessionStorage.getItem("uid");
+  const { data } = await axios.post("/api/cookie-get-uid");
+  if (data.error) throw data.msg;
+  const { uid } = data;
   if (!uid) throw "no user";
   var res = await axios.post("/api/sign-in-uid", { uid });
-  if (res.error) throw res.errMsg;
-  console.log(res);
+  if (res.data.error) throw res.data.msg;
   return {
     active: true,
     uid,

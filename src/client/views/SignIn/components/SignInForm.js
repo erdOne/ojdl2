@@ -76,7 +76,12 @@ class SignInForm extends Component {
         var uid = hashUid(this.state.handle, hashPsw);
         this.props.handleSignIn(uid, res.data.isAdmin);
         this.props.enqueueSnackbar(`歡迎，${this.state.handle}～`);
-        window.sessionStorage.setItem("uid", uid);
+        axios.post("/api/cookie-make", { uid })
+          .then(res => {
+            if (res.data.error) throw res.data.msg;
+            // console.log("cookie make success");
+          })
+          .catch(err => console.log(err));
       }
     });
   }
