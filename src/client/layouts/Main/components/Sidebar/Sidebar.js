@@ -68,7 +68,6 @@ function mapDispatchToProps(dispatch) {
   return { handleSignOut: ()=>dispatch(signOut()) };
 }
 
-
 class Sidebar extends React.Component {
 
   constructor(props) {
@@ -87,11 +86,11 @@ class Sidebar extends React.Component {
   }
 
   handleLeave() {
-    this.props.enqueueSnackbar("成功登出，歡迎下次再來");
     this.props.handleSignOut();
-    axios.post("/api/cookie-destroy")
+    axios.post("/api/sign-out-cookie")
       .then(res => {
         if (res.data.error) throw res.data.msg;
+          this.props.enqueueSnackbar("成功登出，歡迎下次再來");
         // console.log("cookie destroy success"))
       })
       .catch(err => console.log(err));

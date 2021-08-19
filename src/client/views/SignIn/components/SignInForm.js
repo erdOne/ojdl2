@@ -67,23 +67,25 @@ class SignInForm extends Component {
     axios.post("/api/sign-in", {
       handle: this.state.handle,
       password: hashPsw
-    }).then(res=>{
-      if (res.data.error) {
-        if (res.data.msg === "no such user") this.setState({ handleError: true });
-        if (res.data.msg === "wrong password") this.setState({ passwordError: true });
-        console.error(res.data.msg);
-      } else {
+    })
+      .then(res => {
+        if (res.data.error) {
+          throw res.data.msg;
+        }
         var uid = hashUid(this.state.handle, hashPsw);
         this.props.handleSignIn(uid, res.data.isAdmin);
         this.props.enqueueSnackbar(`歡迎，${this.state.handle}～`);
-        axios.post("/api/cookie-make", { uid })
-          .then(res => {
-            if (res.data.error) throw res.data.msg;
-            // console.log("cookie make success");
-          })
-          .catch(err => console.log(err));
-      }
-    });
+        return uid;
+      })
+      .then(uid => axios.post("/api/sign-in-cookie", { uid }))
+      .then(res => {
+        if (res.data.error) throw res.data.msg;
+      })
+      .catch(err => {
+        if (err === "no such user") this.setState({ handleError: true });
+        if (err === "wrong password") this.setState({ passwordError: true });
+        console.error(err);
+      });
   }
 
   onChange(event) {

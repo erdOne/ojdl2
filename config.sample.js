@@ -15,7 +15,7 @@ exports.db = {
 
 function getChallenge(path) {
   if (existsSync(path)) {
-    const [ url, response ] = readFileSync(path, 'utf-8').split('\n');
+    const [ url, response ] = readFileSync(path, "utf-8").split("\n");
     return { url, response };
   } else {
     return { url: "/challenge/url", response: "" };
@@ -37,6 +37,11 @@ exports.credentials = {
   certs: getCerts("/path/to/fullchain.pem", "/path/to/privkey.pem")
 };
 
+
+exports.cookie = {
+  secret: "cookie_secret_string_for_sign",
+  maxAge: 12 * 60 * 60 * 1000, // 12 hours
+}
 exports.sandbox = {
   offset: 0,
   limit: 10
