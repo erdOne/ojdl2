@@ -41,7 +41,8 @@ exports.credentials = {
 exports.cookie = {
   secret: "cookie_secret_string_for_sign",
   maxAge: 12 * 60 * 60 * 1000, // 12 hours
-}
+};
+
 exports.sandbox = {
   offset: 0,
   limit: 10
