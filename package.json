@@ -84,7 +84,7 @@
     "marked-katex": "^0.3.8",
     "mathjax": "^2.7.8",
     "morgan": "^1.10.0",
-    "notistack": "^0.9.17",
+    "notistack": "^1.0.10",
     "react-autosuggest": "^9.4.3",
     "react-chartjs-2": "^2.8.0",
     "react-markdown": "^7.0.0",

@@ -5,12 +5,12 @@ import Routes from "./Routes";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import getRootReducer from "./reducers";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
 import { createBrowserHistory } from "history";
 import { create } from "jss";
 import preset from "jss-preset-default";
-import { StylesProvider } from "@material-ui/styles";
+import { StylesProvider } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 

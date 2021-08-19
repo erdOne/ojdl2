@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import verdicts from "common/verdicts";
 
-import { withStyles } from "@material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { Grid, CircularProgress } from "@material-ui/core";
 
 import {

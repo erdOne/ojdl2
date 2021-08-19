@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { Line as LineChart } from "react-chartjs-2";
-import { makeStyles, useTheme } from "@material-ui/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   Card,
   CardHeader,
