@@ -14,7 +14,7 @@ git submodule update --init --recursive
 # Insall & configure MariaDB server
 # Example:
 sudo pacman -S mariadb
-sudo mysqld_safe &
+sudo systemctl start mysql
 
 # Setup ojdl configurations
 cp config.sample.js config.js
@@ -24,5 +24,4 @@ vim config.js
 npm install
 NODE_ENV=production npm run build
 sudo npm start
-
 ```
