@@ -10,18 +10,18 @@ export default {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  title: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
   password: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  signature: {
+  motto: {
     type: Sequelize.STRING,
     allowNull: true,
     defaultValue: ""
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: true
   },
   admin: {
     type: Sequelize.BOOLEAN,

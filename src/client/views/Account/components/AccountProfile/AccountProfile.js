@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import moment from "moment";
+import { formattedDate } from "common/date.js";
+
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  Box,
+  Grid,
   Card,
   CardActions,
   CardContent,
@@ -26,12 +29,11 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0,
     flexGrow: 0
   },
-  progress: {
+  motto: {
+    fontStyle: "italic",
+    marginLeft: theme.spacing(2),
     marginTop: theme.spacing(2)
   },
-  uploadButton: {
-    marginRight: theme.spacing(2)
-  }
 }));
 
 const AccountProfile = props => {
@@ -40,40 +42,39 @@ const AccountProfile = props => {
   const classes = useStyles();
 
   const user = {
-    name: "Shen Zhi",
-    city: "Los Angeles",
-    country: "USA",
-    timezone: "GTM-7",
+    handle: "Benq",
+    motto: "Lorem ipsum.",
+    email: "test@ojdl.ck",
+    lastSignIn: new Date(),
+    createdAt: new Date(0),
+    acProbs: 1,
+    triedProbs: 2,
+    acSubs: 1,
+    totalSubs: 10,
     avatar: "/images/avatars/avatar_11.png"
   };
 
+  user.acRatio = ((user.acSubs / user.totalSubs) * 100).toFixed(2) + "%";
+
   return (
-    <Card
+    <Box
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardContent>
         <div className={classes.details}>
           <div>
             <Typography
               gutterBottom
               variant="h2"
             >
-              John Doe
+              {user.handle}
             </Typography>
             <Typography
-              className={classes.locationText}
+              className={classes.motto}
               color="textSecondary"
-              variant="body1"
+              variant="h4"
             >
-              {user.city}, {user.country}
-            </Typography>
-            <Typography
-              className={classes.dateText}
-              color="textSecondary"
-              variant="body1"
-            >
-              {moment().format("hh:mm A")} ({user.timezone})
+              {user.motto}
             </Typography>
           </div>
           <Avatar
@@ -81,26 +82,29 @@ const AccountProfile = props => {
             src={user.avatar}
           />
         </div>
-        <div className={classes.progress}>
-          <Typography variant="body1">Profile Completeness: 70%</Typography>
-          <LinearProgress
-            value={70}
-            variant="determinate"
-          />
-        </div>
-      </CardContent>
-      <Divider />
-      <CardActions>
-        <Button
-          className={classes.uploadButton}
-          color="primary"
-          variant="text"
-        >
-          Upload picture
-        </Button>
-        <Button variant="text">Remove picture</Button>
-      </CardActions>
-    </Card>
+        <Grid container spacing={2}>
+          <Grid item>
+            Accepted Problems: <br />
+            Unsolved Problems: <br />
+            AC submission ratio: <br />
+          </Grid>
+          <Grid item>
+            {user.acProbs} <br />
+            {user.triedProbs} <br />
+            {`${user.acRatio}(${user.acSubs}/${user.totalSubs})`} <br />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item>
+            Sign up at: <br />
+            Last sign in: <br />
+          </Grid>
+          <Grid item>
+            {formattedDate(user.createdAt)} <br />
+            {formattedDate(user.lastSignIn)} <br />
+          </Grid>
+        </Grid>
+    </Box>
   );
 };
 
