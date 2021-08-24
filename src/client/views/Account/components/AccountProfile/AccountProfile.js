@@ -25,8 +25,8 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginLeft: "auto",
-    height: 110,
-    width: 100,
+    height: 180,
+    width: 200,
     flexShrink: 0,
     flexGrow: 0
   },
@@ -69,8 +69,9 @@ const AccountProfile = (props) => {
             </Typography>
           </div>
           <Avatar
+            variant="rounded"
             className={classes.avatar}
-            src={user.avatar ? `/images/avatars/${user.avatar}` : ""}
+            src={user.avatar && user.avatar !== "" ? `/images/avatars/${user.avatar}` : ""}
           />
         </div>
         <Grid container spacing={2}>

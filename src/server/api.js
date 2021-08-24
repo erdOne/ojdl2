@@ -38,18 +38,40 @@ export async function getUser({ handle, uid }) {
   return { editable, user, stats: { acProbs, totalProbs, acSubs, totalSubs } };
 }
 
+function validateAvatarName(name) {
+  const result = /[ \w-]+(\.[\w-]{1,4})?/.test(name);
+  if (!result)
+    throw "invalid avatar name";
+}
+
+function validateMotto(motto) {
+  if (motto.length > 200)
+    throw "motto length too long (at most 200)";
+}
+
+function validateEmail(email) {
+  if (email.length > 200)
+    throw "email length too long (at most 200)";
+}
+
 export async function updateUser({ uid, currentPassword, handle, password, motto, email }, files) {
   const user = await UserDB.findByPk(hashUidInDB(uid));
   if (!user)
     throw "no such user";
   if (user.password !== hashPswInDB(currentPassword))
     throw "current password wrong";
-  if (files) {
-    const avatar = Object.values(files)[0];
+  if (files && files.avatar) {
+    const avatar = files.avatar;
     const maxAvatarSize = 2 * 1024 * 1024; // 2 MB
     if (avatar.size >= maxAvatarSize)
-      throw "avatar too big";
-    const filename = `${avatar.name}`;
+      throw "avatar too big (at most 2 MB)";
+    validateAvatarName(avatar.name);
+    const orgFilename = user.avatar;
+    if (orgFilename && orgFilename !== "") {
+      fs.unlinkSync(`public/images/avatars/${orgFilename}`);
+      console.log(`deleted old avatar ${orgFilename}`);
+    }
+    const filename = `${user.handle}-${avatar.name}`;
     const path = `public/images/avatars/${filename}`;
     await user.update({ avatar: filename });
     avatar.mv(path);
@@ -60,7 +82,14 @@ export async function updateUser({ uid, currentPassword, handle, password, motto
     // let newUid = hashUid(handle, password);
     throw "changing handle/password WIP";
   }
-  await user.update({ motto, email });
+  if (motto) {
+    validateMotto(motto);
+    await user.update({ motto });
+  }
+  if (email) {
+    validateEmail(email);
+    await user.update({ email });
+  }
   return { user };
 }
 
@@ -72,13 +101,14 @@ export async function isAdmin({ uid }) {
   return user !== null && user.admin;
 }
 
-function handleValidate(handle) {
-  return /[A-Za-z0-9_]{6,100}/.test(handle);
+function validateHandle(handle) {
+  const result = /[A-Za-z0-9_]{6,100}/.test(handle);
+  if (!result)
+    throw "invalid handle";
 }
 
 export async function signUp({ handle, password }) {
-  if (!handleValidate(handle))
-    throw "invalid handle";
+  validateHandle(handle);
   var uid = hashUid(handle, password);
   var [, created] = await UserDB.findOrCreate({
     where: { handle },

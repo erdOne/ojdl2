@@ -33,17 +33,16 @@ const Account = (props) => {
     const currentPassword = hashPswAtClient(form.currentPassword);
     const { motto, email, avatar } = form;
 
-    console.log(avatar.name, avatar);
     let formData = new FormData();
     formData.set("uid", uid);
     formData.set("currentPassword", currentPassword);
     formData.set("motto", motto);
     formData.set("email", email);
-    formData.append(avatar.name, avatar);
+    formData.append("avatar", avatar);
 
     const res = await axios.post("/api/update-user", formData);
     if (res.data.error) {
-      console.log(res.data.msg);
+      props.enqueueSnackbar(res.data.msg);
       return;
     } else {
       props.history.go(0);
