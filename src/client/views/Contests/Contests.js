@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 
 import { VirtualTable } from "client/components";
 
+import { formattedDate } from "common/date";
+
 const columns = [
   { id: "cid", align: "right", numeric: true,
     disablePadding: false, label: "#", style: { width: 75 } },
   { id: "title", align: "left", numeric: false, disablePadding: false, label: "競賽名稱" },
   { id: "start", align: "left", numeric: false, disablePadding: true, label: "開始時間",
-    display: cont=>new Date(cont.start).toLocaleString() },
+    display: cont=>formattedDate(cont.start) },
   { id: "end", align: "left", numeric: false, disablePadding: true, label: "結束時間",
-    display: cont=>new Date(cont.end).toLocaleString() },
+    display: cont=>formattedDate(cont.end) },
 ];
 
 function mapStateToProps({ user }) {

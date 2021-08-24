@@ -10,6 +10,9 @@ import { Typography, Divider, CircularProgress, Paper as RawPaper } from "@mater
 import { withStyles } from "@material-ui/core/styles";
 import { PriorityHigh as PriorityHighIcon, LowPriority as PriorityLowIcon } from "@material-ui/icons";
 
+
+import { formattedDate } from "common/date.js";
+
 import { AddPost, ToggleSwitch } from "./components";
 
 function mapStateToProps({ user }) {
@@ -132,7 +135,7 @@ class Bulletin extends Component {
               : <PriorityLowIcon fontSize="small" style={{ float: "right" }} />
             }
             <Typography variant="caption">
-              {post.user.handle} at {new Date(post.createdAt).toLocaleString()}
+              {post.user.handle} at {formattedDate(post.createdAt)}
             </Typography>
             {
               isAdmin ?
@@ -168,7 +171,7 @@ class Bulletin extends Component {
                   (<>
                     <Divider />
                     <Typography variant="caption">
-                Reply at {new Date(post.updatedAt).toLocaleString()}
+                Reply at {formattedDate(post.updatedAt)}
                     </Typography>
                     <Typography>{post.reply}</Typography>
                   </>)

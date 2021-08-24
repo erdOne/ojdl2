@@ -3,8 +3,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { VirtualTable } from "client/components";
+
 import verdicts from "common/verdicts";
 import languages from "common/languages";
+import { formattedDate } from "common/date";
+
 
 const columns = [
   { id: "sid", align: "right", numeric: true,
@@ -30,7 +33,7 @@ const columns = [
     label: "語言", style: { width: 75 } },
   { id: "timestamp", align: "right", numeric: false, disablePadding: true,
     label: "上傳時間", style: { width: 150 },
-    display: sub=>new Date(sub.timestamp).toLocaleString() },
+    display: sub=>formattedDate(sub.timestamp) },
 ];
 
 function mapStateToProps({ user, contest }) {

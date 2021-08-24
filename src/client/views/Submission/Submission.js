@@ -2,8 +2,8 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
-import axios from "axios";
 import { withSnackbar } from "notistack";
+import axios from "axios";
 
 import {
   Paper,
@@ -18,10 +18,14 @@ import {
   DialogContent,
   CircularProgress } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+
+import verdicts from "common/verdicts.js";
+import languages from "common/languages.js";
+import { formattedDate } from "common/date.js";
+
 import Editor from "client/components/Editor";
+
 import { SubtaskResultDisplay, Verdict } from "./components";
-import verdicts from "common/verdicts";
-import languages from "common/languages";
 
 const styles = theme => ({
   root: {
@@ -206,7 +210,7 @@ class Submission extends Component {
                 </TableCell>
                 <TableCell>{sub.user.handle}</TableCell>
                 <TableCell>{languages[sub.language].text}</TableCell>
-                <TableCell>{new Date(sub.createdAt).toLocaleString()}</TableCell>
+                <TableCell>{formattedDate(sub.createdAt)}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
