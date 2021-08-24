@@ -69,10 +69,17 @@ const useStyles = makeStyles(theme => ({
 function useAPI({ loadData, page, rowsPerPage, filters }) {
   const [data, setData] = useState(null);
   useEffect(() => {
-    if (data) setData(([rows, rowsLength]) => [[], rowsLength]);
-    loadData({ limit: rowsPerPage, offset: page * rowsPerPage, filters })
-      .then(res => setData(res))
-      .catch(msg => setData({ error: true, errMsg: msg }));
+    if (data)
+      setData(([rows, rowsLength]) => [[], rowsLength]);
+    async function fetchData() {
+      try {
+        const res = await loadData({ limit: rowsPerPage, offset: page * rowsPerPage, filters });
+        setData(res);
+      } catch(err) {
+        setData({ error: true, errMsg: err });
+      }
+    }
+    fetchData();
   }, [loadData]);
   return data;
 }
