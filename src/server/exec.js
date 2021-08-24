@@ -74,7 +74,7 @@ export async function exec(sid) {
     console.error(e);
     await uploader.upload(new ErrorResult(e));
   } finally {
-    await fs.rmdir(`${workdir}/${jid}`, { recursive: true }, ()=>console.log("remove workdir", jid, "successfully"));
+    await fs.rm(`${workdir}/${jid}`, { recursive: true }, ()=>console.log("remove workdir", jid, "successfully"));
   }
   console.log(`Finished judging on submission No. ${sid}.`);
 }
