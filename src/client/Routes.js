@@ -52,7 +52,7 @@ class Routes extends Component {
             path={["/submit/:pid?", "/contest/:cid/submit/:pid?"]} />
           <Route component={Submissions} layout={Main} strict exact
             path={["/submissions", "/contest/:cid/submissions"]} />
-          <Route component={Account} layout={Main} exact path="/account" />
+          <Route component={Account} layout={Main} exact path="/account/:handle?" />
           <Route component={Settings} layout={Main} exact path="/settings" />
           <Route component={SignUp} layout={Minimal} exact path="/sign-up" />
           <Route component={SignIn} layout={Minimal} exact path="/sign-in" />

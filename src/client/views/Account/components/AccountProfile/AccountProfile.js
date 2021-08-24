@@ -1,7 +1,6 @@
-import React from "react";
+// import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { formattedDate } from "common/date.js";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -16,6 +15,8 @@ import {
   Button,
   LinearProgress
 } from "@material-ui/core";
+
+import { formattedDate } from "common/date.js";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -36,25 +37,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AccountProfile = props => {
-  const { className, ...rest } = props;
+const AccountProfile = (props) => {
+  const { className, user, stats, ...rest } = props;
 
   const classes = useStyles();
 
-  const user = {
-    handle: "Benq",
-    motto: "Lorem ipsum.",
-    email: "test@ojdl.ck",
-    lastSignIn: new Date(),
-    createdAt: new Date(0),
-    acProbs: 1,
-    triedProbs: 2,
-    acSubs: 1,
-    totalSubs: 10,
-    avatar: "/images/avatars/avatar_11.png"
-  };
+  const { acProbs, totalProbs, acSubs, totalSubs } = stats;
+  const triedProbs = totalProbs - acProbs;
 
-  user.acRatio = ((user.acSubs / user.totalSubs) * 100).toFixed(2) + "%";
+  const acRatio = ((acSubs / totalSubs) * 100).toFixed(2) + "%";
 
   return (
     <Box
@@ -79,7 +70,7 @@ const AccountProfile = props => {
           </div>
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={user.avatar ? `/images/avatars/${user.avatar}` : ""}
           />
         </div>
         <Grid container spacing={2}>
@@ -89,9 +80,9 @@ const AccountProfile = props => {
             AC submission ratio: <br />
           </Grid>
           <Grid item>
-            {user.acProbs} <br />
-            {user.triedProbs} <br />
-            {`${user.acRatio}(${user.acSubs}/${user.totalSubs})`} <br />
+            {acProbs} <br />
+            {triedProbs} <br />
+            {`${acRatio}(${acSubs}/${totalSubs})`} <br />
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -109,7 +100,8 @@ const AccountProfile = props => {
 };
 
 AccountProfile.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  // user: PropTypes.object
 };
 
 export default AccountProfile;

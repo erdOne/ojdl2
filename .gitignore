@@ -5,6 +5,7 @@ package-lock.json
 node_modules
 data
 public/dist/*
+public/images/avatars/*
 workdir/**
 *.log
 *-challenge.txt

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
+
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -19,26 +20,28 @@ import {
 
 const useStyles = makeStyles(theme => ({
   root: {},
-  textField: {
-    margin: theme.spacing(1, 0)
-  },
   progress: {
     margin: theme.spacing(1, 0)
   },
+  textField: {
+    // margin: theme.spacing(1, 0)
+  },
   uploadButton: {
     textTransform: "none",
-    margin: theme.spacing(1, 1, 1, 0),
+    marginRight: theme.spacing(1),
   }
 }));
 
 const fields = [
+  /*
   {
-    // helperText: "please specify first name",
+    helperText: "Changing handle feature WIP",
     name: "handle",
     label: "Handle",
     type: "text",
     required: true
   },
+  */
   {
     name: "email",
     label: "Email address",
@@ -55,52 +58,63 @@ const fields = [
     type: "file",
   },
   {
-    name: "password",
+    name: "currentPassword",
     label: "Current password",
     type: "password",
     required: true,
   },
+  /*
   {
-    name: "newPassword",
+    name: "password",
     label: "New password",
     type: "password",
   },
   {
-    name: "newPasswordConfirm",
+    name: "passwordConfirm",
     label: "New password confirmation",
     type: "password",
   }
+  */
 ];
 
 const AccountEditForm = props => {
-  const { className, ...rest } = props;
+  const { className, user, handleSubmit, ...rest } = props;
 
   const classes = useStyles();
 
   const [form, setForm] = useState({
-    handle: "Benq",
-    email: "test@ojdl.ck",
+    handle: "",
+    email: "",
     motto: "",
+    currentPassword: "",
     password: "",
+    passwordConfirm: "",
   });
 
-  const [status, setStatus] = useState({ error: false });
-
   const handleChangeForm = event => {
+    const { name, value } = event.target;
     setForm(prevForm => ({
       ...prevForm,
-      [event.target.name]: event.target.value
+      [name]: value
     }));
   };
 
   const handleChangeFile = event => {
+    const { name, files } = event.target;
     setForm(prevForm => ({
       ...prevForm,
-      [event.target.name]: event.target.files[0]
+      [name]: files[0]
     }));
   };
 
-  const completeness = 100;
+  useEffect(() => {
+    setForm(prevForm => ({
+      ...prevForm,
+      ...user
+    }));
+  }, [user]);
+
+  // const completeness = 100;
 
   return (
     <Card
@@ -113,7 +127,7 @@ const AccountEditForm = props => {
       >
         <CardHeader
           title="Profile"
-          subheader="The information can be edited"
+          subheader="These information can be edited"
         />
         {
           /*
@@ -130,24 +144,23 @@ const AccountEditForm = props => {
         <CardContent>
           <Grid
             container
-            spacing={3}
+            spacing={1}
             direction="column"
           >
             {
               fields.map((field, key) => {
-                const { helperText, label, name, value, type, required } = field;
+                const { helperText, label, name, type, required } = field;
                 if (type == "file") {
                   return (
-                    <Grid item key={key}>
+                    <Grid item key={name}>
                       <input
-                        label={label}
-                        name={name}
                         accept="image/*"
                         className={classes.input}
-                        id="contained-button-file"
-                        multiple
-                        type="file"
                         onChange={handleChangeFile}
+                        id="contained-button-file"
+                        label={label}
+                        name={name}
+                        type="file"
                         hidden
                       />
                       <label htmlFor="contained-button-file">
@@ -164,23 +177,25 @@ const AccountEditForm = props => {
                       </label>
                     </Grid>
                   );
+                } else {
+                  return (
+                    <Grid item key={name} >
+                      <TextField
+                        margin="dense"
+                        variant="outlined"
+                        className={classes.textField}
+                        onChange={handleChangeForm}
+                        value={form[name]}
+                        helperText={helperText}
+                        label={label}
+                        name={name}
+                        type={type}
+                        required={required}
+                        autoComplete="new-text"
+                      />
+                    </Grid>
+                  );
                 }
-                return (
-                  <Grid item key={key} >
-                    <TextField
-                      margin="dense"
-                      variant="outlined"
-                      className={classes.textField}
-                      onChange={handleChangeForm}
-                      value={form[name]}
-                      helperText={helperText}
-                      label={label}
-                      name={name}
-                      type={type}
-                      required={required}
-                    />
-                  </Grid>
-                );
               })
             }
           </Grid>
@@ -190,6 +205,7 @@ const AccountEditForm = props => {
           <Button
             color="primary"
             variant="contained"
+            onClick={() => handleSubmit(form)}
           >
             Save details
           </Button>

@@ -16,16 +16,26 @@ export default {
   },
   motto: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
     defaultValue: ""
   },
   email: {
     type: Sequelize.STRING,
-    allowNull: true
+    allowNull: false,
+    detaultValue: ""
   },
   admin: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
+  },
+  lastSignIn: {
+    type: Sequelize.DATE,
+    allowNull: true,
+  },
+  avatar: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    defaultValue: ""
   }
 };

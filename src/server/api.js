@@ -10,11 +10,57 @@ import languages from "../common/languages.js";
 import { toChars, fromChars } from "../common/char.js";
 import sql, { Op } from "sequelize";
 
-export async function getUser({ uid }) {
-  var user = await UserDB.findOne({
-    where: { uid: hashUidInDB(uid) }
-  });
+export async function getUser({ handle, uid }) {
+  const hashedUid = hashUidInDB(uid);
+  const editable = (await UserDB.findOne({
+    where: handle ? { handle, uid: hashedUid } : { uid: hashedUid }
+  })) !== null;
+  const where = handle ? { handle } : { uid: hashedUid };
+  const attributes = ["handle", "motto", "lastSignIn", "createdAt", "avatar"]
+    .concat(editable ? ["uid", "email"] : []);
+  let user = await UserDB.findOne({ where, attributes });
   if (!user) throw "no such user";
+  const { uid: targetUid } = await UserDB.findOne({ where });
+  let acProbs = await SubDB.count({
+    where: { uid: targetUid, verdict: verdicts.AC  },
+    distinct: true, col: "pid"
+  });
+  let totalProbs = await SubDB.count({
+    where: { uid: targetUid },
+    distinct: true, col: "pid"
+  });
+  let acSubs = await SubDB.count({
+    where: { uid: targetUid, verdict: verdicts.AC  },
+  });
+  let totalSubs = await SubDB.count({
+    where: { uid: targetUid },
+  });
+  return { editable, user, stats: { acProbs, totalProbs, acSubs, totalSubs } };
+}
+
+export async function updateUser({ uid, currentPassword, handle, password, motto, email }, files) {
+  const user = await UserDB.findByPk(hashUidInDB(uid));
+  if (!user)
+    throw "no such user";
+  if (user.password !== hashPswInDB(currentPassword))
+    throw "current password wrong";
+  if (files) {
+    const avatar = Object.values(files)[0];
+    const maxAvatarSize = 2 * 1024 * 1024; // 2 MB
+    if (avatar.size >= maxAvatarSize)
+      throw "avatar too big";
+    const filename = `${avatar.name}`;
+    const path = `public/images/avatars/${filename}`;
+    await user.update({ avatar: filename });
+    avatar.mv(path);
+  }
+  if (handle && password)
+    throw "do not change handle and password at the same time";
+  if (handle || password) {
+    // let newUid = hashUid(handle, password);
+    throw "changing handle/password WIP";
+  }
+  await user.update({ motto, email });
   return { user };
 }
 
@@ -26,13 +72,20 @@ export async function isAdmin({ uid }) {
   return user !== null && user.admin;
 }
 
+function handleValidate(handle) {
+  return /[A-Za-z0-9_]{6,100}/.test(handle);
+}
+
 export async function signUp({ handle, password }) {
+  if (!handleValidate(handle))
+    throw "invalid handle";
   var uid = hashUid(handle, password);
   var [, created] = await UserDB.findOrCreate({
     where: { handle },
     defaults: {
       uid: hashUidInDB(uid),
-      password: hashPswInDB(password)
+      password: hashPswInDB(password),
+      email: "",
     }
   });
   if (!created) throw "handle taken";
@@ -45,6 +98,7 @@ export async function signIn({ handle, password }) {
   });
   if (!user) throw "no such user";
   if (user.password !== hashPswInDB(password)) throw "wrong password";
+  await user.update({ lastSignIn: new Date() });
   return { isAdmin: user.admin };
 }
 
