@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
   motto: {
     fontStyle: "italic",
-    marginLeft: theme.spacing(2),
+    // marginLeft: theme.spacing(2),
     marginTop: theme.spacing(2)
   },
 }));

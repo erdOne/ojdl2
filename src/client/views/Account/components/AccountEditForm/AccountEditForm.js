@@ -8,15 +8,17 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  CardMedia,
   Divider,
   Grid,
   Button,
   TextField,
   Typography,
   LinearProgress,
-  FormHelperText
+  FormHelperText,
+  IconButton,
 } from "@material-ui/core";
+
+import { AttachFile as AttachFileIcon } from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,6 +30,7 @@ const useStyles = makeStyles(theme => ({
   },
   uploadButton: {
     textTransform: "none",
+    textAlign: "left",
     marginRight: theme.spacing(1),
   }
 }));
@@ -110,11 +113,62 @@ const AccountEditForm = props => {
   useEffect(() => {
     setForm(prevForm => ({
       ...prevForm,
-      ...user
+      ...user,
+      avatar: null
     }));
   }, [user]);
 
   // const completeness = 100;
+
+  const renderField = (field) =>  {
+    const { helperText, label, name, type, required } = field;
+    const onChange = (type === "file" ? () => null : handleChangeForm);
+    const value = (type === "file" ? (form[name]?.name ?? "*No file selected") : form[name]);
+    let InputProps = {};
+    if (type == "file") {
+      InputProps.endAdornment = (
+        <label>
+          <input
+            accept="image/*"
+            onChange={handleChangeFile}
+            label={label}
+            name={name}
+            type="file"
+            hidden
+          />
+          <IconButton
+            component="span"
+            variant="outlined"
+            className={classes.uploadButton}
+            size="small"
+            edge="end"
+          >
+            <AttachFileIcon />
+          </IconButton>
+        </label>
+      );
+      InputProps.readOnly = true;
+    }
+    return (
+      <Grid item key={name} >
+        <TextField
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          className={classes.textField}
+          onChange={onChange}
+          value={value}
+          helperText={helperText}
+          label={label}
+          name={name}
+          required={required}
+          type={type === "file" ? "text" : type}
+          autoComplete="new-text"
+          InputProps={InputProps}
+        />
+      </Grid>
+    );
+  };
 
   return (
     <Card
@@ -147,57 +201,7 @@ const AccountEditForm = props => {
             spacing={1}
             direction="column"
           >
-            {
-              fields.map((field, key) => {
-                const { helperText, label, name, type, required } = field;
-                if (type == "file") {
-                  return (
-                    <Grid item key={name}>
-                      <input
-                        accept="image/*"
-                        className={classes.input}
-                        onChange={handleChangeFile}
-                        id="contained-button-file"
-                        label={label}
-                        name={name}
-                        type="file"
-                        hidden
-                      />
-                      <label htmlFor="contained-button-file">
-                        <Button
-                          component="span"
-                          variant="outlined"
-                          className={classes.uploadButton}
-                        >
-                          Change avatar
-                        </Button>
-                        <FormHelperText component="span">
-                          {form[name] ? form[name].name : "*No file selected"}
-                        </FormHelperText>
-                      </label>
-                    </Grid>
-                  );
-                } else {
-                  return (
-                    <Grid item key={name} >
-                      <TextField
-                        margin="dense"
-                        variant="outlined"
-                        className={classes.textField}
-                        onChange={handleChangeForm}
-                        value={form[name]}
-                        helperText={helperText}
-                        label={label}
-                        name={name}
-                        type={type}
-                        required={required}
-                        autoComplete="new-text"
-                      />
-                    </Grid>
-                  );
-                }
-              })
-            }
+            {fields.map(renderField)}
           </Grid>
         </CardContent>
         <Divider />

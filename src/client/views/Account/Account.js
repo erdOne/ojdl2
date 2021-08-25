@@ -36,9 +36,12 @@ const Account = (props) => {
     let formData = new FormData();
     formData.set("uid", uid);
     formData.set("currentPassword", currentPassword);
-    formData.set("motto", motto);
-    formData.set("email", email);
-    formData.append("avatar", avatar);
+    if (motto)
+      formData.set("motto", motto);
+    if (email)
+      formData.set("email", email);
+    if (avatar)
+      formData.set("avatar", avatar);
 
     const res = await axios.post("/api/update-user", formData);
     if (res.data.error) {
