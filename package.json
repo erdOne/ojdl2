@@ -5,7 +5,8 @@
   "main": "src/server/index.js",
   "scripts": {
     "start": "node -r esm src/server/index.js",
-    "build": "gulp default",
+    "build": "gulp build",
+    "watch": "gulp watch",
     "test": "node -r esm --inspect-brk=0.0.0.0:5858 src/server/index.js"
   },
   "repository": {
