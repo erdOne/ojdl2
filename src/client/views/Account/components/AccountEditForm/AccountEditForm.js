@@ -66,7 +66,6 @@ const fields = [
     type: "password",
     required: true,
   },
-  /*
   {
     name: "password",
     label: "New password",
@@ -77,7 +76,6 @@ const fields = [
     label: "New password confirmation",
     type: "password",
   }
-  */
 ];
 
 const AccountEditForm = props => {
@@ -86,12 +84,12 @@ const AccountEditForm = props => {
   const classes = useStyles();
 
   const [form, setForm] = useState({
-    handle: "",
-    email: "",
-    motto: "",
-    currentPassword: "",
-    password: "",
-    passwordConfirm: "",
+    handle: null,
+    email: null,
+    motto: null,
+    currentPassword: null,
+    password: null,
+    passwordConfirm: null
   });
 
   const handleChangeForm = event => {
@@ -123,7 +121,7 @@ const AccountEditForm = props => {
   const renderField = (field) =>  {
     const { helperText, label, name, type, required } = field;
     const onChange = (type === "file" ? () => null : handleChangeForm);
-    const value = (type === "file" ? (form[name]?.name ?? "*No file selected") : form[name]);
+    const value = (type === "file" ? (form[name]?.name ?? "*No file selected") : form[name] ?? "");
     let InputProps = {};
     if (type == "file") {
       InputProps.endAdornment = (

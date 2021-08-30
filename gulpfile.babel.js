@@ -79,17 +79,27 @@ function build() {
     .pipe(gulp.dest(paths.dest))
 }
 
-function watch() {
-  console.log("Staring backend server...");
+function startServer() {
   const proc = spawn("node", ["-r", "esm", path.resolve(__dirname, "src/server/index.js")]);
   proc.stdout.on("data", x => process.stdout.write(x));
   proc.stderr.on("data", x => process.stderr.write(x));
+  return proc;
+}
+
+function watch() {
+  console.log("Staring backend server...");
+  let proc = startServer();
   let executing = false;
   gulp.watch(paths.src).on("change", () => {
     if (executing)
       return;
     executing = true;
-    build().on("end", () => { executing = false; });
+    build().on("end", () => {
+      proc.kill("SIGINT");
+      console.log("Restaring backend server...");
+      proc = startServer();
+      executing = false;
+    });
   });
 }
 

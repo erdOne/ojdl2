@@ -8,11 +8,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, CircularProgress } from "@material-ui/core";
 
 import { hashPswAtClient } from "common/hash.js";
+import { signOut } from "client/actions";
 
 import { AccountProfile, AccountEditForm } from "./components";
 
 function mapStateToProps({ user }) {
   return { user };
+}
+
+function mapDispatchToProps(dispatch) {
+  return { handleSignOut: ()=>dispatch(signOut()) };
 }
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +36,19 @@ const Account = (props) => {
 
     const uid = props.user.uid;
     const currentPassword = hashPswAtClient(form.currentPassword);
-    const { motto, email, avatar } = form;
+    const { motto, email, avatar, password, passwordConfirm } = form;
+
+    if (password) {
+      if (password !== passwordConfirm) {
+        props.enqueueSnackbar("wrong password confirmation");
+        return;
+      }
+      const validatePassword = p => /.{6,100}/.test(p);
+      if (!validatePassword(password)) {
+        props.enqueueSnackbar("password length should between 6~100");
+        return;
+      }
+    }
 
     let formData = new FormData();
     formData.set("uid", uid);
@@ -42,13 +59,23 @@ const Account = (props) => {
       formData.set("email", email);
     if (avatar)
       formData.set("avatar", avatar);
+    if (password)
+      formData.set("password", hashPswAtClient(password));
 
     const res = await axios.post("/api/update-user", formData);
     if (res.data.error) {
       props.enqueueSnackbar(res.data.msg);
       return;
     } else {
-      props.history.go(0);
+      if (password) {
+        props.enqueueSnackbar("請重新登入");
+        props.handleSignOut();
+        const res = await axios.post("/api/sign-out-cookie");
+        if (res.data.error)
+          throw res.data.msg;
+      } else {
+        props.history.go(0);
+      }
     }
   };
 
@@ -109,4 +136,4 @@ const Account = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(withSnackbar(withRouter(Account)));
+export default connect(mapStateToProps, mapDispatchToProps)(withSnackbar(withRouter(Account)));

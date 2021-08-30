@@ -21,18 +21,18 @@ export async function getUser({ handle, uid }) {
   let user = await UserDB.findOne({ where, attributes });
   if (!user) throw "no such user";
   const { uid: targetUid } = await UserDB.findOne({ where });
-  let acProbs = await SubDB.count({
+  const acProbs = await SubDB.count({
     where: { uid: targetUid, verdict: verdicts.AC  },
     distinct: true, col: "pid"
   });
-  let totalProbs = await SubDB.count({
+  const totalProbs = await SubDB.count({
     where: { uid: targetUid },
     distinct: true, col: "pid"
   });
-  let acSubs = await SubDB.count({
+  const acSubs = await SubDB.count({
     where: { uid: targetUid, verdict: verdicts.AC  },
   });
-  let totalSubs = await SubDB.count({
+  const totalSubs = await SubDB.count({
     where: { uid: targetUid },
   });
   return { editable, user, stats: { acProbs, totalProbs, acSubs, totalSubs } };
@@ -54,8 +54,14 @@ function validateEmail(email) {
     throw "email length too long (at most 200)";
 }
 
+function validateHandle(handle) {
+  const result = /[A-Za-z0-9_]{6,100}/.test(handle);
+  if (!result)
+    throw "invalid handle";
+}
+
 export async function updateUser({ uid, currentPassword, handle, password, motto, email }, files) {
-  const user = await UserDB.findByPk(hashUidInDB(uid));
+  let user = await UserDB.findByPk(hashUidInDB(uid));
   if (!user)
     throw "no such user";
   if (user.password !== hashPswInDB(currentPassword))
@@ -76,12 +82,10 @@ export async function updateUser({ uid, currentPassword, handle, password, motto
     await user.update({ avatar: filename });
     avatar.mv(path);
   }
+  if (handle)
+    throw "changing handle feature WIP";
   if (handle && password)
     throw "do not change handle and password at the same time";
-  if (handle || password) {
-    // let newUid = hashUid(handle, password);
-    throw "changing handle/password WIP";
-  }
   if (motto) {
     validateMotto(motto);
     await user.update({ motto });
@@ -90,7 +94,17 @@ export async function updateUser({ uid, currentPassword, handle, password, motto
     validateEmail(email);
     await user.update({ email });
   }
-  return { user };
+  if (password) {
+    let newUid = hashUid(user.handle, password);
+    await UserDB.update({ uid: hashUidInDB(newUid), password: hashPswInDB(password) },
+      { where: { uid: hashUidInDB(uid) } });
+    uid = newUid;
+    user = await UserDB.findOne({ where: { handle: user.handle } });
+    // console.log({ ...user });
+    // hashPswInDB(password);
+    // throw "changing handle/password WIP";
+  }
+  return {};
 }
 
 export async function isAdmin({ uid }) {
@@ -99,12 +113,6 @@ export async function isAdmin({ uid }) {
     logging: false
   });
   return user !== null && user.admin;
-}
-
-function validateHandle(handle) {
-  const result = /[A-Za-z0-9_]{6,100}/.test(handle);
-  if (!result)
-    throw "invalid handle";
 }
 
 export async function signUp({ handle, password }) {
