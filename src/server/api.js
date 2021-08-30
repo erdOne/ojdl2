@@ -39,7 +39,7 @@ export async function getUser({ handle, uid }) {
 }
 
 function validateAvatarName(name) {
-  const result = /[ \w-]+(\.[\w-]{1,4})?/.test(name);
+  const result = /[ \w-]{1,50}(\.[\w-]{1,4})?/.test(name);
   if (!result)
     throw "invalid avatar name";
 }

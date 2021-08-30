@@ -93,7 +93,7 @@ const AccountProfile = (props) => {
           </Grid>
           <Grid item>
             {formattedDate(user.createdAt)} <br />
-            {formattedDate(user.lastSignIn)} <br />
+            {user.lastSignIn ? formattedDate(user.lastSignIn) : "-"} <br />
           </Grid>
         </Grid>
     </Box>
