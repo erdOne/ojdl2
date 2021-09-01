@@ -58,7 +58,8 @@ export default class Tester {
 
 export class InteractiveTester extends Tester {
   getArgs(tid) {
-    return ["/box/interact.js", "/box/judge", `/box/${tid}.in`, `/box/${tid}.out`, ...this.lang.execArgs];
+    return ["/box/interact.js",
+      "/box/judge", `/box/${tid}.in`, `/box/${tid}.out`, ...this.lang.execArgs];
     /* pipexec researching
     return ['/bin/pipexec', '--',
       '[', 'J', '/box/judge', `/box/${tid}.in`, `/box/${tid}.out`, ']',

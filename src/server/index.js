@@ -10,7 +10,7 @@ import hsts from "hsts";
 import fs from "fs";
 
 import * as api from "./api.js";
-import * as session_api from "./session-api.js";
+import * as sessionApi from "./session-api.js";
 
 import config from "../../config.js";
 
@@ -55,8 +55,8 @@ app.post("/api/:type", function(req, res) {
         res.send({ error: true, msg: String(err) });
         res.end();
       });
-  else if (type in session_api)
-    session_api[type](req)
+  else if (type in sessionApi)
+    sessionApi[type](req)
       .then(x => {
         res.send({ error: false, ...x });
         res.end();
@@ -78,7 +78,8 @@ app.get("/download/:filename", function(req, res, next) {
         console.error(err);
         next();
       }
-      fs.unlink(`workdir/${filename}`, () => console.log(`Removed workdir/${filename} successfully`));
+      fs.unlink(`workdir/${filename}`,
+        () => console.log(`Removed workdir/${filename} successfully`));
     });
   else
     next();

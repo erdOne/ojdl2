@@ -22,7 +22,7 @@ export async function getUser({ handle, uid }) {
   if (!user) throw "no such user";
   const { uid: targetUid } = await UserDB.findOne({ where });
   const acProbs = await SubDB.count({
-    where: { uid: targetUid, verdict: verdicts.AC  },
+    where: { uid: targetUid, verdict: verdicts.AC },
     distinct: true, col: "pid"
   });
   const totalProbs = await SubDB.count({
@@ -30,7 +30,7 @@ export async function getUser({ handle, uid }) {
     distinct: true, col: "pid"
   });
   const acSubs = await SubDB.count({
-    where: { uid: targetUid, verdict: verdicts.AC  },
+    where: { uid: targetUid, verdict: verdicts.AC },
   });
   const totalSubs = await SubDB.count({
     where: { uid: targetUid },

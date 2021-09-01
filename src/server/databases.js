@@ -54,7 +54,8 @@ async function init() {
       user: db.user,
       password: db.password,
     });
-    await pool.getConnection().then(conn => conn.query(`CREATE DATABASE IF NOT EXISTS ${db.schema}`)); // self-sqli?
+    await pool.getConnection()
+      .then(conn => conn.query(`CREATE DATABASE IF NOT EXISTS ${db.schema}`)); // self-sqli?
     await sequelize.authenticate();
     await initModel();
     console.log("Connection has been established successfully.");
