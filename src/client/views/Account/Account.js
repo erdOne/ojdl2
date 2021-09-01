@@ -95,6 +95,17 @@ const Account = (props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // typesetMath
+    try {
+      window.MathJax.startup.promise = window.MathJax.startup.promise.then(
+        ()=>window.MathJax.typesetPromise()
+      );
+    } catch (e) {
+      console.log("cannot typeset");
+    }
+  });
+
   if (!props.match.params.handle && !props.user.active)
     return "GO SIGN IN";
   if (!values)

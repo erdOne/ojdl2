@@ -9,6 +9,7 @@ import Controller from "./controllers";
 import {
   Dashboard,
   Account,
+  Accounts,
   Settings,
   SignUp,
   SignIn,
@@ -53,6 +54,7 @@ class Routes extends Component {
           <Route component={Submissions} layout={Main} strict exact
             path={["/submissions", "/contest/:cid/submissions"]} />
           <Route component={Account} layout={Main} exact path="/account/:handle?" />
+          <Route component={Accounts} layout={Main} exact path="/accounts" />
           <Route component={Settings} layout={Main} exact path="/settings" />
           <Route component={SignUp} layout={Minimal} exact path="/sign-up" />
           <Route component={SignIn} layout={Minimal} exact path="/sign-in" />

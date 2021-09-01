@@ -22,7 +22,9 @@ import {
   Edit,
   Add,
   Chat,
-  Home } from "@material-ui/icons";
+  Home,
+  People
+} from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { signOut } from "client/actions";
 
@@ -132,13 +134,14 @@ class Sidebar extends React.Component {
           <Item href="/standings" icon={<BarChart />} title="Standings" display={inContest} />
           <Item exact href="/" icon={<ArrowBack />} title="Leave Contest" display={inContest} />
           <Item href="/contests" icon={<GolfCourse />} title="Contests" display={!inContest} />
+          <Item exact href="/accounts" icon={<People />} title="Profiles" clean />
           { isAdmin ? <Divider /> : null }
           <Item exact href="/add/problem"
             icon={<Edit />} title="Add problem" display={Boolean(isAdmin)} />
           <Item exact href="/add/contest"
             icon={<Add />} title="Add contest" display={Boolean(isAdmin)} />
           <Divider />
-          <Item exact href="/account" icon={<Person />} title="Profile" display={isActive} clean />
+          <Item exact href="/account" icon={<Person />} title="My profile" display={isActive} clean />
           <Item href="" onClick={this.handleLeave}
             icon={<Cancel />} title="Sign out" display={isActive} clean />
           <Item href="/sign-in" icon={<ExitToApp />} title="Sign in" display={!isActive} clean />

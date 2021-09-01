@@ -38,6 +38,27 @@ export async function getUser({ handle, uid }) {
   return { editable, user, stats: { acProbs, totalProbs, acSubs, totalSubs } };
 }
 
+export async function getUsers({ limit, offset, filters = {} }) {
+  const { handle } = filters;
+  let where = {};
+  if (handle)
+    where.handle = { [Op.substring]: handle.replace(/[%_]/g, (match) => `\\${match}`) };
+  const { rows: users, count: userCount } = await UserDB.findAndCountAll({
+    limit, offset, where,
+    attributes: [
+      // https://stackoverflow.com/questions/33900750/sequelize-order-by-count-association
+      [sql.literal("(SELECT COUNT(DISTINCT pid) FROM submissions WHERE submissions.uid=users.uid)"),
+        "acProbCount"],
+      "handle",
+      "motto",
+      "avatar",
+    ],
+    order: [[sql.literal("acProbCount"), "DESC"]],
+  });
+  // console.log(users);
+  return { users, userCount };
+}
+
 function validateAvatarName(name) {
   const result = /[ \w-]{1,50}(\.[\w-]{1,4})?/.test(name);
   if (!result)
