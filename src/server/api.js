@@ -98,7 +98,7 @@ export async function updateUser({ uid, currentPassword, handle, password, motto
       fs.unlinkSync(`public/images/avatars/${orgFilename}`);
       console.log(`deleted old avatar ${orgFilename}`);
     }
-    const filename = `${user.handle}-${avatar.name}`;
+    const filename = `${user.handle}.${avatar.name}`;
     const path = `public/images/avatars/${filename}`;
     await user.update({ avatar: filename });
     avatar.mv(path);
