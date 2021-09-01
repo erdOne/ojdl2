@@ -47,7 +47,8 @@ export async function getUsers({ limit, offset, filters = {} }) {
     limit, offset, where,
     attributes: [
       // https://stackoverflow.com/questions/33900750/sequelize-order-by-count-association
-      [sql.literal("(SELECT COUNT(DISTINCT pid) FROM submissions WHERE submissions.uid=users.uid)"),
+      [sql.literal(`(SELECT COUNT(DISTINCT pid) FROM submissions\
+        WHERE submissions.uid=users.uid AND submissions.verdict=${verdicts.AC})`),
         "acProbCount"],
       "handle",
       "motto",
