@@ -12,7 +12,7 @@ import fs from "fs";
 import * as api from "./api.js";
 import * as sessionApi from "./session-api.js";
 
-import config from "../../config.js";
+import { cookie, credentials, ports } from "../../env.js";
 
 // ['log','warn','error'].forEach(a=>{let b=console[a];console[a]=(...c)=>{try{throw new Error}catch(d){b.apply(console,[d.stack.split('\n')[2].trim().substring(3).replace(__dirname,'').replace(/\s\(./,' at ').replace(/\)/,''),'\n',...c])}}}); // display current function
 /* ['log', 'warn', 'error'].forEach(t => {
@@ -22,9 +22,8 @@ import config from "../../config.js";
   };
 }); */
 
-var app = express();
+let app = express();
 
-//app.set("port", process.env.PORT || 80);
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,12 +31,12 @@ app.use(fileUpload());
 app.use(hsts({ maxAge: 31536000 }));
 
 app.use(session({
-  secret: config.cookie.secret,
+  secret: cookie.secret,
   name: "uid",
   saveUninitialized: false,
   resave: true,
   cookie: {
-    maxAge: config.cookie.maxAge
+    maxAge: cookie.maxAge
   }
 }));
 
@@ -90,9 +89,11 @@ app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
 app.use("/images", express.static(path.join(__dirname, "../../public/images")));
 app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
 
-app.get(config.credentials.challenge.url, (req, res)=>{
-  res.send(config.credentials.challenge.response);
-});
+if (credentials.challenge.url) {
+  app.get(credentials.challenge.url, (req, res)=>{
+    res.send(credentials.challenge.response);
+  });
+}
 
 app.use(function(req, res) {
   fs.readFile(path.join(__dirname, "../../public/index.html"), (err, data)=>{
@@ -104,5 +105,5 @@ app.use(function(req, res) {
 
 //app.listen(8080, "127.0.0.1");
 
-http.createServer(app).listen(config.ports.http);
-https.createServer(config.credentials.certs, app).listen(config.ports.https);
+http.createServer(app).listen(ports.http);
+https.createServer(credentials.certs, app).listen(ports.https);

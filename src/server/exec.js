@@ -13,7 +13,7 @@ import { ErrorResult } from "./judge/results.js";
 const workdir = "./workdir";
 const isolatePath = "isolate/isolate";
 
-import { sandbox } from "../../config.js";
+import { sandbox } from "../../env.js";
 
 global.sandBoxQueue = new Queue(sandbox.limit, function(boxno, callback) {
   boxno += sandbox.offset;
