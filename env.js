@@ -51,7 +51,7 @@ function getChallenge() {
   const config = dotenv.parse(resolve(path, ""));
   return {
     url: config.CHALLENGE_URL || "",
-    response: config.CHALLENGE_response || ""
+    response: config.CHALLENGE_RESPONSE || ""
   };
 }
 
