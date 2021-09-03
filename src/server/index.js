@@ -96,7 +96,9 @@ app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
 app.use("/images", express.static(path.join(__dirname, "../../public/images")));
 app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
 
-app.use("/*", express.static(path.join(__dirname, "../../public/index.html")));
+app.use("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../public/index.html"));
+});
 
 //app.listen(8080, "127.0.0.1");
 
