@@ -61,9 +61,15 @@ export async function getUsers({ limit, offset, filters = {} }) {
 }
 
 function validateAvatarName(name) {
-  const result = /[ \w-]{1,50}(\.[\w-]{1,4})?/.test(name);
+  const result = /^[ \w-]{1,50}(\.[\w-]{1,4})?$/.test(name);
   if (!result)
     throw "invalid avatar name";
+}
+
+function validateAvatarMimeType(mimetype) {
+  const result = /^image\/*/.test(mimetype);
+  if (!result)
+    throw "invalid mime type";
 }
 
 function validateMotto(motto) {
@@ -77,7 +83,7 @@ function validateEmail(email) {
 }
 
 function validateHandle(handle) {
-  const result = /[A-Za-z0-9_]{6,100}/.test(handle);
+  const result = /^[A-Za-z0-9_]{6,100}$/.test(handle);
   if (!result)
     throw "invalid handle";
 }
@@ -94,6 +100,7 @@ export async function updateUser({ uid, currentPassword, handle, password, motto
     if (avatar.size >= maxAvatarSize)
       throw "avatar too big (at most 2 MB)";
     validateAvatarName(avatar.name);
+    validateAvatarMimeType(avatar.mimetype);
     const orgFilename = user.avatar;
     if (orgFilename && orgFilename !== "") {
       fs.unlinkSync(`public/images/avatars/${orgFilename}`);

@@ -85,9 +85,6 @@ app.get("/download/:filename", function(req, res, next) {
 
 });
 
-app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
-app.use("/images", express.static(path.join(__dirname, "../../public/images")));
-app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
 
 if (credentials.challenge.url) {
   app.get(credentials.challenge.url, (req, res)=>{
@@ -95,13 +92,11 @@ if (credentials.challenge.url) {
   });
 }
 
-app.use(function(req, res) {
-  fs.readFile(path.join(__dirname, "../../public/index.html"), (err, data)=>{
-    if (err) console.error(err);
-    res.write(data);
-    res.end();
-  });
-});
+app.use("/dist", express.static(path.join(__dirname, "../../public/dist")));
+app.use("/images", express.static(path.join(__dirname, "../../public/images")));
+app.use("/fonts", express.static(path.join(__dirname, "../../public/fonts")));
+
+app.use("/*", express.static(path.join(__dirname, "../../public/index.html")));
 
 //app.listen(8080, "127.0.0.1");
 
