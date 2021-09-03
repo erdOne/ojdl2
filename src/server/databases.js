@@ -1,7 +1,6 @@
 import Sequelize from "sequelize";
 import { db } from "../../env.js";
 import * as definitions from "./databases/index.js";
-import mariadb from "mariadb";
 
 const sequelize = new Sequelize(db.schema, db.user, db.password, definitions.schema);
 
@@ -49,13 +48,6 @@ async function initModel() {
 
 async function init() {
   try {
-    const pool = mariadb.createPool({
-      host: "localhost",
-      user: db.user,
-      password: db.password,
-    });
-    await pool.getConnection()
-      .then(conn => conn.query(`CREATE DATABASE IF NOT EXISTS ${db.schema};`)); // self-sqli?
     await sequelize.authenticate();
     await initModel();
     console.log("Connection has been established successfully.");
