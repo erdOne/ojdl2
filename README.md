@@ -18,11 +18,9 @@ sudo pacman -S mariadb
 sudo systemctl start mysql
 
 # Create database and user in MariaDB and give permission
-sudo mysql
-## ( ... )
-
-# Configure cgroups
-## ( ... )
+# Example:
+sudo mysql -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD'; \
+    GRANT ALL PRIVILEGES ON $DB_SCHEMA.* TO '$DB_USER'@'localhost'"
 
 # Setup ojdl configurations
 cp .sample.env .env
@@ -34,6 +32,12 @@ NODE_ENV=production npm run build
 sudo npm start
 ```
 
+
+## Configure cgroups
+Run `isolate-check-environment` to check if cgroup is enabled. cgroup v1 is required to run ioi/isolate sandbox. Useful links:
+- [ioi/isolate manual](http://www.ucw.cz/moe/isolate.1.html#_installation)
+- https://wiki.archlinux.org/title/cgroups#Enable_cgroup_v1
+
 ## SSL certification
 `SSL_CERTIFICATE_PATH` and `SSL_PRIVATE_KEY_PATH` should be set to the path of the public and private key (resp.) in order to enable https.
-Also, one could use `.challenge.env` to fullfill a simple http challenge. See `.sample.challenge.env` for more details.
+Also, one could use `.challenge.env` to fulfill a simple http challenge. See `.sample.challenge.env` for more details.
