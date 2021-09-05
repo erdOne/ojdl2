@@ -6,7 +6,7 @@ export default {
     mode: "text/x-c++src",
     text: "C++17 (gcc)",
     buildArgs: ["--cg", `--env=PATH=${PATH}`, "--dir=/etc", "--dir=/opt", "--processes",
-      "--", "/usr/local/bin/g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
+      "--", "/usr/bin/env", "g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.cpp",
     executable: "main.out"
@@ -16,7 +16,7 @@ export default {
     mode: "text/x-csrc",
     text: "C (gcc)",
     buildArgs: ["--cg", `--env=PATH=${PATH}`, "--dir=/etc", "--dir=/opt", "--processes",
-      "--", "/usr/local/bin/gcc", "main.c", "-o", "main.out"],
+      "--", "/usr/bin/env", "gcc", "main.c", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.c",
     executable: "main.out"

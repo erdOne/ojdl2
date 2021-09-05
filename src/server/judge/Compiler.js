@@ -11,7 +11,7 @@ export default class Compiler {
     fs.copyFileSync(`./data/sub/${sid}`, `./workdir/${jid}/${this.lang.source}`);
     if (!this.lang.buildArgs) return;
     var { boxExec, boxClean } = await global.sandBoxQueue.request();
-    const COMPILE_TIME_LIMIT = 2.0; // second
+    const COMPILE_TIME_LIMIT = 10.0; // second
     const args = [`--dir=/box=${process.cwd()}/workdir/${jid}:rw`,
       `--time=${COMPILE_TIME_LIMIT}`, `--wall-time=${COMPILE_TIME_LIMIT * 1.1}`, "--run"];
     try {
