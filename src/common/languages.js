@@ -5,7 +5,7 @@ export default {
     mode: "text/x-c++src",
     text: "C++17 (gcc)",
     buildArgs: ["--cg", `--env=PATH=${PATH}`, "--processes",
-      "--", "/usr/bin/env", "g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
+      "--", "/usr/local/bin/g++", "-std=c++17", "-O2", "main.cpp", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.cpp",
     executable: "main.out"
@@ -15,7 +15,7 @@ export default {
     mode: "text/x-csrc",
     text: "C (gcc)",
     buildArgs: ["--cg", `--env=PATH=${PATH}`, "--processes",
-      "--", "/usr/bin/env", "gcc", "-static", "main.c", "-o", "main.out"],
+      "--", "/usr/local/bin/gcc", "-static", "main.c", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.c",
     executable: "main.out"
@@ -25,7 +25,7 @@ export default {
     mode: "text/x-haskell",
     text: "haskell (ghc)",
     buildArgs: ["--cg", `--env=PATH=${PATH}`, "--processes", "--",
-      "/usr/bin/env", "ghc", "-dynamic", "-tmpdir", ".", "main.hs", "-o", "main.out"],
+      "/usr/bin/ghc", "-dynamic", "-tmpdir", ".", "main.hs", "-o", "main.out"],
     execArgs: ["./main.out"],
     source: "main.hs",
     executable: "main.out"
