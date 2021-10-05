@@ -187,6 +187,7 @@ export async function getSub({ sid, uid, cid, withData }) {
     // where: admin || !cid ? {} : { cid }
   }]);
   var sub = await SubDB.findByPk(sid, { include });
+  if (cid) cid = tryParseInt(cid);
   if (!sub || (sub.cid && cid && cid !== sub.cid)) throw "no such sub";
   if (sub.cid)
     if (!admin && (hashUidInDB(uid) !== sub.uid)) {
