@@ -87,8 +87,12 @@ function useAPI({ loadData, page, rowsPerPage, filters }) {
 function VirtualTable({ columns, config, api, history, title }) {
   const classes = useStyles();
 
-  const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dense, setDense] = useState(() => (
+    localStorage.getItem('table_dense_padding') === 'true'
+  ));
+  const [rowsPerPage, setRowsPerPage] = useState(() => (
+    parseInt(localStorage.getItem('table_rows_per_page')) ?? 10
+  ));
   let qs = new URLSearchParams(window.location.search);
   let filters = {};
   for (const key of qs.keys()) if (key in api.queryWhiteList) filters[key] = qs.get(key);
@@ -109,6 +113,7 @@ function VirtualTable({ columns, config, api, history, title }) {
 
   function handleChangeDense(event) {
     setDense(event.target.checked);
+    localStorage.setItem('table_dense_padding', event.target.checked);
   }
 
   function handleChangePage(event, newPage) {
@@ -118,6 +123,7 @@ function VirtualTable({ columns, config, api, history, title }) {
 
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value));
+    localStorage.setItem('table_rows_per_page', parseInt(event.target.value));
     qs.set("page", 1);
     history.push({ search: qs.toString() });
   }
@@ -133,6 +139,24 @@ function VirtualTable({ columns, config, api, history, title }) {
 
   const [rows = [], rowsLength] = data ?? [];
   const emptyRows = rowsPerPage - rows.length;
+
+
+  const paginate = (
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25, 50, 100]}
+        colSpan={columns.length}
+        count={rowsLength}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        SelectProps={{
+          inputProps: { "aria-label": "rows per page" },
+          native: true,
+        }}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        ActionsComponent={TablePaginationActions}
+      />
+  );
 
   return (
     <div className={classes.root}>
@@ -207,20 +231,7 @@ function VirtualTable({ columns, config, api, history, title }) {
 
             <TableFooter>
               <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={columns.length}
-                  count={rowsLength}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: { "aria-label": "rows per page" },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
+                {paginate}
               </TableRow>
             </TableFooter>
           </Table>
