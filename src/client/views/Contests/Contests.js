@@ -29,7 +29,7 @@ const Contests = ({ user }) => (
     api={{
       loadData: ({ limit, offset, filters }) => {
         return axios.post("/api/get_conts",
-          { uid: user.uid, order: [["cid", "desc"]], limit, offset, filters })
+          { uid: user.uid, limit, offset, filters })
           .then(res => {
             if (res.data.error) throw res.data.msg;
             return [res.data.conts, res.data.contCount];

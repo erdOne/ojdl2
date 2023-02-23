@@ -210,8 +210,9 @@ function visible(admin) {
 }
 
 export async function getConts({ uid, limit, offset }) {
+  const order = [["cid", "desc"]];
   const { rows: conts, count: contCount } = await ContDB.findAndCountAll({
-    limit, offset, where: visible(await isAdmin({ uid })),
+    limit, offset, order, where: visible(await isAdmin({ uid })),
     attributes: { exclude: ["problems"] }
   });
   return { conts, contCount };
