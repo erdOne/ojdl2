@@ -1,7 +1,6 @@
 import express from "express";
 import fileUpload from "express-fileupload";
 import path from "path";
-import logger from "morgan";
 import bodyParser from "body-parser";
 import session from "express-session";
 import http from "http";
@@ -24,6 +23,7 @@ import { cookie, credentials, ports } from "../../env.js";
 
 let app = express();
 
+var logger = require('morgan');
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
