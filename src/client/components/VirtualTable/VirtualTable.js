@@ -91,7 +91,7 @@ function VirtualTable({ columns, config, api, history, title }) {
     localStorage.getItem('table_dense_padding') === 'true'
   ));
   const [rowsPerPage, setRowsPerPage] = useState(() => (
-    parseInt(localStorage.getItem('table_rows_per_page')) ?? 10
+    parseInt(localStorage.getItem('table_rows_per_page') ?? 10)
   ));
   let qs = new URLSearchParams(window.location.search);
   let filters = {};
